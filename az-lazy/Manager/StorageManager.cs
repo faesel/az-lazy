@@ -8,7 +8,9 @@ namespace az_lazy.Manager
     public interface ILocalStorageManager
     {
         void AddConnection(string connectionName, string connectionString);
-         List<Connection> GetConnections();
+        void SelectConnection(string connectionName);
+        void RemoveConnection(string connectionName);
+        List<Connection> GetConnections();
     }
 
     public class LocalStorageManager : ILocalStorageManager
@@ -19,10 +21,11 @@ namespace az_lazy.Manager
         {
             using var db = new LiteDatabase(ConnectionCollection);
             var collection = db.GetCollection<Connection>(nameof(ModelNames.Connection));
-            var connection = new Connection(connectionName, connectionString, false);
+            var connection = new Connection(connectionName, connectionString);
 
             collection.Insert(connection);
             collection.EnsureIndex(x => x.ConnectionName);
+            collection.EnsureIndex(x => x.IsSelected);
         }
 
         public List<Connection> GetConnections()
@@ -32,6 +35,33 @@ namespace az_lazy.Manager
 
             return collection.Query()
                 .ToList();
+        }
+
+        public void SelectConnection(string connectionName)
+        {
+            using var db = new LiteDatabase(ConnectionCollection);
+            var collection = db.GetCollection<Connection>(nameof(ModelNames.Connection));
+
+            var selectedConnection = collection.FindOne(x => x.IsSelected);
+            selectedConnection.SetUnselected();
+
+            collection.Update(selectedConnection);
+
+            var connectionToSelect = collection.FindOne(x => x.ConnectionName.Equals(connectionName, StringComparison.InvariantCultureIgnoreCase));
+            connectionToSelect.SetSelected();
+
+            collection.Update(connectionToSelect);
+        }
+
+        public void RemoveConnection(string connectionName)
+        {
+            using var db = new LiteDatabase(ConnectionCollection);
+            var collection = db.GetCollection<Connection>(nameof(ModelNames.Connection));
+
+            var connectionToRemove = collection.FindOne(x => x.ConnectionName.Equals(connectionName, StringComparison.InvariantCultureIgnoreCase));
+
+            //TODO: This needs work
+            collection.Delete(new BsonValue(connectionName));
         }
     }
 }

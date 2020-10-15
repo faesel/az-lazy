@@ -16,29 +16,31 @@ namespace az_lazy.Commands
 
         public async Task<bool> Run(ConnectionOptions opts)
         {
-            if(opts.List)
+            if (opts.List)
             {
-                foreach(var connection in localStorageManager.GetConnections())
+                foreach (var connection in localStorageManager.GetConnections())
                 {
                     Console.WriteLine($"{connection.ConnectionName} {(connection.IsSelected ? "[*]" : string.Empty)}");
                 }
             }
 
-            if(!string.IsNullOrEmpty(opts.ConnectionString) && !string.IsNullOrEmpty(opts.ConnectionName))
+            if (!string.IsNullOrEmpty(opts.ConnectionString) && !string.IsNullOrEmpty(opts.ConnectionName))
             {
                 localStorageManager.AddConnection(opts.ConnectionName, opts.ConnectionString);
 
                 Console.WriteLine($"{opts.ConnectionName} Connection Added");
             }
 
-            if(!string.IsNullOrEmpty(opts.RemoveConnection))
+            if (!string.IsNullOrEmpty(opts.RemoveConnection))
             {
-                Console.WriteLine("Connection removed");
+                localStorageManager.RemoveConnection(opts.RemoveConnection);
+                Console.WriteLine($"{opts.RemoveConnection} Connection removed");
             }
 
-            if(!string.IsNullOrEmpty(opts.SelectConnection))
+            if (!string.IsNullOrEmpty(opts.SelectConnection))
             {
-                Console.WriteLine("Connection selected");
+                localStorageManager.RemoveConnection(opts.SelectConnection);
+                Console.WriteLine($"{opts.SelectConnection} Connection selected");
             }
 
             return true;
