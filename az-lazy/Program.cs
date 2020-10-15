@@ -13,7 +13,7 @@ namespace az_lazy
                 .BuildServiceProvider();
 
              var azRunner = serviceProvider.GetService<IAzRunner>();
-             
+
              await azRunner.Startup(args).ConfigureAwait(false);
         }
     }

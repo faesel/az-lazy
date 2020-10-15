@@ -1,31 +1,46 @@
 using System;
 using System.Threading.Tasks;
+using az_lazy.Manager;
 
 namespace az_lazy.Commands
 {
     public class ConnectionRunner : IConnectionRunner<ConnectionOptions>
     {
+        public readonly ILocalStorageManager localStorageManager;
+
+        public ConnectionRunner(
+            ILocalStorageManager localStorageManager)
+        {
+            this.localStorageManager = localStorageManager;
+        }
+
         public async Task<bool> Run(ConnectionOptions opts)
         {
-            if(opts.List)
+            if (opts.List)
             {
-                Console.WriteLine("ConnectionOne [*]");
-                Console.WriteLine("ConnectionTwo");
+                foreach (var connection in localStorageManager.GetConnections())
+                {
+                    Console.WriteLine($"{connection.ConnectionName} {(connection.IsSelected ? "[*]" : string.Empty)}");
+                }
             }
 
-            if(!string.IsNullOrEmpty(opts.ConnectionString))
+            if (!string.IsNullOrEmpty(opts.ConnectionString) && !string.IsNullOrEmpty(opts.ConnectionName))
             {
-                Console.WriteLine("Connection added");
+                localStorageManager.AddConnection(opts.ConnectionName, opts.ConnectionString);
+
+                Console.WriteLine($"{opts.ConnectionName} Connection Added");
             }
 
-            if(!string.IsNullOrEmpty(opts.RemoveConnection))
+            if (!string.IsNullOrEmpty(opts.RemoveConnection))
             {
-                Console.WriteLine("Connection removed");
+                localStorageManager.RemoveConnection(opts.RemoveConnection);
+                Console.WriteLine($"{opts.RemoveConnection} Connection removed");
             }
 
-            if(!string.IsNullOrEmpty(opts.SelectConnection))
+            if (!string.IsNullOrEmpty(opts.SelectConnection))
             {
-                Console.WriteLine("Connection selected");
+                localStorageManager.RemoveConnection(opts.SelectConnection);
+                Console.WriteLine($"{opts.SelectConnection} Connection selected");
             }
 
             return true;
