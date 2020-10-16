@@ -50,7 +50,6 @@ namespace az_lazy.Manager
                 collection.Update(selectedConnection);
             }
 
-
             var connectionToSelect = collection.FindOne(x => x.ConnectionName.Equals(connectionName, StringComparison.InvariantCultureIgnoreCase));
             connectionToSelect.SetSelected();
 
@@ -64,7 +63,6 @@ namespace az_lazy.Manager
 
             var connectionToRemove = collection.FindOne(x => x.ConnectionName.Equals(connectionName, StringComparison.InvariantCultureIgnoreCase));
 
-            //TODO: This needs work
             collection.Delete(new BsonValue(connectionToRemove.Id));
         }
     }

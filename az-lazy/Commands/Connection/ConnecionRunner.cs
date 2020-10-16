@@ -24,12 +24,6 @@ namespace az_lazy.Commands
                 }
             }
 
-            if (!string.IsNullOrEmpty(opts.ConnectionString) && !string.IsNullOrEmpty(opts.ConnectionName))
-            {
-                localStorageManager.AddConnection(opts.ConnectionName, opts.ConnectionString);
-                Console.WriteLine($"{opts.ConnectionName} Connection Added");
-            }
-
             if (!string.IsNullOrEmpty(opts.RemoveConnection))
             {
                 localStorageManager.RemoveConnection(opts.RemoveConnection);

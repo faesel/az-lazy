@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using az_lazy.Commands;
+using az_lazy.Commands.Connection;
 using az_lazy.Commands.Queue;
 using CommandLine;
 
@@ -14,22 +15,26 @@ namespace az_lazy
     public class AzRunner : IAzRunner
     {
         private readonly IConnectionRunner<ConnectionOptions> ConnectionRunner;
+        private readonly IConnectionRunner<AddConnectionOptions> AddConnectionRunner;
         private readonly IConnectionRunner<QueueOptions> QueueRunner;
 
         public AzRunner(
             IConnectionRunner<ConnectionOptions> connectionRunner,
+            IConnectionRunner<AddConnectionOptions> addConnectionRunner,
             IConnectionRunner<QueueOptions> queueRunner)
         {
             this.ConnectionRunner = connectionRunner;
+            this.AddConnectionRunner = addConnectionRunner;
             this.QueueRunner = queueRunner;
         }
 
         public async Task Startup(string[] args)
         {
-            var parsedResult = Parser.Default.ParseArguments<ConnectionOptions, QueueOptions>(args);
+            var parsedResult = Parser.Default.ParseArguments<ConnectionOptions, AddConnectionOptions, QueueOptions>(args);
 
             var result = await parsedResult
                     .MapResult(
+                        (AddConnectionOptions opts) => AddConnectionRunner.Run(opts),
                         (ConnectionOptions opts) => ConnectionRunner.Run(opts),
                         (QueueOptions opts) => QueueRunner.Run(opts),
                     errs => DisplayHelp(parsedResult, errs))
