@@ -43,9 +43,13 @@ namespace az_lazy.Manager
             var collection = db.GetCollection<Connection>(nameof(ModelNames.Connection));
 
             var selectedConnection = collection.FindOne(x => x.IsSelected);
-            selectedConnection.SetUnselected();
 
-            collection.Update(selectedConnection);
+            if(selectedConnection != null)
+            {
+                selectedConnection.SetUnselected();
+                collection.Update(selectedConnection);
+            }
+
 
             var connectionToSelect = collection.FindOne(x => x.ConnectionName.Equals(connectionName, StringComparison.InvariantCultureIgnoreCase));
             connectionToSelect.SetSelected();
@@ -61,7 +65,7 @@ namespace az_lazy.Manager
             var connectionToRemove = collection.FindOne(x => x.ConnectionName.Equals(connectionName, StringComparison.InvariantCultureIgnoreCase));
 
             //TODO: This needs work
-            collection.Delete(new BsonValue(connectionName));
+            collection.Delete(new BsonValue(connectionToRemove.Id));
         }
     }
 }

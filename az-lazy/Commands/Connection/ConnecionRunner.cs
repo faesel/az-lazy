@@ -20,14 +20,13 @@ namespace az_lazy.Commands
             {
                 foreach (var connection in localStorageManager.GetConnections())
                 {
-                    Console.WriteLine($"{connection.ConnectionName} {(connection.IsSelected ? "[*]" : string.Empty)}");
+                    Console.WriteLine($"{connection.ConnectionName} {(connection.IsSelected ? "[*]" : string.Empty)} - Added on {connection.DateAdded.ToShortDateString()}");
                 }
             }
 
             if (!string.IsNullOrEmpty(opts.ConnectionString) && !string.IsNullOrEmpty(opts.ConnectionName))
             {
                 localStorageManager.AddConnection(opts.ConnectionName, opts.ConnectionString);
-
                 Console.WriteLine($"{opts.ConnectionName} Connection Added");
             }
 
@@ -39,7 +38,7 @@ namespace az_lazy.Commands
 
             if (!string.IsNullOrEmpty(opts.SelectConnection))
             {
-                localStorageManager.RemoveConnection(opts.SelectConnection);
+                localStorageManager.SelectConnection(opts.SelectConnection);
                 Console.WriteLine($"{opts.SelectConnection} Connection selected");
             }
 

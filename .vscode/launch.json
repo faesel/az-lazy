@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             "program": "${workspaceFolder}/az-lazy/bin/Debug/netcoreapp3.1/az-lazy.dll",
-            "args": [],
+            "args": [ "connection --remove Staging" ],
             "cwd": "${workspaceFolder}/az-lazy",
             "console": "internalConsole",
             "stopAtEntry": false

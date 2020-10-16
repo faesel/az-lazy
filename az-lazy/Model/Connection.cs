@@ -8,6 +8,7 @@ namespace az_lazy.Model
             string connectionName,
             string connectionString)
         {
+            this.Id = Guid.NewGuid();
             this.ConnectionName = connectionName;
             this.ConnectionString = connectionString;
             this.DateAdded = DateTime.UtcNow;
@@ -24,6 +25,7 @@ namespace az_lazy.Model
             this.IsSelected = false;
         }
 
+        public Guid Id { get; set; }
         public string ConnectionName { get; set; }
         public string ConnectionString { get; set; }
         public DateTime DateAdded { get; set; }
