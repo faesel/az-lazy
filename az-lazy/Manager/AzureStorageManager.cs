@@ -1,22 +1,23 @@
 using System;
+using System.Threading.Tasks;
 using Azure.Storage.Queues;
 
 namespace az_lazy.Manager
 {
     public interface IAzureStorageManager
     {
-        bool TestConnection(string connectionString);
+        Task<bool> TestConnection(string connectionString);
     }
 
     public class AzureStorageManager : IAzureStorageManager
     {
-        public bool TestConnection(string connectionString)
+        public async Task<bool> TestConnection(string connectionString)
         {
             var isSuccesfull = true;
 
             try
             {
-
+                
             }
             catch(Exception ex)
             {
