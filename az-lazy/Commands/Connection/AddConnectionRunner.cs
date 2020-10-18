@@ -23,7 +23,7 @@ namespace az_lazy.Commands.Connection
             {
                 Console.Write($"Testing {opts.ConnectionName} connection ...");
                 Console.SetCursorPosition(0, Console.CursorTop);
-                var result = azureStorageManager.TestConnection(opts.ConnectionString);
+                var result = await azureStorageManager.TestConnection(opts.ConnectionString);
 
                 if(!result)
                 {
