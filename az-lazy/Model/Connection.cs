@@ -25,10 +25,16 @@ namespace az_lazy.Model
             this.IsSelected = false;
         }
 
+        public void SetDevelopmentStorage()
+        {
+            this.IsDevelopmentStorage = true;
+        }
+
         public Guid Id { get; set; }
         public string ConnectionName { get; set; }
         public string ConnectionString { get; set; }
         public DateTime DateAdded { get; set; }
         public bool IsSelected { get; private set; }
+        public bool IsDevelopmentStorage { get; private set; }
     }
 }

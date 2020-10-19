@@ -26,7 +26,9 @@ namespace az_lazy.Manager
 
             if(collection.Count() == 0)
             {
-                collection.Insert(new Connection("devStorage", "UseDevelopmentStorage=true"));
+                var developmentStorage = new Connection("devStorage", "UseDevelopmentStorage=true");
+                developmentStorage.SetDevelopmentStorage();
+                collection.Insert(developmentStorage);
             }
 
             collection.Insert(connection);
@@ -77,7 +79,10 @@ namespace az_lazy.Manager
 
             var connectionToRemove = collection.FindOne(x => x.ConnectionName.Equals(connectionName, StringComparison.InvariantCultureIgnoreCase));
 
-            collection.Delete(new BsonValue(connectionToRemove.Id));
+            if (!connectionToRemove.IsDevelopmentStorage)
+            {
+                collection.Delete(new BsonValue(connectionToRemove.Id));
+            }
         }
     }
 }

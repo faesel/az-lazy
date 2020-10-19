@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "az-lazy", "az-lazy.csproj", "{AAC27867-8054-4917-9292-12A8833E0341}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "az-lazy", "az-lazy\az-lazy.csproj", "{AAC27867-8054-4917-9292-12A8833E0341}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "az-lazy.test", "az-lazy.test\az-lazy.test.csproj", "{16380B38-F7EC-449E-B2D1-27E0CE274476}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{AAC27867-8054-4917-9292-12A8833E0341}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AAC27867-8054-4917-9292-12A8833E0341}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AAC27867-8054-4917-9292-12A8833E0341}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16380B38-F7EC-449E-B2D1-27E0CE274476}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16380B38-F7EC-449E-B2D1-27E0CE274476}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16380B38-F7EC-449E-B2D1-27E0CE274476}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16380B38-F7EC-449E-B2D1-27E0CE274476}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
