@@ -12,6 +12,7 @@ namespace az_lazy.Manager
     public interface IAzureStorageManager
     {
         Task<bool> TestConnection(string connectionName, string connectionString);
+        Task<List<CloudQueue>> GetQueues(string connectionName, string connectionString);
     }
 
     public class AzureStorageManager : IAzureStorageManager
@@ -28,10 +29,9 @@ namespace az_lazy.Manager
             }
             catch(Exception ex)
             {
-                Console.WriteLine("Connection Failed");
+                //TODO: highlight error
+                return false;
             }
-
-            return true;
         }
 
         public async Task<List<CloudQueue>> GetQueues(string connectionName, string connectionString)

@@ -6,19 +6,19 @@ namespace az_lazy.Commands
 {
     public class ConnectionRunner : IConnectionRunner<ConnectionOptions>
     {
-        public readonly ILocalStorageManager localStorageManager;
+        public readonly ILocalStorageManager LocalStorageManager;
 
         public ConnectionRunner(
             ILocalStorageManager localStorageManager)
         {
-            this.localStorageManager = localStorageManager;
+            this.LocalStorageManager = localStorageManager;
         }
 
         public async Task<bool> Run(ConnectionOptions opts)
         {
             if (opts.List)
             {
-                foreach (var connection in localStorageManager.GetConnections())
+                foreach (var connection in LocalStorageManager.GetConnections())
                 {
                     Console.WriteLine($"{connection.ConnectionName} {(connection.IsSelected ? "[*]" : string.Empty)} - Added on {connection.DateAdded.ToShortDateString()}");
                 }
@@ -26,13 +26,13 @@ namespace az_lazy.Commands
 
             if (!string.IsNullOrEmpty(opts.RemoveConnection))
             {
-                localStorageManager.RemoveConnection(opts.RemoveConnection);
+                LocalStorageManager.RemoveConnection(opts.RemoveConnection);
                 Console.WriteLine($"{opts.RemoveConnection} Connection removed");
             }
 
             if (!string.IsNullOrEmpty(opts.SelectConnection))
             {
-                localStorageManager.SelectConnection(opts.SelectConnection);
+                LocalStorageManager.SelectConnection(opts.SelectConnection);
                 Console.WriteLine($"{opts.SelectConnection} Connection selected");
             }
 

@@ -11,6 +11,7 @@ namespace az_lazy.Manager
         void SelectConnection(string connectionName);
         void RemoveConnection(string connectionName);
         List<Connection> GetConnections();
+        Connection GetSelectedConnection();
     }
 
     public class LocalStorageManager : ILocalStorageManager
@@ -35,6 +36,14 @@ namespace az_lazy.Manager
 
             return collection.Query()
                 .ToList();
+        }
+
+        public Connection GetSelectedConnection()
+        {
+            using var db = new LiteDatabase(ConnectionCollection);
+            var collection = db.GetCollection<Connection>(nameof(ModelNames.Connection));
+
+            return collection.FindOne(x => x.IsSelected);
         }
 
         public void SelectConnection(string connectionName)
