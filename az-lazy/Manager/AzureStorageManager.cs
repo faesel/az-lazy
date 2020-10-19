@@ -1,30 +1,53 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Azure.Storage.Queues;
+using az_lazy.Exceptions;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Auth;
+using Microsoft.WindowsAzure.Storage.Queue;
 
 namespace az_lazy.Manager
 {
     public interface IAzureStorageManager
     {
-        Task<bool> TestConnection(string connectionString);
+        Task<bool> TestConnection(string connectionName, string connectionString);
+        Task<List<CloudQueue>> GetQueues(string connectionName, string connectionString);
     }
 
     public class AzureStorageManager : IAzureStorageManager
     {
-        public async Task<bool> TestConnection(string connectionString)
+        public async Task<bool> TestConnection(string connectionName, string connectionString)
         {
-            var isSuccesfull = true;
-
             try
             {
-                
+                var queues = await GetQueues(connectionName, connectionString).ConfigureAwait(false);
+
+                return true;
             }
             catch(Exception ex)
             {
-
+                throw new ConnectionException(ex);
             }
+        }
 
-            return true;
+        public async Task<List<CloudQueue>> GetQueues(string connectionName, string connectionString)
+        {
+            var storageCredentials = new StorageCredentials(connectionName, connectionString);
+            var storageAccount = new CloudStorageAccount(storageCredentials, true);
+            var queueClient = storageAccount.CreateCloudQueueClient();
+
+            QueueContinuationToken token = null;
+            List<CloudQueue> cloudQueueList = new List<CloudQueue>();
+
+            do
+            {
+                QueueResultSegment segment = await queueClient.ListQueuesSegmentedAsync(token).ConfigureAwait(false);
+                token = segment.ContinuationToken;
+                cloudQueueList.AddRange(segment.Results);
+            }
+            while (token != null);
+
+            return cloudQueueList;
         }
     }
 }

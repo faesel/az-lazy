@@ -17,5 +17,6 @@
     <PackageReference Include="LiteDB" Version="5.0.9"/>
     <PackageReference Include="Azure.Storage.Queues" Version="12.4.2"/>
     <PackageReference Include="Azure.Storage.Blobs" Version="12.6.0"/>
+    <PackageReference Include="WindowsAzure.Storage" Version="9.3.3"/>
   </ItemGroup>
 </Project>
