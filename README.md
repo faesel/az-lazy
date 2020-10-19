@@ -8,7 +8,7 @@ Azure CLI tool for managing everything in azure storage
 
 # Managing Connections
 
-Adding Connection Being by adding a new connection
+Use the following command to add a new connection
 
 `addconnection --name "dinosaurStorage" --accessKey "<<azure access key>>"`
 
@@ -16,15 +16,16 @@ Select the connection you want to use
 
 `connection --select "dinosaurStorage"`
 
-You can check which connection is selected the the list command,
+You can check which connection is selected the the list command, by default you will always have **devStorage** which allows you to connect to a local azure emulator
 
 `connection --list`
 
 Output:
 
 ```
-dinosaurStorage [*]
-animalStorage
+dinosaurStorage [*] - Added on 19/10/2020
+animalStorage - Added on 19/10/2020
+devStorage - Added on 19/10/2020
 ```
 
 To remove a connection use the remove command,

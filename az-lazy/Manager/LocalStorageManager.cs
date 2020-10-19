@@ -24,6 +24,11 @@ namespace az_lazy.Manager
             var collection = db.GetCollection<Connection>(nameof(ModelNames.Connection));
             var connection = new Connection(connectionName, connectionString);
 
+            if(collection.Count() == 0)
+            {
+                collection.Insert(new Connection("devStorage", "UseDevelopmentStorage=true"));
+            }
+
             collection.Insert(connection);
             collection.EnsureIndex(x => x.ConnectionName);
             collection.EnsureIndex(x => x.IsSelected);

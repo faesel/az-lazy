@@ -22,7 +22,7 @@ namespace az_lazy.Commands.Queue
             if(opts.List)
             {
                 var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                var queueList = await AzureStorageManager.GetQueues(selectedConnection.ConnectionName, selectedConnection.ConnectionString).ConfigureAwait(false);
+                var queueList = await AzureStorageManager.GetQueues(selectedConnection.ConnectionString).ConfigureAwait(false);
 
                 if(queueList.Count > 0)
                 {
