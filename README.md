@@ -9,3 +9,6 @@ https://www.c-sharpcorner.com/article/change-console-foreground-and-background-c
 
 Queue rest client
 https://docs.microsoft.com/en-us/rest/api/storageservices/queue-service-rest-api
+
+
+https://docs.microsoft.com/en-us/rest/api/storageservices/authorize-with-shared-key
