@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Azure.Storage.Queues;
+using az_lazy.Exceptions;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Queue;
@@ -19,18 +18,15 @@ namespace az_lazy.Manager
     {
         public async Task<bool> TestConnection(string connectionName, string connectionString)
         {
-            var isSuccesfull = true;
-
             try
             {
-                var queues = await GetQueues(connectionName, connectionString);
+                var queues = await GetQueues(connectionName, connectionString).ConfigureAwait(false);
 
                 return true;
             }
             catch(Exception ex)
             {
-                //TODO: highlight error
-                return false;
+                throw new ConnectionException(ex);
             }
         }
 
@@ -45,7 +41,7 @@ namespace az_lazy.Manager
 
             do
             {
-                QueueResultSegment segment = await queueClient.ListQueuesSegmentedAsync(token);
+                QueueResultSegment segment = await queueClient.ListQueuesSegmentedAsync(token).ConfigureAwait(false);
                 token = segment.ContinuationToken;
                 cloudQueueList.AddRange(segment.Results);
             }

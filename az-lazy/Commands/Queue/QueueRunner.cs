@@ -24,9 +24,16 @@ namespace az_lazy.Commands.Queue
                 var selectedConnection = LocalStorageManager.GetSelectedConnection();
                 var queueList = await AzureStorageManager.GetQueues(selectedConnection.ConnectionName, selectedConnection.ConnectionString).ConfigureAwait(false);
 
-                foreach(var queue in queueList)
+                if(queueList.Count > 0)
                 {
-                    Console.WriteLine(queue.Name);
+                    foreach(var queue in queueList)
+                    {
+                        Console.WriteLine(queue.Name);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No queues found");
                 }
             }
 
