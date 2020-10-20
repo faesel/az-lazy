@@ -10,17 +10,17 @@ namespace az_lazy.Manager
 {
     public interface IAzureStorageManager
     {
-        Task<bool> TestConnection(string connectionName, string accessKey);
-        Task<List<CloudQueue>> GetQueues(string connectionName, string accessKey);
+        Task<bool> TestConnection(string connectionString);
+        Task<List<CloudQueue>> GetQueues(string connectionString);
     }
 
     public class AzureStorageManager : IAzureStorageManager
     {
-        public async Task<bool> TestConnection(string connectionName, string accessKey)
+        public async Task<bool> TestConnection(string connectionString)
         {
             try
             {
-                var queues = await GetQueues(connectionName, accessKey).ConfigureAwait(false);
+                var queues = await GetQueues(connectionString).ConfigureAwait(false);
 
                 return true;
             }
@@ -30,10 +30,9 @@ namespace az_lazy.Manager
             }
         }
 
-        public async Task<List<CloudQueue>> GetQueues(string connectionName, string accessKey)
+        public async Task<List<CloudQueue>> GetQueues(string connectionString)
         {
-            var storageCredentials = new StorageCredentials(connectionName, accessKey);
-            var storageAccount = new CloudStorageAccount(storageCredentials, true);
+            var storageAccount = CloudStorageAccount.Parse(connectionString);
             var queueClient = storageAccount.CreateCloudQueueClient();
 
             QueueContinuationToken token = null;

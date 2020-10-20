@@ -20,7 +20,7 @@ namespace az_lazy.Commands.Connection
 
         public async Task<bool> Run(AddConnectionOptions opts)
         {
-            if (!string.IsNullOrEmpty(opts.AccessKey) && !string.IsNullOrEmpty(opts.ConnectionName))
+            if (!string.IsNullOrEmpty(opts.ConnectionString) && !string.IsNullOrEmpty(opts.ConnectionName))
             {
                 Console.Write($"Testing {opts.ConnectionName} connection ...");
                 Console.SetCursorPosition(0, Console.CursorTop);
@@ -29,7 +29,7 @@ namespace az_lazy.Commands.Connection
 
                 try
                 {
-                    isConnected = await AzureStorageManager.TestConnection(opts.ConnectionName, opts.AccessKey).ConfigureAwait(false);
+                    isConnected = await AzureStorageManager.TestConnection(opts.ConnectionString).ConfigureAwait(false);
                 }
                 catch(ConnectionException connectionException)
                 {
@@ -47,7 +47,7 @@ namespace az_lazy.Commands.Connection
                 Console.Write($"Storing {opts.ConnectionName} connection ...");
                 Console.SetCursorPosition(0, Console.CursorTop);
 
-                LocalStorageManager.AddConnection(opts.ConnectionName, opts.AccessKey);
+                LocalStorageManager.AddConnection(opts.ConnectionName, opts.ConnectionString);
 
                 Console.WriteLine($"Storing {opts.ConnectionName} connection ... Succeeded!");
 
