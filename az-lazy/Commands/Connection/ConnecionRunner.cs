@@ -38,6 +38,7 @@ namespace az_lazy.Commands
                 if(isSuccessfull)
                 {
                     ConsoleHelper.WriteLineSuccessWaiting(removeMessage);
+                    ConsoleHelper.WriteLineNormal($"Finished removing connection {opts.RemoveConnection}");
                 }
                 else
                 {
@@ -58,6 +59,7 @@ namespace az_lazy.Commands
                 if(isSuccessfull)
                 {
                     ConsoleHelper.WriteLineSuccessWaiting(selectMessage);
+                    ConsoleHelper.WriteLineNormal($"Connection {opts.RemoveConnection} is ready to use!");
                 }
                 else
                 {

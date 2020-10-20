@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using az_lazy.Helpers;
 using az_lazy.Manager;
 
 namespace az_lazy.Commands.Queue
@@ -28,12 +29,12 @@ namespace az_lazy.Commands.Queue
                 {
                     foreach(var queue in queueList)
                     {
-                        Console.WriteLine(queue.Name);
+                        ConsoleHelper.WriteLineNormal(queue.Name);
                     }
                 }
                 else
                 {
-                    Console.WriteLine("No queues found");
+                    ConsoleHelper.WriteLineError("No queues found")
                 }
             }
 

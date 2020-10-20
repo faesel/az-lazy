@@ -56,7 +56,7 @@ namespace az_lazy.Commands.Connection
                 LocalStorageManager.AddConnection(opts.ConnectionName, opts.ConnectionString);
 
                 ConsoleHelper.WriteLineSuccessWaiting(storingMessage);
-                ConsoleHelper.WriteLineEnd($"Finished adding connection {opts.ConnectionName}");
+                ConsoleHelper.WriteLineNormal($"Finished adding connection {opts.ConnectionName}");
             }
 
             return true;

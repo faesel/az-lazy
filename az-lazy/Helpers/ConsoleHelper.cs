@@ -10,7 +10,7 @@ namespace az_lazy.Helpers
         private static readonly Color FailedColour = Color.IndianRed;
         private static readonly Color SuccessColour = Color.LightGreen;
 
-        public static void WriteLineEnd(string information)
+        public static void WriteLineNormal(string information)
         {
             Console.WriteLine(information);
         }
