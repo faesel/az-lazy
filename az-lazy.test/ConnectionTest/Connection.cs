@@ -9,6 +9,9 @@ namespace az_lazy.test.ConnectionTest
     [Trait("Connection", "Integration test for connections")]
     public class Connection
     {
+        private const string DevStorageName = "devStorage";
+        private const string DevStorageConnectionString = "UseDevelopmentStorage=true";
+
         private readonly LocalStorageFixture LocalStorageFixture;
 
         public Connection(LocalStorageFixture localStorageFixture)
@@ -21,20 +24,20 @@ namespace az_lazy.test.ConnectionTest
         {
             var connectionList = LocalStorageFixture.LocalStorageManager.GetConnections();
 
-            Assert.Contains(connectionList, x => x.ConnectionName.Equals("devStorage") &&
-                    x.ConnectionString.Equals("UseDevelopmentStorage=true"));
+            Assert.Contains(connectionList, x => x.ConnectionName.Equals(DevStorageName) &&
+                    x.ConnectionString.Equals(DevStorageConnectionString));
         }
 
         [Fact(DisplayName = "Cannot remove development storage")]
         public async Task CannotRemoveDevelopmentStorage()
         {
-            var result = await LocalStorageFixture.ConnectionRunner.Run(new ConnectionOptions { RemoveConnection = "devStorage" });
+            var result = await LocalStorageFixture.ConnectionRunner.Run(new ConnectionOptions { RemoveConnection = DevStorageName });
 
             var connectionList = LocalStorageFixture.LocalStorageManager.GetConnections();
 
             Assert.False(result);
-            Assert.Contains(connectionList, x => x.ConnectionName.Equals("devStorage") &&
-                    x.ConnectionString.Equals("UseDevelopmentStorage=true"));
+            Assert.Contains(connectionList, x => x.ConnectionName.Equals(DevStorageName) &&
+                    x.ConnectionString.Equals(DevStorageConnectionString));
         }
 
         [AutoData]
