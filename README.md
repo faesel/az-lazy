@@ -48,3 +48,6 @@ https://docs.microsoft.com/en-us/rest/api/storageservices/queue-service-rest-api
 
 
 https://docs.microsoft.com/en-us/rest/api/storageservices/authorize-with-shared-key
+
+Color scheme
+https://www.color-hex.com/color-palette/99463
