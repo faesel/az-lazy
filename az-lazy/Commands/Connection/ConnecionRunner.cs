@@ -26,14 +26,26 @@ namespace az_lazy.Commands
 
             if (!string.IsNullOrEmpty(opts.RemoveConnection))
             {
-                LocalStorageManager.RemoveConnection(opts.RemoveConnection);
-                Console.WriteLine($"{opts.RemoveConnection} Connection removed");
+                var isSuccessfull = LocalStorageManager.RemoveConnection(opts.RemoveConnection);
+
+                var message = isSuccessfull ? $"{opts.RemoveConnection} Connection removed" :
+                    $"{opts.RemoveConnection} Connection not found!";
+
+                Console.WriteLine(message);
+
+                return isSuccessfull;
             }
 
             if (!string.IsNullOrEmpty(opts.SelectConnection))
             {
-                LocalStorageManager.SelectConnection(opts.SelectConnection);
-                Console.WriteLine($"{opts.SelectConnection} Connection selected");
+                var isSuccessfull = LocalStorageManager.SelectConnection(opts.SelectConnection);
+
+                var message = isSuccessfull ? $"{opts.SelectConnection} Connection selected" :
+                    $"{opts.SelectConnection} Connection not found!";
+
+                Console.WriteLine(message);
+
+                return isSuccessfull;
             }
 
             return true;
