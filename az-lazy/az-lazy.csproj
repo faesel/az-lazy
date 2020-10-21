@@ -7,7 +7,7 @@
     <ToolCommandName>azlazy</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <Version>1.0.0</Version>
-    
+
     <Id>azlazy</Id>
     <Authors>Faesel Saeed</Authors>
     <Owners>Faesel Saeed</Owners>
@@ -16,7 +16,7 @@
     <Copyright>Copyright 2020 Faesel Saeed</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-    <PackageIconUrl>https://github.com/faesel/az-lazy/tree/main/az-lazy/icon.png</PackageIconUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/faesel/az-lazy/main/az-lazy/icon.png</PackageIconUrl>
     <PackageTags>azure storage queues blob table connection</PackageTags>
     <RepositoryUrl>https://github.com/faesel/az-lazy.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
