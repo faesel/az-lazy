@@ -3,22 +3,23 @@ Azure CLI tool for managing everything in azure storage
 
 # Contents
 
-1. Managing Connections
-2. Managing Queues
+1. Getting started
+2. Command list
+3. Contributing
 
-# Managing Connections
+# 1. Getting started
 
 Use the following command to add a new connection
 
-`addconnection --name "dinosaurStorage" --accessKey "<<azure access key>>"`
+`azlazy addconnection --name "dinosaurStorage" --accessKey "<<azure access key>>"`
 
 Select the connection you want to use
 
-`connection --select "dinosaurStorage"`
+`azlazy connection --select "dinosaurStorage"`
 
 You can check which connection is selected the the list command, by default you will always have **devStorage** which allows you to connect to a local azure emulator
 
-`connection --list`
+`azlazy connection --list`
 
 Output:
 
@@ -28,26 +29,38 @@ animalStorage - Added on 19/10/2020
 devStorage - Added on 19/10/2020
 ```
 
-To remove a connection use the remove command,
+Once a connection has been added you can begin using all the other commands, eg
 
-`connection --remove "dinosaurStorage"`
+`azlazy queue --list`
 
-# Managing queues
+Output:
 
-Once a valid connection has been added you can  mamage queues, begin by viewing a list what queues are available.
+```
+importantqueue1
+importantqueue2
+importantqueue3
+```
 
-`queue --list`
+# 2. Command List
 
-# Dev Links
+To view a list of commands through the CLI you can use `azlazy --help`
 
-Console colors
-https://www.c-sharpcorner.com/article/change-console-foreground-and-background-color-in-c-sharp/
+## Connection commands
 
-Queue rest client
-https://docs.microsoft.com/en-us/rest/api/storageservices/queue-service-rest-api
+| Command   |      Description      |
+|----------|:-------------:|
+| azlazy addconnection --name "name of connection" --connectionstring "connection string" |  Adds a new connection to the connection list. You can also select the connection with `--select true` |
+| azlazy connection --help | Display a list of commends you can use for connections   |
+| azlazy connection --list | Show a list of connections available, the selected connection will highlighted with a `[*]` symbol |
+| azlazy connection --remove "name of connection" | Removes a connection from the connections list |
+| azlazy connection --select "name of connection" | Selects a connection from the connections list |
 
+## Queue commands
 
-https://docs.microsoft.com/en-us/rest/api/storageservices/authorize-with-shared-key
+| Command   |      Description      |
+|----------|:-------------:|
+| azlazy queue --list |  View a list of queues in the storage account |
 
-Color scheme
-https://www.color-hex.com/color-palette/99463
+# 3. Contributing
+
+I havent writen any contributing guidelines hey
