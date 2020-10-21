@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using az_lazy.Exceptions;
+using az_lazy.Helpers;
 using az_lazy.Manager;
 
 namespace az_lazy.Commands.Connection
@@ -22,36 +23,40 @@ namespace az_lazy.Commands.Connection
         {
             if (!string.IsNullOrEmpty(opts.ConnectionString) && !string.IsNullOrEmpty(opts.ConnectionName))
             {
-                Console.Write($"Testing {opts.ConnectionName} connection ...");
-                Console.SetCursorPosition(0, Console.CursorTop);
+                var testingMessage = $"Testing {opts.ConnectionName} connection";
 
-                var isConnected = false;
+                ConsoleHelper.WriteInfoWaiting(testingMessage, true);
+
+                var errorMessage = string.Empty;
+                bool isConnected;
 
                 try
                 {
                     isConnected = await AzureStorageManager.TestConnection(opts.ConnectionString).ConfigureAwait(false);
                 }
-                catch(ConnectionException connectionException)
+                catch (ConnectionException connectionException)
                 {
-                    Console.WriteLine(connectionException.Message);
+                    errorMessage = connectionException.Message;
+                    isConnected = false;
                 }
 
-                if(!isConnected)
+                if (!isConnected)
                 {
-                    Console.WriteLine($"Testing {opts.ConnectionName} connection ... Failed!");
+                    ConsoleHelper.WriteLineFailedWaiting(testingMessage);
+                    ConsoleHelper.WriteLineError(errorMessage);
+
                     return false;
                 }
 
-                Console.WriteLine($"Testing {opts.ConnectionName} connection ... Succeeded!");
+                ConsoleHelper.WriteLineSuccessWaiting(testingMessage);
 
-                Console.Write($"Storing {opts.ConnectionName} connection ...");
-                Console.SetCursorPosition(0, Console.CursorTop);
+                var storingMessage = $"Storing {opts.ConnectionName} connection";
+                ConsoleHelper.WriteInfoWaiting(storingMessage, true);
 
                 LocalStorageManager.AddConnection(opts.ConnectionName, opts.ConnectionString);
 
-                Console.WriteLine($"Storing {opts.ConnectionName} connection ... Succeeded!");
-
-                Console.WriteLine($"Finished adding connection {opts.ConnectionName}");
+                ConsoleHelper.WriteLineSuccessWaiting(storingMessage);
+                ConsoleHelper.WriteLineNormal($"Finished adding connection {opts.ConnectionName}");
             }
 
             return true;
