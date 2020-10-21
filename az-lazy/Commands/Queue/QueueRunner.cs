@@ -34,7 +34,7 @@ namespace az_lazy.Commands.Queue
                 }
                 else
                 {
-                    ConsoleHelper.WriteLineError("No queues found")
+                    ConsoleHelper.WriteLineError("No queues found");
                 }
             }
 
