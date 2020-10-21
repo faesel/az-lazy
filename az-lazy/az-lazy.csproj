@@ -7,6 +7,22 @@
     <ToolCommandName>azlazy</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <Version>1.0.0</Version>
+    
+    <Id>azlazy</Id>
+    <Authors>Faesel Saeed</Authors>
+    <Owners>Faesel Saeed</Owners>
+    <Title>Azure CLI tool for managing everything in azure storage</Title>
+    <Description>AzLazy is a dotnet tool help facilitate developers who are working with azure storage, it can speed up tasks with view queues, peeking messages, dealing with poison queues etc.</Description>
+    <Copyright>Copyright 2020 Faesel Saeed</Copyright>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageIconUrl>https://github.com/faesel/az-lazy/tree/main/az-lazy/icon.png</PackageIconUrl>
+    <PackageTags>azure storage queues blob table connection</PackageTags>
+    <RepositoryUrl>https://github.com/faesel/az-lazy.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryBranch>main</RepositoryBranch>
+    <PackageProjectUrl>https://github.com/faesel/az-lazy</PackageProjectUrl>
+
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
@@ -19,5 +35,7 @@
     <PackageReference Include="Azure.Storage.Blobs" Version="12.6.0" />
     <PackageReference Include="Pastel" Version="1.3.2" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
+
+    <None Include="LICENSE.txt" Pack="true" PackagePath="$(PackageLicenseFile)"/>
   </ItemGroup>
 </Project>
