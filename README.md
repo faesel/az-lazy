@@ -61,6 +61,8 @@ To view a list of commands through the CLI you can use `azlazy --help`
 |----------|:-------------:|
 | azlazy queue --list |  View a list of queues in the storage account |
 
+More comming soon !
+
 # 3. Contributing
 
-I havent writen any contributing guidelines hey
+I havent writen any contributing guidelines yet but you can reach me [here](https://www.faesel.com/contact) 
