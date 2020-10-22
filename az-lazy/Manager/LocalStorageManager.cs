@@ -9,7 +9,7 @@ namespace az_lazy.Manager
     public interface ILocalStorageManager
     {
         void AddConnection(string connectionName, string connectionString);
-        void AddDevelopmentConnection(ILiteCollection<Connection> connectionCollection);
+        void AddDevelopmentConnection();
         bool SelectConnection(string connectionName);
         bool RemoveConnection(string connectionName);
         List<Connection> GetConnections();
@@ -28,31 +28,27 @@ namespace az_lazy.Manager
             using var db = new LiteDatabase(ConnectionCollection);
             var collection = db.GetCollection<Connection>(nameof(ModelNames.Connection));
             var connection = new Connection(connectionName, connectionString);
-                
-            if(collection.Count() == 0)
-            {
-                AddDevelopmentConnection(collection);
-            }
 
             collection.Insert(connection);
             collection.EnsureIndex(x => x.ConnectionName);
             collection.EnsureIndex(x => x.IsSelected);
         }
 
-        public void AddDevelopmentConnection(ILiteCollection<Connection> connectionCollection)
+        public void AddDevelopmentConnection()
         {
             var developmentStorage = new Connection(DevConnectionName, DevConnectionString);
             developmentStorage.SetDevelopmentStorage();
 
-            if (connectionCollection == null)
+            using var db = new LiteDatabase(ConnectionCollection);
+            var collection = db.GetCollection<Connection>(nameof(ModelNames.Connection));
+
+            var hasDevelopmentStorage = collection.Query()
+                .Where(x => x.IsDevelopmentStorage)
+                .Count() > 0;
+
+            if(!hasDevelopmentStorage)
             {
-                using var db = new LiteDatabase(ConnectionCollection);
-                connectionCollection = db.GetCollection<Connection>(nameof(ModelNames.Connection));
-                connectionCollection.Insert(developmentStorage);
-            }
-            else 
-            {
-                connectionCollection.Insert(developmentStorage);
+                collection.Insert(developmentStorage);
             }
         }
 
@@ -79,7 +75,7 @@ namespace az_lazy.Manager
             var collection = db.GetCollection<Connection>(nameof(ModelNames.Connection));
 
             var connectionToSelect = collection.FindOne(x => x.ConnectionName.Equals(connectionName, StringComparison.InvariantCultureIgnoreCase));
-           
+
             if (connectionToSelect != null)
             {
                 var selectedConnection = collection.FindOne(x => x.IsSelected);

@@ -27,7 +27,7 @@ namespace az_lazy.test
 
             //Add development connection to connect to azure storage emulator
             LocalStorageManager = ServiceProvider.GetService<ILocalStorageManager>();
-            LocalStorageManager.AddDevelopmentConnection(null);
+            LocalStorageManager.AddDevelopmentConnection();
 
             AddConnectionRunner = ServiceProvider.GetService<IConnectionRunner<AddConnectionOptions>>();
             ConnectionRunner = ServiceProvider.GetService<IConnectionRunner<ConnectionOptions>>();
