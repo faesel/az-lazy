@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using az_lazy.Startup;
 using System;
+using az_lazy.Manager;
 
 namespace az_lazy
 {
@@ -9,13 +10,16 @@ namespace az_lazy
     {
         private static async Task Main(string[] args)
         {
-             var serviceProvider = new ServiceCollection()
-                .AddProjectDependencies()
-                .BuildServiceProvider();
+            var serviceProvider = new ServiceCollection()
+               .AddProjectDependencies()
+               .BuildServiceProvider();
 
-             var azRunner = serviceProvider.GetService<IAzRunner>();
+            //Ensure there is always a development connection available
+            var localStorageManager = serviceProvider.GetService<ILocalStorageManager>();
+            localStorageManager.AddDevelopmentConnection();
 
-             await azRunner.Startup(args).ConfigureAwait(false);
+            var azRunner = serviceProvider.GetService<IAzRunner>();
+            await azRunner.Startup(args).ConfigureAwait(false);
         }
     }
 }
