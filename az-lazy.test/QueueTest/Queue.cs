@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using az_lazy.Commands.Queue;
 using Xunit;
@@ -17,10 +18,11 @@ namespace az_lazy.test.QueueTest
             this.LocalStorageFixture = localStorageFixture;
         }
 
-        [AutoData]
-        [Theory(DisplayName = "Can create new queue successfully")]
-        public async Task CanCreateNewQueueSuccesfully(string queueName)
+        [Fact(DisplayName = "Can create new queue successfully")]
+        public async Task CanCreateNewQueueSuccessfully()
         {
+            const string queueName = "addedqueue";
+
             var result = await LocalStorageFixture.AddQueueRunner.Run(new AddQueueOptions { Name = queueName }).ConfigureAwait(false);
             var queueList = await LocalStorageFixture.AzureStorageManager.GetQueues(DevStorageConnectionString).ConfigureAwait(false);
 
