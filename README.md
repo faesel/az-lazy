@@ -6,6 +6,7 @@ Azure CLI tool for managing everything in azure storage
 1. Getting started
 2. Command list
 3. Contributing
+4. Changelog
 
 # 1. Getting started
 
@@ -67,3 +68,7 @@ More comming soon !
 # 3. Contributing
 
 I havent writen any contributing guidelines yet but you can reach me [here](https://www.faesel.com/contact) 
+
+# 4. Changelog
+
+23/10/2020 - Added command to create a new queue
