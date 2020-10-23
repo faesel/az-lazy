@@ -18,6 +18,8 @@ namespace az_lazy.test
         //Runners
         public IConnectionRunner<ConnectionOptions> ConnectionRunner;
         public IConnectionRunner<AddConnectionOptions> AddConnectionRunner;
+        public IConnectionRunner<AddQueueOptions> AddQueueRunner;
+        
 
         public LocalStorageFixture()
         {
@@ -31,6 +33,7 @@ namespace az_lazy.test
 
             AddConnectionRunner = ServiceProvider.GetService<IConnectionRunner<AddConnectionOptions>>();
             ConnectionRunner = ServiceProvider.GetService<IConnectionRunner<ConnectionOptions>>();
+            AddQueueRunner = ServiceProvider.GetService<IConnectionRunner<AddQueueOptions>>();
         }
     }
 }
