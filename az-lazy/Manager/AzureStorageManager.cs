@@ -1,10 +1,14 @@
+using System.Net;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using az_lazy.Exceptions;
+using Azure.Storage.Queues;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Queue;
+using Azure;
+using Azure.Storage.Queues.Models;
 
 namespace az_lazy.Manager
 {
@@ -12,6 +16,7 @@ namespace az_lazy.Manager
     {
         Task<bool> TestConnection(string connectionString);
         Task<List<CloudQueue>> GetQueues(string connectionString);
+        Task<bool> CreateQueue(string connectionString, string queueName);
     }
 
     public class AzureStorageManager : IAzureStorageManager
@@ -47,6 +52,22 @@ namespace az_lazy.Manager
             while (token != null);
 
             return cloudQueueList;
+        }
+
+        public async Task<bool> CreateQueue(string connectionString, string queueName)
+        {
+            try
+            {
+                // Try to create a queue that already exists
+                QueueClient queue = new QueueClient(connectionString, queueName);
+                await queue.CreateAsync().ConfigureAwait(false);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new QueueException(ex);
+            }
         }
     }
 }

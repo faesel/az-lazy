@@ -16,6 +16,7 @@ namespace az_lazy.Startup
             serviceCollection.AddSingleton<IConnectionRunner<ConnectionOptions>, ConnectionRunner>();
             serviceCollection.AddSingleton<IConnectionRunner<AddConnectionOptions>, AddConnectionRunner>();
             serviceCollection.AddSingleton<IConnectionRunner<QueueOptions>, QueueRunner>();
+            serviceCollection.AddSingleton<IConnectionRunner<AddQueueOptions>, AddQueueRunner>();
 
             //Managers
             serviceCollection.AddSingleton<ILocalStorageManager, LocalStorageManager>();

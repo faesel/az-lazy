@@ -59,6 +59,7 @@ To view a list of commands through the CLI you can use `azlazy --help`
 
 | Command   |      Description      |
 |----------|:-------------:|
+| azlazy addqueue --name |  Creates a new queue with the given name |
 | azlazy queue --list |  View a list of queues in the storage account |
 
 More comming soon !
