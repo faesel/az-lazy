@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using AutoFixture.Xunit2;
 using az_lazy.Commands.Queue;
 using Xunit;
 
@@ -8,6 +9,7 @@ namespace az_lazy.test.QueueTest
     [Trait("Queue", "Integration test for queues")]
     public class Queue
     {
+        private const string DevStorageConnectionString = "UseDevelopmentStorage=true";
         private readonly LocalStorageFixture LocalStorageFixture;
 
         public Queue(LocalStorageFixture localStorageFixture)
@@ -15,16 +17,15 @@ namespace az_lazy.test.QueueTest
             this.LocalStorageFixture = localStorageFixture;
         }
 
-        [Fact(DisplayName = "Can create new queue successfully")]
-        public async Task CanCreateNewQueueSuccesfully()
+        [AutoData]
+        [Theory(DisplayName = "Can create new queue successfully")]
+        public async Task CanCreateNewQueueSuccesfully(string queueName)
         {
-            var result = await LocalStorageFixture.AddQueueRunner.Run(new AddQueueOptions { Name = "AddedQueue" });
+            var result = await LocalStorageFixture.AddQueueRunner.Run(new AddQueueOptions { Name = queueName }).ConfigureAwait(false);
+            var queueList = await LocalStorageFixture.AzureStorageManager.GetQueues(DevStorageConnectionString).ConfigureAwait(false);
 
-            var connectionList = LocalStorageFixture.LocalStorageManager.GetConnections();
-
-            Assert.False(result);
-            Assert.Contains(connectionList, x => x.ConnectionName.Equals(DevStorageName) &&
-                    x.ConnectionString.Equals(DevStorageConnectionString));
+            Assert.True(result);
+            Assert.Contains(queueList, x => x.Name.Equals(queueName));
         }
     }
 }

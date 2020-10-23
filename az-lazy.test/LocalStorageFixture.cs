@@ -14,12 +14,13 @@ namespace az_lazy.test
     {
         private ServiceProvider ServiceProvider;
         public ILocalStorageManager LocalStorageManager;
+        public IAzureStorageManager AzureStorageManager;
 
         //Runners
         public IConnectionRunner<ConnectionOptions> ConnectionRunner;
         public IConnectionRunner<AddConnectionOptions> AddConnectionRunner;
         public IConnectionRunner<AddQueueOptions> AddQueueRunner;
-        
+
 
         public LocalStorageFixture()
         {
@@ -30,6 +31,8 @@ namespace az_lazy.test
             //Add development connection to connect to azure storage emulator
             LocalStorageManager = ServiceProvider.GetService<ILocalStorageManager>();
             LocalStorageManager.AddDevelopmentConnection();
+
+            AzureStorageManager = ServiceProvider.GetService<IAzureStorageManager>();
 
             AddConnectionRunner = ServiceProvider.GetService<IConnectionRunner<AddConnectionOptions>>();
             ConnectionRunner = ServiceProvider.GetService<IConnectionRunner<ConnectionOptions>>();

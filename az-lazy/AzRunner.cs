@@ -17,26 +17,30 @@ namespace az_lazy
         private readonly IConnectionRunner<ConnectionOptions> ConnectionRunner;
         private readonly IConnectionRunner<AddConnectionOptions> AddConnectionRunner;
         private readonly IConnectionRunner<QueueOptions> QueueRunner;
+        private readonly IConnectionRunner<AddQueueOptions> AddQueueRunner;
 
         public AzRunner(
             IConnectionRunner<ConnectionOptions> connectionRunner,
             IConnectionRunner<AddConnectionOptions> addConnectionRunner,
-            IConnectionRunner<QueueOptions> queueRunner)
+            IConnectionRunner<QueueOptions> queueRunner,
+            IConnectionRunner<AddQueueOptions> addQueueRunner)
         {
             this.ConnectionRunner = connectionRunner;
             this.AddConnectionRunner = addConnectionRunner;
             this.QueueRunner = queueRunner;
+            this.AddQueueRunner = addQueueRunner;
         }
 
         public async Task Startup(string[] args)
         {
-            var parsedResult = Parser.Default.ParseArguments<ConnectionOptions, AddConnectionOptions, QueueOptions>(args);
+            var parsedResult = Parser.Default.ParseArguments<ConnectionOptions, AddConnectionOptions, QueueOptions, AddQueueOptions>(args);
 
             var result = await parsedResult
                     .MapResult(
                         (AddConnectionOptions opts) => AddConnectionRunner.Run(opts),
                         (ConnectionOptions opts) => ConnectionRunner.Run(opts),
                         (QueueOptions opts) => QueueRunner.Run(opts),
+                        (AddQueueOptions opts) => AddQueueRunner.Run(opts),
                     errs => DisplayHelp(parsedResult, errs))
                 .ConfigureAwait(false);
 

@@ -10,13 +10,21 @@ namespace az_lazy.Commands.Queue
         private readonly ILocalStorageManager LocalStorageManager;
         private readonly IAzureStorageManager AzureStorageManager;
 
+        public AddQueueRunner(
+            ILocalStorageManager localStorageManager,
+            IAzureStorageManager azureStorageManager)
+        {
+            this.LocalStorageManager = localStorageManager;
+            this.AzureStorageManager = azureStorageManager;
+        }
+
         public async Task<bool> Run(AddQueueOptions options)
         {
             if(!string.IsNullOrEmpty(options.Name))
             {
                 var message = $"Creating new queue {options.Name}";
 
-                ConsoleHelper.WriteInfoWaiting(message);
+                ConsoleHelper.WriteInfoWaiting(message, true);
 
                 var connection = LocalStorageManager.GetSelectedConnection();
 

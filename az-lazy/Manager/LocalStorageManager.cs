@@ -37,6 +37,7 @@ namespace az_lazy.Manager
         public void AddDevelopmentConnection()
         {
             var developmentStorage = new Connection(DevConnectionName, DevConnectionString);
+            developmentStorage.SetSelected();
             developmentStorage.SetDevelopmentStorage();
 
             using var db = new LiteDatabase(ConnectionCollection);
