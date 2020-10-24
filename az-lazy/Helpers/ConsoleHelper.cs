@@ -64,5 +64,10 @@ namespace az_lazy.Helpers
         {
             Console.WriteLine($"{information.Pastel(InformationColour)} ... {"Failed".Pastel(FailedColour)}");
         }
+
+        public static void WriteSepparator()
+        {
+            Console.WriteLine("------------------------------------------------------------");
+        }
     }
 }
