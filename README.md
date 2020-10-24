@@ -72,3 +72,4 @@ I havent writen any contributing guidelines yet but you can reach me [here](http
 # 4. Changelog
 
 23/10/2020 - Added command to create a new queue
+24/10/2020 - Added message counts to queue list, and coloured poison queues in red
