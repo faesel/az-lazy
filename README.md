@@ -37,9 +37,9 @@ Once a connection has been added you can begin using all the other commands, eg
 Output:
 
 ```
-importantqueue1
-importantqueue2
-importantqueue3
+importantqueue1 (1)
+importantqueue2 (0)
+importantqueue3 (100)
 ```
 
 # 2. Command List
@@ -61,7 +61,7 @@ To view a list of commands through the CLI you can use `azlazy --help`
 | Command   |      Description      |
 |----------|:-------------:|
 | azlazy addqueue --name |  Creates a new queue with the given name |
-| azlazy queue --list |  View a list of queues in the storage account |
+| azlazy queue --list |  View a list of queues in the storage account along with the number of messages they are holding, poison queues are highlighted in red |
 
 More comming soon !
 
