@@ -72,6 +72,6 @@ I havent writen any contributing guidelines yet but you can reach me [here](http
 
 # 4. Changelog
 
-23/10/2020 - Added command to create a new queue
-24/10/2020 - Added message counts to queue list, and coloured poison queues in red
-25/10/2020 - Added command to remove a queue
+- 23/10/2020 v1.0.0 Added command to create a new queue
+- 24/10/2020 v1.0.1 Added message counts to queue list, and coloured poison queues in red
+- 25/10/2020 v1.0.2 Added command to remove a queue
