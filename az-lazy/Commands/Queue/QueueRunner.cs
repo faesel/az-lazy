@@ -83,6 +83,8 @@ namespace az_lazy.Commands.Queue
                 }
             }
 
+            if(!string.IsNullOrEmpty(opts.Cure))
+
             return false;
         }
     }
