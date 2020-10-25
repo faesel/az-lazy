@@ -51,6 +51,8 @@ namespace az_lazy.Commands.Queue
                             ConsoleHelper.WriteLineNormal(queueInformation);
                         }
                     }
+
+                    return true;
                 }
                 else
                 {
@@ -59,7 +61,29 @@ namespace az_lazy.Commands.Queue
                 }
             }
 
-            return true;
+            if(!string.IsNullOrEmpty(opts.RemoveQueue))
+            {
+                string message = $"Removing queue {opts.RemoveQueue}";
+                ConsoleHelper.WriteInfoWaiting(message, true);
+
+                try
+                {
+                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                    await AzureStorageManager.RemoveQueue(selectedConnection.ConnectionString, opts.RemoveQueue).ConfigureAwait(false);
+
+                    ConsoleHelper.WriteLineSuccessWaiting(message);
+                    ConsoleHelper.WriteLineNormal($"Finished removing queue {opts.RemoveQueue}");
+
+                    return true;
+                }
+                catch(Exception ex)
+                {
+                    ConsoleHelper.WriteLineFailedWaiting(message);
+                    ConsoleHelper.WriteLineError(ex.Message);
+                }
+            }
+
+            return false;
         }
     }
 }
