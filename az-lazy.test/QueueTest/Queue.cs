@@ -29,5 +29,22 @@ namespace az_lazy.test.QueueTest
             Assert.True(result);
             Assert.Contains(queueList, x => x.Name.Equals(queueName));
         }
+
+        [Fact(DisplayName = "Can remove queue successfully")]
+        public async Task CanRemoveQueueSuccessfully()
+        {
+            const string queueName = "removequeue";
+
+            await LocalStorageFixture.AddQueueRunner.Run(new AddQueueOptions { Name = queueName }).ConfigureAwait(false);
+            var queueList = await LocalStorageFixture.AzureStorageManager.GetQueues(DevStorageConnectionString).ConfigureAwait(false);
+
+            Assert.Contains(queueList, x => x.Name.Equals(queueName));
+
+            var removeQueueResult = await LocalStorageFixture.QueueRunner.Run(new QueueOptions { RemoveQueue = queueName }).ConfigureAwait(false);
+            queueList = await LocalStorageFixture.AzureStorageManager.GetQueues(DevStorageConnectionString).ConfigureAwait(false);
+
+            Assert.True(removeQueueResult);
+            Assert.DoesNotContain(queueList, x => x.Name.Equals(queueName));
+        }
     }
 }

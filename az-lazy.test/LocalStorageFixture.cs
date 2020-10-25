@@ -4,15 +4,12 @@ using az_lazy.Commands.Queue;
 using az_lazy.Manager;
 using az_lazy.Startup;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace az_lazy.test
 {
     public class LocalStorageFixture
     {
-        private ServiceProvider ServiceProvider;
+        private readonly ServiceProvider ServiceProvider;
         public ILocalStorageManager LocalStorageManager;
         public IAzureStorageManager AzureStorageManager;
 
@@ -20,7 +17,7 @@ namespace az_lazy.test
         public IConnectionRunner<ConnectionOptions> ConnectionRunner;
         public IConnectionRunner<AddConnectionOptions> AddConnectionRunner;
         public IConnectionRunner<AddQueueOptions> AddQueueRunner;
-
+        public IConnectionRunner<QueueOptions> QueueRunner;
 
         public LocalStorageFixture()
         {
@@ -37,6 +34,7 @@ namespace az_lazy.test
             AddConnectionRunner = ServiceProvider.GetService<IConnectionRunner<AddConnectionOptions>>();
             ConnectionRunner = ServiceProvider.GetService<IConnectionRunner<ConnectionOptions>>();
             AddQueueRunner = ServiceProvider.GetService<IConnectionRunner<AddQueueOptions>>();
+            QueueRunner = ServiceProvider.GetService<IConnectionRunner<QueueOptions>>();
         }
     }
 }
