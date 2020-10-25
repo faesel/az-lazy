@@ -60,8 +60,9 @@ To view a list of commands through the CLI you can use `azlazy --help`
 
 | Command   |      Description      |
 |----------|:-------------:|
-| azlazy addqueue --name |  Creates a new queue with the given name |
+| azlazy addqueue --name "queue to add" |  Creates a new queue with the given name |
 | azlazy queue --list |  View a list of queues in the storage account along with the number of messages they are holding, poison queues are highlighted in red |
+| azlazy queue --remove "queue to remove" | Removes the queue with the given name |
 
 More comming soon !
 
@@ -73,3 +74,4 @@ I havent writen any contributing guidelines yet but you can reach me [here](http
 
 23/10/2020 - Added command to create a new queue
 24/10/2020 - Added message counts to queue list, and coloured poison queues in red
+25/10/2020 - Added command to remove a queue
