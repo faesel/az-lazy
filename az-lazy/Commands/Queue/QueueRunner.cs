@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using az_lazy.Exceptions;
 using az_lazy.Helpers;
 using az_lazy.Manager;
 
@@ -83,7 +84,27 @@ namespace az_lazy.Commands.Queue
                 }
             }
 
-            if(!string.IsNullOrEmpty(opts.Cure))
+            if(!string.IsNullOrEmpty(opts.CureQueue))
+            {
+                string message = $"Clearing poison queue {opts.RemoveQueue}-poison ...";
+                ConsoleHelper.WriteLineInfo(message);
+
+                try
+                {
+                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                    await AzureStorageManager.MovePoisonQueues(selectedConnection.ConnectionString, opts.CureQueue).ConfigureAwait(false);
+
+                    ConsoleHelper.WriteLineSuccessWaiting(message);
+                    ConsoleHelper.WriteLineNormal("Finished moving poison queue messages");
+
+                    return true;
+                }
+                catch(QueueException ex)
+                {
+                    ConsoleHelper.WriteLineFailedWaiting(message);
+                    ConsoleHelper.WriteLineError(ex.Message);
+                }
+            }
 
             return false;
         }

@@ -35,6 +35,16 @@ namespace az_lazy.Helpers
             }
         }
 
+        public static void WriteInfoWaitingPct(string information, int pct, bool resetPosition = false)
+        {
+            Console.Write($"{information.Pastel(InformationColour)} ... %{pct}");
+
+            if(resetPosition)
+            {
+                Console.SetCursorPosition(0, Console.CursorTop);
+            }
+        }
+
         public static void WriteLineAdditionalInfo(string information, string additionalInformation)
         {
             Console.WriteLine($"{information} - {additionalInformation.Pastel(InformationColour)}");

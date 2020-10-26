@@ -46,5 +46,33 @@ namespace az_lazy.test.QueueTest
             Assert.True(removeQueueResult);
             Assert.DoesNotContain(queueList, x => x.Name.Equals(queueName));
         }
+
+        [Fact(DisplayName = "Can move posion queues back to main queue")]
+        public async Task CanMovePoisonQueuesToMainQueue()
+        {
+            const string normalQueueName = "posionmovetest";
+
+            await LocalStorageFixture.AzureStorageManager.CreateQueue(DevStorageConnectionString, normalQueueName);
+            await LocalStorageFixture.AzureStorageManager.ClearQueue(DevStorageConnectionString, normalQueueName);
+
+            const string poisonQueueName = "posionmovetest-poison";
+
+            await LocalStorageFixture.AzureStorageManager.CreateQueue(DevStorageConnectionString, poisonQueueName);
+            await LocalStorageFixture.AzureStorageManager.ClearQueue(DevStorageConnectionString, poisonQueueName);
+            await LocalStorageFixture.AzureStorageManager.AddMessage(DevStorageConnectionString, poisonQueueName, "{ 'poison': true }");
+
+            await LocalStorageFixture.QueueRunner.Run(new QueueOptions { CureQueue = normalQueueName }).ConfigureAwait(false);
+
+            var queueList = await LocalStorageFixture.AzureStorageManager.GetQueues(DevStorageConnectionString).ConfigureAwait(false);
+
+            var normalQueue = queueList.Find(x => x.Name.Equals(normalQueueName));
+            var poisonQueue = queueList.Find(x => x.Name.Equals(poisonQueueName));
+
+            await normalQueue.FetchAttributesAsync();
+            await poisonQueue.FetchAttributesAsync();
+
+            Assert.Equal(1, normalQueue.ApproximateMessageCount);
+            Assert.Equal(0, poisonQueue.ApproximateMessageCount);
+        }
     }
 }
