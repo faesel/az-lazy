@@ -168,7 +168,7 @@ namespace az_lazy.Manager
                 }
                 while(poisonMessages.Length > 0);
 
-                ConsoleHelper.WriteSuccessWaiting(message);
+                ConsoleHelper.WriteLineSuccessWaiting(message);
 
                 return true;
             }

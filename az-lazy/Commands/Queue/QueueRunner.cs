@@ -94,7 +94,6 @@ namespace az_lazy.Commands.Queue
                     var selectedConnection = LocalStorageManager.GetSelectedConnection();
                     await AzureStorageManager.MovePoisonQueues(selectedConnection.ConnectionString, opts.CureQueue).ConfigureAwait(false);
 
-                    ConsoleHelper.WriteLineSuccessWaiting(message);
                     ConsoleHelper.WriteLineNormal("Finished moving poison queue messages");
 
                     return true;

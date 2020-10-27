@@ -66,6 +66,8 @@ namespace az_lazy.test.ConnectionTest
 
             Assert.True(result);
             Assert.Equal(fakeConnectionForSelection, selectedConnection.ConnectionName);
+
+            await LocalStorageFixture.ConnectionRunner.Run(new ConnectionOptions { SelectConnection = DevStorageName });
         }
 
         [AutoData]
