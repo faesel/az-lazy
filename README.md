@@ -71,7 +71,7 @@ More coming soon !
 
 # 4. Contributing <a name="contributing"></a>
 
-I haven't written any contributing guidelines yet but you can reach me [here](https://www.faesel.com/contact) 
+I haven't written any contributing guidelines yet but you can reach me [here](https://www.faesel.com/contact), [Development Notes](other_file.md) are also available.
 
 # 5. Change Log <a name="changelog"></a>
 
