@@ -1,56 +1,50 @@
 # Az-Lazy
 Azure CLI tool for managing everything in azure storage
 
-# Installation
+# Contents
 
-[Nuget Gallery](https://www.nuget.org/packages/az-lazy/)
+# Table of Contents
+1. [Installation](#installation)
+2. [Getting started](#gettingstarted)
+3. Command list
+4. Contributing
+5. Change Log
+
+# 1. Installation <a name="installation"></a>
+
+You can download the tool from the [Nuget Gallery](https://www.nuget.org/packages/az-lazy/), run the following installation command,
 
 `dotnet tool install --global az-lazy`
 
-# Contents
-
-1. Getting started
-2. Command list
-3. Contributing
-4. Changelog
-
-# 1. Getting started
+# 2. Getting started <a name="gettingstarted"></a>
 
 Use the following command to add a new connection
 
-`azlazy addconnection --name "dinosaurStorage" --accessKey "<<azure access key>>"`
+`azlazy addconnection --name "dinosaurStorage" --connectionString "<<azure access key>>"`
+
+![](documentation/images/addconnection.png)
 
 Select the connection you want to use
 
 `azlazy connection --select "dinosaurStorage"`
 
+![](documentation/images/selectconnection.png)
+
 You can check which connection is selected the the list command, by default you will always have **devStorage** which allows you to connect to a local azure emulator
 
 `azlazy connection --list`
 
-Output:
-
-```
-dinosaurStorage [*] - Added on 19/10/2020
-animalStorage - Added on 19/10/2020
-devStorage - Added on 19/10/2020
-```
+![](/documentation/images/listconnection.png)
 
 Once a connection has been added you can begin using all the other commands, eg
 
 `azlazy queue --list`
 
-Output:
+![](/documentation/images/listqueues.png)
 
-```
-importantqueue1 (1)
-importantqueue2 (0)
-importantqueue3 (100)
-```
+# 3. Command List
 
-# 2. Command List
-
-To view a list of commands through the CLI you can use `azlazy --help`
+To view a list of commands through the CLI you can use `azlazy --help`, each command has an alias beginning with the first letter of the command, eg `azlazy connection --list` can be aliased to `azlazy connection -l`.
 
 ## Connection commands
 
@@ -71,13 +65,13 @@ To view a list of commands through the CLI you can use `azlazy --help`
 | azlazy queue --remove "queue to remove" | Removes the queue with the given name |
 | azlazy queue --cure "queue to move poison messages to" | Moves moves poison queue messages from the queues poison queue back into the processing queue |
 
-More comming soon !
+More coming soon !
 
-# 3. Contributing
+# 4. Contributing
 
-I havent writen any contributing guidelines yet but you can reach me [here](https://www.faesel.com/contact) 
+I haven't written any contributing guidelines yet but you can reach me [here](https://www.faesel.com/contact) 
 
-# 4. Change Log
+# 5. Change Log
 
 | Date   |      Version      |      Description      |
 |----------|:-------------|:-------------|
