@@ -10,5 +10,8 @@ namespace az_lazy.Commands.Connection
 
         [Option('n', "name", Required = true, HelpText = "Name for the storage account being added")]
         public string ConnectionName { get; set; }
+
+        [Option('s', "select", Required = false, HelpText = "Select connection when adding it to the list")]
+        public bool Select { get; set; }
     }
 }
