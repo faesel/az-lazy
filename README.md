@@ -1,4 +1,4 @@
-# Az-Lazy
+![](az-lazy/icon.png)
 
 AzLazy CLI tool is designed for developers, it provides a command line interface to quickly manage and make changes to azure storage queues, blobs and tables.
 
