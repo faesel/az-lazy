@@ -66,7 +66,7 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 | azlazy queue --remove "queue to remove" | Removes the queue with the given name |
 | azlazy queue --cure "queue to move poison messages to" | Moves moves poison queue messages from the queues poison queue back into the processing queue |
 | azlazy queue --clear "queue to clear" | Removes all messages in the queue |
-| azlazy queue --addQueue "queue to add a new message" --addMessage "{ 'test': true }" | Removes all messages in the queue |
+| azlazy queue --addQueue "queue to add a new message" --addMessage '{ \"test\": true }' | Adds a new message to the queue |
 
 More coming soon !
 
@@ -83,3 +83,4 @@ I haven't written any contributing guidelines yet but you can reach me [here on 
 | 25/10/2020 | v1.0.2 | Added command to remove a queue |
 | 27/10/2020 | v1.0.3 | Added command to move poison queue messages back into the processing queue |
 | 27/10/2020 | v1.0.4 | Added command to clear queue, bug fix on messaging |
+| 27/10/2020 | v1.0.5 | Added command to add a new message to the queue |
