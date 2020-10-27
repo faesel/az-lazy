@@ -6,8 +6,8 @@ AzLazy CLI tool is designed for developers, it provides a command line interface
 1. [Installation](#installation)
 2. [Getting started](#gettingstarted)
 3. [Command list](#commandlist)
-3.1. [Connection Commands](#connectioncommand)
-3.2. [Queue Commands](#queuecommand)
+    1. [Connection Commands](#connectioncommand)
+    2. [Queue Commands](#queuecommand)
 4. [Contributing](#contributing)
 5. [Change Log](#changelog)
 
@@ -47,7 +47,7 @@ Once a connection has been added you can begin using all the other commands, eg
 
 To view a list of commands through the CLI you can use `azlazy --help`, each command has an alias beginning with the first letter of the command, eg `azlazy connection --list` can be aliased to `azlazy connection -l`.
 
-## 3.1 Connection commands <a name="connectioncommand"></a>
+## 1 Connection commands <a name="connectioncommand"></a>
 
 | Command   |      Description      |
 |----------|:-------------:|
@@ -57,7 +57,7 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 | azlazy connection --remove "name of connection" | Removes a connection from the connections list |
 | azlazy connection --select "name of connection" | Selects a connection from the connections list |
 
-## 3.2 Queue commands <a name="queuecommand"></a>
+## 2 Queue commands <a name="queuecommand"></a>
 
 | Command   |      Description      |
 |----------|:-------------:|
