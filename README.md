@@ -1,6 +1,12 @@
 # Az-Lazy
 Azure CLI tool for managing everything in azure storage
 
+# Installation
+
+[Nuget Gallery](https://www.nuget.org/packages/az-lazy/)
+
+`dotnet tool install --global az-lazy`
+
 # Contents
 
 1. Getting started
