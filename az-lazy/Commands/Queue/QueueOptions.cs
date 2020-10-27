@@ -10,5 +10,8 @@ namespace az_lazy.Commands.Queue
 
         [Option('r', "remove", Required = false, HelpText = "Queue name to remove")]
         public string RemoveQueue { get; set; }
+
+        [Option('c', "cure", Required = false, HelpText = "Move poison queue messages back into main queue")]
+        public string CureQueue { get; set; }
     }
 }
