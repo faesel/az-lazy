@@ -47,7 +47,7 @@ Once a connection has been added you can begin using all the other commands, eg
 
 To view a list of commands through the CLI you can use `azlazy --help`, each command has an alias beginning with the first letter of the command, eg `azlazy connection --list` can be aliased to `azlazy connection -l`.
 
-## 1 Connection commands <a name="connectioncommand"></a>
+## i. Connection commands <a name="connectioncommand"></a>
 
 | Command   |      Description      |
 |----------|:-------------:|
@@ -57,7 +57,7 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 | azlazy connection --remove "name of connection" | Removes a connection from the connections list |
 | azlazy connection --select "name of connection" | Selects a connection from the connections list |
 
-## 2 Queue commands <a name="queuecommand"></a>
+## ii. Queue commands <a name="queuecommand"></a>
 
 | Command   |      Description      |
 |----------|:-------------:|
