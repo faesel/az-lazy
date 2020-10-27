@@ -6,8 +6,8 @@ AzLazy CLI tool is designed for developers, it provides a command line interface
 1. [Installation](#installation)
 2. [Getting started](#gettingstarted)
 3. [Command list](#commandlist)
-    3.1. [Connection Commands](#connectioncommand)
-    3.2. [Queue Commands](#queuecommand)
+⋅⋅3.1. [Connection Commands](#connectioncommand)
+⋅⋅3.2. [Queue Commands](#queuecommand)
 4. [Contributing](#contributing)
 5. [Change Log](#changelog)
 
