@@ -7,7 +7,7 @@ namespace az_lazy.Exceptions
         {
         }
 
-        public QueueException(Exception ex) : base($"Failed to create queue {ex.Message}")
+        public QueueException(Exception ex) : base($"Failed queue operation {ex.Message}")
         {
         }
 
