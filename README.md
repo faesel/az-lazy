@@ -80,4 +80,5 @@ I haven't written any contributing guidelines yet but you can reach me [here](ht
 | 23/10/2020 | v1.0.0 | Added command to create a new queue |
 | 24/10/2020 | v1.0.1 | Added message counts to queue list, and coloured poison queues in red |
 | 25/10/2020 | v1.0.2 | Added command to remove a queue |
-| 27/10/2020 | v1.0.3 | Added command to move poison queue messages back into the processing queue, and clear out queue |
+| 27/10/2020 | v1.0.3 | Added command to move poison queue messages back into the processing queue |
+| 27/10/2020 | v1.0.4 | Added command to clear queue, bug fix on messaging |
