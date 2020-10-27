@@ -91,5 +91,21 @@ namespace az_lazy.test.QueueTest
 
             Assert.Equal(0, clearedQueue.ApproximateMessageCount);
         }
+
+        [Fact(DisplayName = "Can add a new message to queue")]
+        public async Task CanSuccessfullyAddMessage()
+        {
+            const string queueName = "addmessages";
+
+            await LocalStorageFixture.AzureStorageManager.CreateQueue(DevStorageConnectionString, queueName).ConfigureAwait(false);
+            await LocalStorageFixture.AzureStorageManager.ClearQueue(DevStorageConnectionString, queueName).ConfigureAwait(false);
+            await LocalStorageFixture.QueueRunner.Run(new QueueOptions { AddQueue = queueName, AddMessage = "{}" }).ConfigureAwait(false);
+
+            var queueList = await LocalStorageFixture.AzureStorageManager.GetQueues(DevStorageConnectionString).ConfigureAwait(false);
+            var clearedQueue = queueList.Find(x => x.Name.Equals(queueName));
+            await clearedQueue.FetchAttributesAsync().ConfigureAwait(false);
+
+            Assert.Equal(1, clearedQueue.ApproximateMessageCount);
+        }
     }
 }
