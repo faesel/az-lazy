@@ -8,7 +8,7 @@ namespace az_lazy.Manager
 {
     public interface ILocalStorageManager
     {
-        void AddConnection(string connectionName, string connectionString);
+        void AddConnection(string connectionName, string connectionString, bool selectConnection = false);
         void AddDevelopmentConnection();
         bool SelectConnection(string connectionName);
         bool RemoveConnection(string connectionName);
@@ -23,7 +23,7 @@ namespace az_lazy.Manager
 
         private readonly string ConnectionCollection = @$"{Environment.CurrentDirectory}\connections.db";
 
-        public void AddConnection(string connectionName, string connectionString)
+        public void AddConnection(string connectionName, string connectionString, bool selectConnection = false)
         {
             using var db = new LiteDatabase(ConnectionCollection);
             var collection = db.GetCollection<Connection>(nameof(ModelNames.Connection));
@@ -32,6 +32,11 @@ namespace az_lazy.Manager
             collection.Insert(connection);
             collection.EnsureIndex(x => x.ConnectionName);
             collection.EnsureIndex(x => x.IsSelected);
+
+            if(selectConnection)
+            {
+                SelectConnection(connectionName);
+            }
         }
 
         public void AddDevelopmentConnection()
