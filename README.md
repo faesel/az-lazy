@@ -59,12 +59,13 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 
 ## ii. Queue commands <a name="queuecommand"></a>
 
-| Command   |      Description      |
+| Command | Description |
 |----------|:-------------:|
 | azlazy addqueue --name "queue to add" |  Creates a new queue with the given name |
 | azlazy queue --list |  View a list of queues in the storage account along with the number of messages they are holding, poison queues are highlighted in red |
 | azlazy queue --remove "queue to remove" | Removes the queue with the given name |
 | azlazy queue --cure "queue to move poison messages to" | Moves moves poison queue messages from the queues poison queue back into the processing queue |
+| azlazy queue --clear "queue to clear" | Removes all messages in the queue |
 
 More coming soon !
 
@@ -79,4 +80,4 @@ I haven't written any contributing guidelines yet but you can reach me [here](ht
 | 23/10/2020 | v1.0.0 | Added command to create a new queue |
 | 24/10/2020 | v1.0.1 | Added message counts to queue list, and coloured poison queues in red |
 | 25/10/2020 | v1.0.2 | Added command to remove a queue |
-| 27/10/2020 | v1.0.3 | Added command to move poison queue messages back into the processing queue |
+| 27/10/2020 | v1.0.3 | Added command to move poison queue messages back into the processing queue, and clear out queue |

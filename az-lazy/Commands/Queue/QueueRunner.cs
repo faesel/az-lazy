@@ -86,7 +86,7 @@ namespace az_lazy.Commands.Queue
 
             if(!string.IsNullOrEmpty(opts.CureQueue))
             {
-                string message = $"Clearing poison queue {opts.RemoveQueue}-poison ...";
+                string message = $"Clearing poison queue {opts.CureQueue}-poison ...";
                 ConsoleHelper.WriteLineInfo(message);
 
                 try
@@ -99,6 +99,28 @@ namespace az_lazy.Commands.Queue
                     return true;
                 }
                 catch(QueueException ex)
+                {
+                    ConsoleHelper.WriteLineFailedWaiting(message);
+                    ConsoleHelper.WriteLineError(ex.Message);
+                }
+            }
+
+            if(!string.IsNullOrEmpty(opts.ClearQueue))
+            {
+                string message = $"Clearing queue {opts.ClearQueue}";
+                ConsoleHelper.WriteInfoWaiting(message, true);
+
+                try
+                {
+                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                    await AzureStorageManager.ClearQueue(selectedConnection.ConnectionString, opts.ClearQueue).ConfigureAwait(false);
+
+                    ConsoleHelper.WriteLineSuccessWaiting(message);
+                    ConsoleHelper.WriteLineNormal($"Finished clearing queue {opts.ClearQueue}");
+
+                    return true;
+                }
+                catch(Exception ex)
                 {
                     ConsoleHelper.WriteLineFailedWaiting(message);
                     ConsoleHelper.WriteLineError(ex.Message);
