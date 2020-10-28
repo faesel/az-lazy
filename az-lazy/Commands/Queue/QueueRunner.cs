@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using az_lazy.Exceptions;
 using az_lazy.Helpers;
 using az_lazy.Manager;
 
@@ -98,7 +97,7 @@ namespace az_lazy.Commands.Queue
 
                     return true;
                 }
-                catch(QueueException ex)
+                catch(Exception ex)
                 {
                     ConsoleHelper.WriteLineFailedWaiting(message);
                     ConsoleHelper.WriteLineError(ex.Message);
@@ -117,6 +116,28 @@ namespace az_lazy.Commands.Queue
 
                     ConsoleHelper.WriteLineSuccessWaiting(message);
                     ConsoleHelper.WriteLineNormal($"Finished clearing queue {opts.ClearQueue}");
+
+                    return true;
+                }
+                catch(Exception ex)
+                {
+                    ConsoleHelper.WriteLineFailedWaiting(message);
+                    ConsoleHelper.WriteLineError(ex.Message);
+                }
+            }
+
+            if(!string.IsNullOrEmpty(opts.AddQueue) || !string.IsNullOrEmpty(opts.AddMessage))
+            {
+                string message = $"Adding message to queue {opts.AddQueue}";
+                ConsoleHelper.WriteInfoWaiting(message, true);
+
+                try
+                {
+                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                    await AzureStorageManager.AddMessage(selectedConnection.ConnectionString, opts.AddQueue, opts.AddMessage).ConfigureAwait(false);
+
+                    ConsoleHelper.WriteLineSuccessWaiting(message);
+                    ConsoleHelper.WriteLineNormal($"Finished adding message to queue {opts.AddQueue}");
 
                     return true;
                 }

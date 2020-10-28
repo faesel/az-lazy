@@ -16,5 +16,11 @@ namespace az_lazy.Commands.Queue
 
         [Option("clear", Required = false, HelpText = "Remove all messages from the queue")]
         public string ClearQueue { get; set; }
+
+        [Option("addQueue", Required = false, HelpText = "Queue to add new message")]
+        public string AddQueue { get; set; }
+
+        [Option("addMessage", Required = false, HelpText = "Message to send")]
+        public string AddMessage { get; set; }
     }
 }
