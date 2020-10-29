@@ -148,6 +148,26 @@ namespace az_lazy.Commands.Queue
                 }
             }
 
+            if(!string.IsNullOrEmpty(opts.Watch))
+            {
+                ConsoleHelper.WriteInfoWaiting($"Starting to watch {opts.Watch}", true);
+
+                try
+                {
+                    ConsoleHelper.WriteLineSuccessWaiting($"Watching queue {opts.Watch}");
+
+                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                    await AzureStorageManager.WatchQueue(selectedConnection.ConnectionString, opts.Watch).ConfigureAwait(false);
+
+                    return true;
+                }
+                catch(Exception ex)
+                {
+                    ConsoleHelper.WriteLineFailedWaiting($"Failed to watch queue {opts.Watch}");
+                    ConsoleHelper.WriteLineError(ex.Message);
+                }
+            }
+
             return false;
         }
     }

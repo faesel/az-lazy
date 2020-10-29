@@ -1,3 +1,4 @@
+using System.Linq;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -20,6 +21,7 @@ namespace az_lazy.Manager
         Task<bool> ClearQueue(string connectionString, string queueName);
         Task<bool> MovePoisonQueues(string connectionString, string queueName);
         Task<bool> AddMessage(string connectionString, string queueName, string message);
+        Task WatchQueue(string connectionString, string watch);
     }
 
     public class AzureStorageManager : IAzureStorageManager
@@ -32,7 +34,7 @@ namespace az_lazy.Manager
 
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new ConnectionException(ex);
             }
@@ -82,7 +84,7 @@ namespace az_lazy.Manager
 
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new QueueException(ex);
             }
@@ -122,7 +124,7 @@ namespace az_lazy.Manager
         {
             try
             {
-                if(queueName.Contains("poison"))
+                if (queueName.Contains("poison"))
                 {
                     throw new QueueException("Enter the queue name rather than the poison queue name to move all the messages");
                 }
@@ -133,7 +135,7 @@ namespace az_lazy.Manager
                 var queueExists = await queueClient.ExistsAsync().ConfigureAwait(false);
                 var poisonQueueExists = await poisonQueueClient.ExistsAsync().ConfigureAwait(false);
 
-                if(!queueExists || !poisonQueueExists)
+                if (!queueExists || !poisonQueueExists)
                 {
                     throw new QueueException("Either the queue or its related poison queue do not exist");
                 }
@@ -152,7 +154,7 @@ namespace az_lazy.Manager
                 {
                     poisonMessages = await poisonQueueClient.ReceiveMessagesAsync(maxMessages: 32).ConfigureAwait(false);
 
-                    foreach(var poisonMessage in poisonMessages)
+                    foreach (var poisonMessage in poisonMessages)
                     {
                         await queueClient.SendMessageAsync(poisonMessage.MessageText).ConfigureAwait(false);
                         await poisonQueueClient.DeleteMessageAsync(poisonMessage.MessageId, poisonMessage.PopReceipt).ConfigureAwait(false);
@@ -161,18 +163,48 @@ namespace az_lazy.Manager
                     processed += poisonMessages.Length;
 
                     if (poisonMessages.Length > 0)
-                    { 
+                    {
                         ConsoleHelper.WriteInfoWaitingPct(message, processed / poisonQueueCount * 100, true);
                     }
 
                 }
-                while(poisonMessages.Length > 0);
+                while (poisonMessages.Length > 0);
 
                 ConsoleHelper.WriteLineSuccessWaiting(message);
 
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
+            {
+                throw new QueueException(ex);
+            }
+        }
+
+        public async Task WatchQueue(string connectionString, string watch)
+        {
+            try
+            {
+                var queueClient = new QueueClient(connectionString, watch);
+                var queueCount = 0;
+
+                while (true)
+                {
+                    var queueProperties = await queueClient.GetPropertiesAsync().ConfigureAwait(false);
+                    if (queueCount != queueProperties.Value.ApproximateMessagesCount)
+                    {
+                        var infomessage = queueCount == 0 ?
+                            $"{queueProperties.Value.ApproximateMessagesCount} already in queue, waiting for more ..." :
+                            $"Queue message added - {queueProperties.Value.ApproximateMessagesCount} in queue - {DateTime.UtcNow:MM/dd/yyyy HH:mm:ss}";
+
+                        ConsoleHelper.WriteLineNormal(infomessage);
+
+                        queueCount = queueProperties.Value.ApproximateMessagesCount;
+                    }
+
+                    Thread.Sleep(1000);
+                }
+            }
+            catch (Exception ex)
             {
                 throw new QueueException(ex);
             }
