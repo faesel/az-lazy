@@ -86,3 +86,4 @@ I haven't written any contributing guidelines yet but you can reach me [here on 
 | 27/10/2020 | v1.0.4 | Added command to clear queue, bug fix on messaging |
 | 27/10/2020 | v1.0.5 | Added command to add a new message to the queue |
 | 29/10/2020 | v1.0.6 | Added command to watch a queue message |
+| 29/10/2020 | v1.0.7 | Bug Fix, resolved problem of package storing data in current directory rather than using the package directory |

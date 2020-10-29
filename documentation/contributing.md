@@ -11,6 +11,12 @@
 
 cd to the .exe /az-lazy.exe connection --list
 
+To install and run the project you can do the following:
+
+1. `dotnet pack` the az-lazy project
+2. cd into the `nupkg` folder
+3. Run the following command `dotnet tool install --global --add-source ./ az-lazy`
+
 # 2. Running unit tests <a name="runningtests"></a>
 
 Unit tests are designed to run against the azure storage emulator, run them with 
@@ -24,3 +30,4 @@ https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azurite?toc=/a
 
 1. Make tests run through docker with azurite
 2. Add CI process with github
+

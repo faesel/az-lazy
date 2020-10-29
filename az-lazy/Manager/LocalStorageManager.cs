@@ -1,8 +1,10 @@
+using System.IO;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using az_lazy.Model;
 using LiteDB;
+using System.Reflection;
 
 namespace az_lazy.Manager
 {
@@ -20,8 +22,7 @@ namespace az_lazy.Manager
     {
         private const string DevConnectionName = "devStorage";
         private const string DevConnectionString = "UseDevelopmentStorage=true";
-
-        private readonly string ConnectionCollection = @$"{Environment.CurrentDirectory}\connections.db";
+        private readonly string ConnectionCollection = @$"{Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)}\connections.db";
 
         public void AddConnection(string connectionName, string connectionString, bool selectConnection = false)
         {
