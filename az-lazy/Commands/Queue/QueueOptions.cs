@@ -23,7 +23,7 @@ namespace az_lazy.Commands.Queue
         [Option("addMessage", Required = false, HelpText = "Message to send")]
         public string AddMessage { get; set; }
 
-        [Option("watch", Required = false, HelpText = "Queue name to begin watching for new messages")]
+        [Option('w', "watch", Required = false, HelpText = "Queue name to begin watching for new messages")]
         public string Watch { get; set; }
     }
 }
