@@ -64,7 +64,7 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 | `azlazy addqueue --name "queue to add"` |  Creates a new queue with the given name |
 | `azlazy queue --list` |  View a list of queues in the storage account along with the number of messages they are holding, poison queues are highlighted in red |
 | `azlazy queue --remove "queue to remove"` | Removes the queue with the given name |
-| `azlazy queue --cure "queue to move poison messages to"` | Moves moves poison queue messages from the queues poison queue back into the processing queue |
+| `azlazy queue --cure "queue to move poison messages to"` | Moves poison queue messages back into the processing queue |
 | `azlazy queue --clear "queue to clear"` | Removes all messages in the queue |
 | `azlazy queue --addQueue "queue to add a new message" --addMessage '{ \"test\": true }'` | Adds a new message to the queue |
 | `azlazy queue --watch "queue to watch"` | Watches a queue for new messages |
