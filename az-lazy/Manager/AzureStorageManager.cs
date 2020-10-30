@@ -22,6 +22,7 @@ namespace az_lazy.Manager
         Task<bool> MovePoisonQueues(string connectionString, string queueName);
         Task<bool> AddMessage(string connectionString, string queueName, string message);
         Task WatchQueue(string connectionString, string watch);
+        Task<PeekedMessage[]> PeekMessages(string connectionString, string queueToView, int viewCount);
     }
 
     public class AzureStorageManager : IAzureStorageManager
@@ -203,6 +204,31 @@ namespace az_lazy.Manager
 
                     Thread.Sleep(1000);
                 }
+            }
+            catch (Exception ex)
+            {
+                throw new QueueException(ex);
+            }
+        }
+
+        public async Task<PeekedMessage[]> PeekMessages(string connectionString, string queueToView, int viewCount)
+        {
+            try
+            {
+                var queueClient = new QueueClient(connectionString, queueToView);
+                var queueExists = await queueClient.ExistsAsync().ConfigureAwait(false);
+
+                if (!queueExists)
+                {
+                    throw new QueueException("Either the queue or its related poison queue do not exist");
+                }
+
+                viewCount = viewCount == 0 ? 1 : viewCount;
+                viewCount = viewCount > 32 ? 32 : viewCount;
+
+                var messages = await queueClient.PeekMessagesAsync(maxMessages: viewCount).ConfigureAwait(false);
+
+                return messages.Value;
             }
             catch (Exception ex)
             {

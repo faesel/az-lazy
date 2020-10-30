@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using az_lazy.Helpers;
 using az_lazy.Manager;
+using ConsoleTables;
 
 namespace az_lazy.Commands.Queue
 {
@@ -20,7 +22,7 @@ namespace az_lazy.Commands.Queue
 
         public async Task<bool> Run(QueueOptions opts)
         {
-            if(opts.List)
+            if (opts.List)
             {
                 const string message = "Fetching queues";
 
@@ -29,12 +31,12 @@ namespace az_lazy.Commands.Queue
                 var selectedConnection = LocalStorageManager.GetSelectedConnection();
                 var queueList = await AzureStorageManager.GetQueues(selectedConnection.ConnectionString).ConfigureAwait(false);
 
-                if(queueList.Count > 0)
+                if (queueList.Count > 0)
                 {
                     ConsoleHelper.WriteLineSuccessWaiting(message);
                     ConsoleHelper.WriteSepparator();
 
-                    foreach(var queue in queueList)
+                    foreach (var queue in queueList)
                     {
                         await queue.FetchAttributesAsync().ConfigureAwait(false);
 
@@ -42,7 +44,7 @@ namespace az_lazy.Commands.Queue
                         var isPoisonQueue = queue.Name.EndsWith("poison");
                         var queueInformation = $"{queue.Name} ({queueCount})";
 
-                        if(isPoisonQueue)
+                        if (isPoisonQueue)
                         {
                             ConsoleHelper.WriteLineError(queueInformation);
                         }
@@ -61,7 +63,7 @@ namespace az_lazy.Commands.Queue
                 }
             }
 
-            if(!string.IsNullOrEmpty(opts.RemoveQueue))
+            if (!string.IsNullOrEmpty(opts.RemoveQueue))
             {
                 string message = $"Removing queue {opts.RemoveQueue}";
                 ConsoleHelper.WriteInfoWaiting(message, true);
@@ -76,14 +78,14 @@ namespace az_lazy.Commands.Queue
 
                     return true;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     ConsoleHelper.WriteLineFailedWaiting(message);
                     ConsoleHelper.WriteLineError(ex.Message);
                 }
             }
 
-            if(!string.IsNullOrEmpty(opts.CureQueue))
+            if (!string.IsNullOrEmpty(opts.CureQueue))
             {
                 string message = $"Clearing poison queue {opts.CureQueue}-poison ...";
                 ConsoleHelper.WriteLineInfo(message);
@@ -97,14 +99,14 @@ namespace az_lazy.Commands.Queue
 
                     return true;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     ConsoleHelper.WriteLineFailedWaiting(message);
                     ConsoleHelper.WriteLineError(ex.Message);
                 }
             }
 
-            if(!string.IsNullOrEmpty(opts.ClearQueue))
+            if (!string.IsNullOrEmpty(opts.ClearQueue))
             {
                 string message = $"Clearing queue {opts.ClearQueue}";
                 ConsoleHelper.WriteInfoWaiting(message, true);
@@ -119,14 +121,14 @@ namespace az_lazy.Commands.Queue
 
                     return true;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     ConsoleHelper.WriteLineFailedWaiting(message);
                     ConsoleHelper.WriteLineError(ex.Message);
                 }
             }
 
-            if(!string.IsNullOrEmpty(opts.AddQueue) || !string.IsNullOrEmpty(opts.AddMessage))
+            if (!string.IsNullOrEmpty(opts.AddQueue) || !string.IsNullOrEmpty(opts.AddMessage))
             {
                 string message = $"Adding message to queue {opts.AddQueue}";
                 ConsoleHelper.WriteInfoWaiting(message, true);
@@ -141,14 +143,14 @@ namespace az_lazy.Commands.Queue
 
                     return true;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     ConsoleHelper.WriteLineFailedWaiting(message);
                     ConsoleHelper.WriteLineError(ex.Message);
                 }
             }
 
-            if(!string.IsNullOrEmpty(opts.Watch))
+            if (!string.IsNullOrEmpty(opts.Watch))
             {
                 ConsoleHelper.WriteInfoWaiting($"Starting to watch {opts.Watch}", true);
 
@@ -161,7 +163,38 @@ namespace az_lazy.Commands.Queue
 
                     return true;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
+                {
+                    ConsoleHelper.WriteLineFailedWaiting($"Failed to watch queue {opts.Watch}");
+                    ConsoleHelper.WriteLineError(ex.Message);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(opts.Peek))
+            {
+                var infoMessage = $"Peeking queue {opts.Peek}";
+                ConsoleHelper.WriteInfoWaiting(infoMessage, true);
+
+                try
+                {
+                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                    var peekedMessages = await AzureStorageManager.PeekMessages(selectedConnection.ConnectionString, opts.Peek, opts.PeekCount).ConfigureAwait(false);
+
+                    ConsoleHelper.WriteLineSuccessWaiting(infoMessage);
+
+                    var table = new ConsoleTable("Number", "Message Id", "Message", "Inserted On");
+
+                    foreach (var message in peekedMessages.Select((value, index) => new { value, index }))
+                    {
+                        table.AddRow(message.index + 1, message.value.MessageId, message.value.MessageText, message.value.InsertedOn);
+                    }
+
+                    table.Write();
+                    Console.WriteLine();
+
+                    return true;
+                }
+                catch (Exception ex)
                 {
                     ConsoleHelper.WriteLineFailedWaiting($"Failed to watch queue {opts.Watch}");
                     ConsoleHelper.WriteLineError(ex.Message);

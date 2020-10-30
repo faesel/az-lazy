@@ -25,5 +25,12 @@ namespace az_lazy.Commands.Queue
 
         [Option('w', "watch", Required = false, HelpText = "Queue name to begin watching for new messages")]
         public string Watch { get; set; }
+
+        [Option('p', "peek", Required = false, HelpText = "Queue name to begin peeking messages from")]
+        public string Peek { get; set; }
+
+        [Option("peekCount", Required = false, HelpText = "The number of messages to peek from the queue")]
+        public int PeekCount { get; set; }
+
     }
 }
