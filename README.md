@@ -68,6 +68,7 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 | `azlazy queue --clear "queue to clear"` | Removes all messages in the queue |
 | `azlazy queue --addQueue "queue to add a new message" --addMessage '{ \"test\": true }'` | Adds a new message to the queue |
 | `azlazy queue --watch "queue to watch"` | Watches a queue for new messages |
+| `azlazy queue --peek "queue to peek messages"` | Views messages in the queue, note this function peeks messages so visibility is not changed for consuming applications. `--peekCount 10` can also be used to specify how many messages you want to view. The Maximum peek count available is 32.  |
  
 More coming soon !
 
@@ -87,3 +88,4 @@ I haven't written any contributing guidelines yet but you can reach me [here on 
 | 27/10/2020 | v1.0.5 | Added command to add a new message to the queue |
 | 29/10/2020 | v1.0.6 | Added command to watch a queue message |
 | 29/10/2020 | v1.0.7 | Bug Fix, resolved problem of package storing data in current directory rather than using the package directory |
+| 30/10/2020 | v1.0.8 | Added command to peek for messages in a queue |
