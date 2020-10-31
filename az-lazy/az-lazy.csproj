@@ -6,7 +6,7 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>azlazy</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
-    <Version>1.0.8</Version>
+    <Version>1.0.9</Version>
     <Id>azlazy</Id>
     <Authors>Faesel Saeed</Authors>
     <Owners>Faesel Saeed</Owners>
@@ -21,6 +21,7 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryBranch>main</RepositoryBranch>
     <PackageProjectUrl>https://github.com/faesel/az-lazy</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.8.0"/>
@@ -35,5 +36,6 @@
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.3"/>
     <PackageReference Include="ConsoleTables" Version="2.4.2"/>
     <None Include="LICENSE.txt" Pack="true" PackagePath="$(PackageLicenseFile)"/>
+    <None Include="icon.png" Pack="true" PackagePath="\"/>
   </ItemGroup>
 </Project>

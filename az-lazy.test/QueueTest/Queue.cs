@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using az_lazy.Commands.Queue;
@@ -92,20 +93,21 @@ namespace az_lazy.test.QueueTest
             Assert.Equal(0, clearedQueue.ApproximateMessageCount);
         }
 
-        [Fact(DisplayName = "Can add a new message to queue")]
-        public async Task CanSuccessfullyAddMessage()
+        [Fact(DisplayName = "Can peek a new message to queue")]
+        public async Task CanSuccessfullyViewMessage()
         {
-            const string queueName = "addmessages";
+            const string queueName = "peekmessage";
+            const string messageText = @"{ ""test"" : true }";
 
             await LocalStorageFixture.AzureStorageManager.CreateQueue(DevStorageConnectionString, queueName).ConfigureAwait(false);
             await LocalStorageFixture.AzureStorageManager.ClearQueue(DevStorageConnectionString, queueName).ConfigureAwait(false);
-            await LocalStorageFixture.QueueRunner.Run(new QueueOptions { AddQueue = queueName, AddMessage = @"{ ""test"" : true }" }).ConfigureAwait(false);
+            await LocalStorageFixture.QueueRunner.Run(new QueueOptions { AddQueue = queueName, AddMessage = messageText }).ConfigureAwait(false);
 
-            var queueList = await LocalStorageFixture.AzureStorageManager.GetQueues(DevStorageConnectionString).ConfigureAwait(false);
-            var clearedQueue = queueList.Find(x => x.Name.Equals(queueName));
-            await clearedQueue.FetchAttributesAsync().ConfigureAwait(false);
+            var message = await LocalStorageFixture.AzureStorageManager.PeekMessages(DevStorageConnectionString, queueName, 1).ConfigureAwait(false);
 
-            Assert.Equal(1, clearedQueue.ApproximateMessageCount);
+            Assert.NotNull(message);
+            Assert.Single(message);
+            Assert.Equal(message[0].MessageText, messageText);
         }
     }
 }
