@@ -13,14 +13,14 @@ namespace az_lazy.Commands.Queue
             this.CommandExecutors = commandExecutors;
         }
 
-        public Task<bool> Run(QueueOptions opts)
+        public async Task<bool> Run(QueueOptions opts)
         {
             foreach(var executor in CommandExecutors)
             {
-                executor.Execute(opts);
+                await executor.Execute(opts).ConfigureAwait(false);
             }
 
-            return Task.FromResult(true);
+            return true;
         }
     }
 }

@@ -42,8 +42,6 @@ namespace az_lazy.test.QueueTest
 
             await LocalStorageFixture.QueueRunner.Run(new QueueOptions { RemoveQueue = queueName }).ConfigureAwait(false);
 
-            Thread.Sleep(1000);
-
             queueList = await LocalStorageFixture.AzureStorageManager.GetQueues(DevStorageConnectionString).ConfigureAwait(false);
 
             Assert.DoesNotContain(queueList, x => x.Name.Equals(queueName));
@@ -64,8 +62,6 @@ namespace az_lazy.test.QueueTest
             await LocalStorageFixture.AzureStorageManager.AddMessage(DevStorageConnectionString, poisonQueueName, @"{ ""poison"" : true }").ConfigureAwait(false);
 
             await LocalStorageFixture.QueueRunner.Run(new QueueOptions { CureQueue = normalQueueName }).ConfigureAwait(false);
-
-            Thread.Sleep(1000);
 
             var queueList = await LocalStorageFixture.AzureStorageManager.GetQueues(DevStorageConnectionString).ConfigureAwait(false);
 
