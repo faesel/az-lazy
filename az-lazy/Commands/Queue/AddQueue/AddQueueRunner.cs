@@ -3,7 +3,7 @@ using az_lazy.Exceptions;
 using az_lazy.Helpers;
 using az_lazy.Manager;
 
-namespace az_lazy.Commands.Queue
+namespace az_lazy.Commands.Queue.AddQueue
 {
     public class AddQueueRunner : IConnectionRunner<AddQueueOptions>
     {
