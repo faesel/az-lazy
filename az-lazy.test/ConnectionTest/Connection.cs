@@ -1,5 +1,6 @@
 ﻿using AutoFixture.Xunit2;
 using az_lazy.Commands;
+using az_lazy.Commands.Connection;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -31,11 +32,10 @@ namespace az_lazy.test.ConnectionTest
         [Fact(DisplayName = "Cannot remove development storage")]
         public async Task CannotRemoveDevelopmentStorage()
         {
-            var result = await LocalStorageFixture.ConnectionRunner.Run(new ConnectionOptions { RemoveConnection = DevStorageName }).ConfigureAwait(false);
+            await LocalStorageFixture.ConnectionRunner.Run(new ConnectionOptions { RemoveConnection = DevStorageName }).ConfigureAwait(false);
 
             var connectionList = LocalStorageFixture.LocalStorageManager.GetConnections();
 
-            Assert.False(result);
             Assert.Contains(connectionList, x => x.ConnectionName.Equals(DevStorageName) &&
                     x.ConnectionString.Equals(DevStorageConnectionString));
         }
@@ -46,11 +46,10 @@ namespace az_lazy.test.ConnectionTest
         {
             LocalStorageFixture.LocalStorageManager.AddConnection(fakeConnection, fakeConnectionString);
 
-            var result = await LocalStorageFixture.ConnectionRunner.Run(new ConnectionOptions { List = true }).ConfigureAwait(false);
+            await LocalStorageFixture.ConnectionRunner.Run(new ConnectionOptions { List = true }).ConfigureAwait(false);
 
             var connections = LocalStorageFixture.LocalStorageManager.GetConnections();
 
-            Assert.True(result);
             Assert.Contains(connections, x => x.ConnectionName.Equals(fakeConnection));
         }
 
@@ -60,11 +59,10 @@ namespace az_lazy.test.ConnectionTest
         {
             LocalStorageFixture.LocalStorageManager.AddConnection(fakeConnectionForSelection, fakeConnectionString);
 
-            var result = await LocalStorageFixture.ConnectionRunner.Run(new ConnectionOptions { SelectConnection = fakeConnectionForSelection }).ConfigureAwait(false);
+            await LocalStorageFixture.ConnectionRunner.Run(new ConnectionOptions { SelectConnection = fakeConnectionForSelection }).ConfigureAwait(false);
 
             var selectedConnection = LocalStorageFixture.LocalStorageManager.GetSelectedConnection();
 
-            Assert.True(result);
             Assert.Equal(fakeConnectionForSelection, selectedConnection.ConnectionName);
 
             await LocalStorageFixture.ConnectionRunner.Run(new ConnectionOptions { SelectConnection = DevStorageName }).ConfigureAwait(false);
@@ -76,11 +74,10 @@ namespace az_lazy.test.ConnectionTest
         {
             LocalStorageFixture.LocalStorageManager.AddConnection(fakeConnectionForSelection, fakeConnectionString);
 
-            var result = await LocalStorageFixture.ConnectionRunner.Run(new ConnectionOptions { SelectConnection = fakeConnectionForSelection + "wrong name" }).ConfigureAwait(false);
+            await LocalStorageFixture.ConnectionRunner.Run(new ConnectionOptions { SelectConnection = fakeConnectionForSelection + "wrong name" }).ConfigureAwait(false);
 
             var selectedConnection = LocalStorageFixture.LocalStorageManager.GetSelectedConnection();
 
-            Assert.False(result);
             Assert.NotEqual(fakeConnectionForSelection, selectedConnection.ConnectionName);
         }
     }

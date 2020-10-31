@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using az_lazy.Commands.AddQueue;
 using az_lazy.Commands.Queue;
 using Xunit;
 
