@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using az_lazy.Extensions;
 using az_lazy.Helpers;
 using az_lazy.Manager;
 using ConsoleTables;
@@ -186,7 +187,13 @@ namespace az_lazy.Commands.Queue
 
                     foreach (var message in peekedMessages.Select((value, index) => new { value, index }))
                     {
-                        table.AddRow(message.index + 1, message.value.MessageId, message.value.MessageText, message.value.InsertedOn);
+                        var rawMessageText = message.value.MessageText;
+                        var isBase64 = rawMessageText.IsBase64();
+                        var messageText = isBase64 ?
+                            System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(rawMessageText)) :
+                            rawMessageText;
+
+                        table.AddRow(message.index + 1, message.value.MessageId, messageText, message.value.InsertedOn);
                     }
 
                     table.Write();
