@@ -1,5 +1,4 @@
 ﻿using AutoFixture.Xunit2;
-using az_lazy.Commands;
 using az_lazy.Commands.Connection;
 using System.Threading.Tasks;
 using Xunit;

@@ -31,7 +31,14 @@ namespace az_lazy.Helpers
 
             if(resetPosition)
             {
-                Console.SetCursorPosition(0, Console.CursorTop);
+                try
+                {
+                    Console.SetCursorPosition(0, Console.CursorTop);
+                }
+                catch(Exception)
+                {
+                    //Suppress error, this is most likely happening because there is no console
+                }
             }
         }
 
@@ -41,7 +48,14 @@ namespace az_lazy.Helpers
 
             if(resetPosition)
             {
-                Console.SetCursorPosition(0, Console.CursorTop);
+                try
+                {
+                    Console.SetCursorPosition(0, Console.CursorTop);
+                }
+                catch(Exception)
+                {
+                    //Suppress error, this is most likely happening because there is no console
+                }
             }
         }
 
