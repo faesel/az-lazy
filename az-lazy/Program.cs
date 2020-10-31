@@ -6,7 +6,7 @@ using az_lazy.Manager;
 
 namespace az_lazy
 {
-    class Program
+    internal static class Program
     {
         private static async Task Main(string[] args)
         {

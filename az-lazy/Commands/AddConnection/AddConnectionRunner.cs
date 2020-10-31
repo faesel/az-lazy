@@ -4,7 +4,7 @@ using az_lazy.Exceptions;
 using az_lazy.Helpers;
 using az_lazy.Manager;
 
-namespace az_lazy.Commands.Connection
+namespace az_lazy.Commands.AddConnection
 {
     public class AddConnectionRunner : IConnectionRunner<AddConnectionOptions>
     {

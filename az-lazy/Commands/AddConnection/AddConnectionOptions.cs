@@ -1,6 +1,6 @@
 using CommandLine;
 
-namespace az_lazy.Commands.Connection
+namespace az_lazy.Commands.AddConnection
 {
     [Verb("addconnection", HelpText = "Add new storage connection")]
     public class AddConnectionOptions : ICommandOptions

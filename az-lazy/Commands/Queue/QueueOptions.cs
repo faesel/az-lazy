@@ -31,6 +31,5 @@ namespace az_lazy.Commands.Queue
 
         [Option("peekCount", Required = false, HelpText = "The number of messages to peek from the queue")]
         public int PeekCount { get; set; }
-
     }
 }

@@ -1,6 +1,6 @@
 using CommandLine;
 
-namespace az_lazy.Commands.Queue
+namespace az_lazy.Commands.AddQueue
 {
     [Verb("addqueue", HelpText = "Create new azure storage queue")]
     public class AddQueueOptions : ICommandOptions

@@ -109,7 +109,7 @@ namespace az_lazy.Manager
 
             var connectionToRemove = collection.FindOne(x => x.ConnectionName.Equals(connectionName, StringComparison.InvariantCultureIgnoreCase));
 
-            if (connectionToRemove != null && !connectionToRemove.IsDevelopmentStorage)
+            if (connectionToRemove?.IsDevelopmentStorage == false)
             {
                 collection.Delete(new BsonValue(connectionToRemove.Id));
 

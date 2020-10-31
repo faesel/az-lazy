@@ -1,16 +1,16 @@
+using System;
 using System.Threading.Tasks;
-using az_lazy.Exceptions;
 using az_lazy.Helpers;
 using az_lazy.Manager;
 
-namespace az_lazy.Commands.Queue
+namespace az_lazy.Commands.Queue.Executor
 {
-    public class AddQueueRunner : IConnectionRunner<AddQueueOptions>
+    public class RemoveQueueExecutor : ICommandExecutor<QueueOptions>
     {
         private readonly ILocalStorageManager LocalStorageManager;
         private readonly IAzureStorageManager AzureStorageManager;
 
-        public AddQueueRunner(
+        public RemoveQueueExecutor(
             ILocalStorageManager localStorageManager,
             IAzureStorageManager azureStorageManager)
         {
@@ -18,33 +18,27 @@ namespace az_lazy.Commands.Queue
             this.AzureStorageManager = azureStorageManager;
         }
 
-        public async Task<bool> Run(AddQueueOptions options)
+        public async Task Execute(QueueOptions opts)
         {
-            if(!string.IsNullOrEmpty(options.Name))
+            if (!string.IsNullOrEmpty(opts.RemoveQueue))
             {
-                var message = $"Creating new queue {options.Name}";
-
+                string message = $"Removing queue {opts.RemoveQueue}";
                 ConsoleHelper.WriteInfoWaiting(message, true);
-
-                var connection = LocalStorageManager.GetSelectedConnection();
 
                 try
                 {
-                    await AzureStorageManager.CreateQueue(connection.ConnectionString, options.Name).ConfigureAwait(false);
+                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                    await AzureStorageManager.RemoveQueue(selectedConnection.ConnectionString, opts.RemoveQueue).ConfigureAwait(false);
 
                     ConsoleHelper.WriteLineSuccessWaiting(message);
-                    ConsoleHelper.WriteLineNormal($"Finished creating queue {options.Name}");
+                    ConsoleHelper.WriteLineNormal($"Finished removing queue {opts.RemoveQueue}");
                 }
-                catch(QueueException ex)
+                catch (Exception ex)
                 {
                     ConsoleHelper.WriteLineFailedWaiting(message);
                     ConsoleHelper.WriteLineError(ex.Message);
                 }
-
-                return true;
             }
-
-            return false;
         }
     }
 }

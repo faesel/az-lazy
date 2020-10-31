@@ -167,7 +167,6 @@ namespace az_lazy.Manager
                     {
                         ConsoleHelper.WriteInfoWaitingPct(message, processed / poisonQueueCount * 100, true);
                     }
-
                 }
                 while (poisonMessages.Length > 0);
 

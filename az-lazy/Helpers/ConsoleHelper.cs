@@ -31,7 +31,15 @@ namespace az_lazy.Helpers
 
             if(resetPosition)
             {
-                Console.SetCursorPosition(0, Console.CursorTop);
+                try
+                {
+                    Console.SetCursorPosition(0, Console.CursorTop);
+                }
+                catch(Exception ex)
+                {
+                    //This is most likely happening because there is no console
+                    Console.WriteLine($"No console to write to {ex.Message}");
+                }
             }
         }
 
@@ -41,7 +49,15 @@ namespace az_lazy.Helpers
 
             if(resetPosition)
             {
-                Console.SetCursorPosition(0, Console.CursorTop);
+                try
+                {
+                    Console.SetCursorPosition(0, Console.CursorTop);
+                }
+                catch(Exception ex)
+                {
+                    //This is most likely happening because there is no console
+                    Console.WriteLine($"No console to write to {ex.Message}");
+                }
             }
         }
 

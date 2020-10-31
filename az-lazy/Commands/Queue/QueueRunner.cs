@@ -1,214 +1,26 @@
-using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using az_lazy.Extensions;
-using az_lazy.Helpers;
-using az_lazy.Manager;
-using ConsoleTables;
 
 namespace az_lazy.Commands.Queue
 {
     public class QueueRunner : IConnectionRunner<QueueOptions>
     {
-        private readonly ILocalStorageManager LocalStorageManager;
-        private readonly IAzureStorageManager AzureStorageManager;
+        public readonly IEnumerable<ICommandExecutor<QueueOptions>> CommandExecutors;
 
         public QueueRunner(
-            ILocalStorageManager localStorageManager,
-            IAzureStorageManager azureStorageManager)
+            IEnumerable<ICommandExecutor<QueueOptions>> commandExecutors)
         {
-            this.LocalStorageManager = localStorageManager;
-            this.AzureStorageManager = azureStorageManager;
+            this.CommandExecutors = commandExecutors;
         }
 
         public async Task<bool> Run(QueueOptions opts)
         {
-            if (opts.List)
+            foreach(var executor in CommandExecutors)
             {
-                const string message = "Fetching queues";
-
-                ConsoleHelper.WriteInfoWaiting(message, true);
-
-                var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                var queueList = await AzureStorageManager.GetQueues(selectedConnection.ConnectionString).ConfigureAwait(false);
-
-                if (queueList.Count > 0)
-                {
-                    ConsoleHelper.WriteLineSuccessWaiting(message);
-                    ConsoleHelper.WriteSepparator();
-
-                    foreach (var queue in queueList)
-                    {
-                        await queue.FetchAttributesAsync().ConfigureAwait(false);
-
-                        var queueCount = queue.ApproximateMessageCount ?? 0;
-                        var isPoisonQueue = queue.Name.EndsWith("poison");
-                        var queueInformation = $"{queue.Name} ({queueCount})";
-
-                        if (isPoisonQueue)
-                        {
-                            ConsoleHelper.WriteLineError(queueInformation);
-                        }
-                        else
-                        {
-                            ConsoleHelper.WriteLineNormal(queueInformation);
-                        }
-                    }
-
-                    return true;
-                }
-                else
-                {
-                    ConsoleHelper.WriteLineFailedWaiting(message);
-                    ConsoleHelper.WriteLineError("No queues found");
-                }
+                await executor.Execute(opts).ConfigureAwait(false);
             }
 
-            if (!string.IsNullOrEmpty(opts.RemoveQueue))
-            {
-                string message = $"Removing queue {opts.RemoveQueue}";
-                ConsoleHelper.WriteInfoWaiting(message, true);
-
-                try
-                {
-                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    await AzureStorageManager.RemoveQueue(selectedConnection.ConnectionString, opts.RemoveQueue).ConfigureAwait(false);
-
-                    ConsoleHelper.WriteLineSuccessWaiting(message);
-                    ConsoleHelper.WriteLineNormal($"Finished removing queue {opts.RemoveQueue}");
-
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    ConsoleHelper.WriteLineFailedWaiting(message);
-                    ConsoleHelper.WriteLineError(ex.Message);
-                }
-            }
-
-            if (!string.IsNullOrEmpty(opts.CureQueue))
-            {
-                string message = $"Clearing poison queue {opts.CureQueue}-poison ...";
-                ConsoleHelper.WriteLineInfo(message);
-
-                try
-                {
-                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    await AzureStorageManager.MovePoisonQueues(selectedConnection.ConnectionString, opts.CureQueue).ConfigureAwait(false);
-
-                    ConsoleHelper.WriteLineNormal("Finished moving poison queue messages");
-
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    ConsoleHelper.WriteLineFailedWaiting(message);
-                    ConsoleHelper.WriteLineError(ex.Message);
-                }
-            }
-
-            if (!string.IsNullOrEmpty(opts.ClearQueue))
-            {
-                string message = $"Clearing queue {opts.ClearQueue}";
-                ConsoleHelper.WriteInfoWaiting(message, true);
-
-                try
-                {
-                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    await AzureStorageManager.ClearQueue(selectedConnection.ConnectionString, opts.ClearQueue).ConfigureAwait(false);
-
-                    ConsoleHelper.WriteLineSuccessWaiting(message);
-                    ConsoleHelper.WriteLineNormal($"Finished clearing queue {opts.ClearQueue}");
-
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    ConsoleHelper.WriteLineFailedWaiting(message);
-                    ConsoleHelper.WriteLineError(ex.Message);
-                }
-            }
-
-            if (!string.IsNullOrEmpty(opts.AddQueue) || !string.IsNullOrEmpty(opts.AddMessage))
-            {
-                string message = $"Adding message to queue {opts.AddQueue}";
-                ConsoleHelper.WriteInfoWaiting(message, true);
-
-                try
-                {
-                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    await AzureStorageManager.AddMessage(selectedConnection.ConnectionString, opts.AddQueue, opts.AddMessage).ConfigureAwait(false);
-
-                    ConsoleHelper.WriteLineSuccessWaiting(message);
-                    ConsoleHelper.WriteLineNormal($"Finished adding message to queue {opts.AddQueue}");
-
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    ConsoleHelper.WriteLineFailedWaiting(message);
-                    ConsoleHelper.WriteLineError(ex.Message);
-                }
-            }
-
-            if (!string.IsNullOrEmpty(opts.Watch))
-            {
-                ConsoleHelper.WriteInfoWaiting($"Starting to watch {opts.Watch}", true);
-
-                try
-                {
-                    ConsoleHelper.WriteLineSuccessWaiting($"Watching queue {opts.Watch}");
-
-                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    await AzureStorageManager.WatchQueue(selectedConnection.ConnectionString, opts.Watch).ConfigureAwait(false);
-
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    ConsoleHelper.WriteLineFailedWaiting($"Failed to watch queue {opts.Watch}");
-                    ConsoleHelper.WriteLineError(ex.Message);
-                }
-            }
-
-            if (!string.IsNullOrEmpty(opts.Peek))
-            {
-                var infoMessage = $"Peeking queue {opts.Peek}";
-                ConsoleHelper.WriteInfoWaiting(infoMessage, true);
-
-                try
-                {
-                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    var peekedMessages = await AzureStorageManager.PeekMessages(selectedConnection.ConnectionString, opts.Peek, opts.PeekCount).ConfigureAwait(false);
-
-                    ConsoleHelper.WriteLineSuccessWaiting(infoMessage);
-
-                    var table = new ConsoleTable("Number", "Message Id", "Message", "Inserted On");
-
-                    foreach (var message in peekedMessages.Select((value, index) => new { value, index }))
-                    {
-                        var rawMessageText = message.value.MessageText;
-                        var isBase64 = rawMessageText.IsBase64();
-                        var messageText = isBase64 ?
-                            System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(rawMessageText)) :
-                            rawMessageText;
-
-                        table.AddRow(message.index + 1, message.value.MessageId, messageText, message.value.InsertedOn);
-                    }
-
-                    table.Write();
-                    Console.WriteLine();
-
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    ConsoleHelper.WriteLineFailedWaiting($"Failed to watch queue {opts.Watch}");
-                    ConsoleHelper.WriteLineError(ex.Message);
-                }
-            }
-
-            return false;
+            return true;
         }
     }
 }
