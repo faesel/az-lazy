@@ -1,6 +1,6 @@
 using CommandLine;
 
-namespace az_lazy.Commands
+namespace az_lazy.Commands.Connection
 {
     [Verb("connection", HelpText = "Manage azure storage connections")]
     public class ConnectionOptions : ICommandOptions

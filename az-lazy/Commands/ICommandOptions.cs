@@ -1,6 +1,6 @@
 namespace az_lazy.Commands
 {
-    public class ICommandOptions
+    public interface ICommandOptions
     {
     }
 }

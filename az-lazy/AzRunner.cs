@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using az_lazy.Commands;
+using az_lazy.Commands.AddConnection;
 using az_lazy.Commands.Connection;
 using az_lazy.Commands.Queue;
+using az_lazy.Commands.AddQueue;
 using CommandLine;
 
 namespace az_lazy
