@@ -89,3 +89,4 @@ I haven't written any contributing guidelines yet but you can reach me [here on 
 | 29/10/2020 | v1.0.6 | Added command to watch a queue message |
 | 29/10/2020 | v1.0.7 | Bug Fix, resolved problem of package storing data in current directory rather than using the package directory |
 | 30/10/2020 | v1.0.8 | Added command to peek for messages in a queue |
+| 31/10/2020 | v1.0.8 | Added support to display queue messages in both base64 and utf8 format |
