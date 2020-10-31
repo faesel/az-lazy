@@ -15,14 +15,17 @@ namespace az_lazy.Commands.Connection.Executor
             this.LocalStorageManager = localStorageManager;
         }
 
-        public Task Execute(ConnectionOptions options)
+        public Task Execute(ConnectionOptions opts)
         {
-            foreach (var connection in LocalStorageManager.GetConnections())
+            if(opts.List)
             {
-                var connectionName = $"{connection.ConnectionName} {(connection.IsSelected ? "[*]" : string.Empty)}";
-                var addedOn = $"Added on {connection.DateAdded.ToShortDateString()}";
+                foreach (var connection in LocalStorageManager.GetConnections())
+                {
+                    var connectionName = $"{connection.ConnectionName} {(connection.IsSelected ? "[*]" : string.Empty)}";
+                    var addedOn = $"Added on {connection.DateAdded.ToShortDateString()}";
 
-                ConsoleHelper.WriteLineAdditionalInfo(connectionName, addedOn);
+                    ConsoleHelper.WriteLineAdditionalInfo(connectionName, addedOn);
+                }
             }
 
             return Task.CompletedTask;
