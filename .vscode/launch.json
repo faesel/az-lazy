@@ -12,7 +12,7 @@
             "program": "${workspaceFolder}/az-lazy/bin/Debug/netcoreapp3.1/az-lazy.dll",
             "args": [],
             "cwd": "${workspaceFolder}/az-lazy",
-            "console": "externalTerminal",
+            "console": "internalConsole",
             "stopAtEntry": false
         },
         {
