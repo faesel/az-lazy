@@ -37,6 +37,5 @@ namespace az_lazy.Commands.Queue
 
         [Option('t', "to", Required = false, HelpText = "Queue you want to move messages to")]
         public string To { get; set; }
-
     }
 }
