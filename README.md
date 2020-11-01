@@ -69,12 +69,13 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 | `azlazy queue --addQueue "queue to add a new message" --addMessage '{ \"test\": true }'` | Adds a new message to the queue |
 | `azlazy queue --watch "queue to watch"` | Watches a queue for new messages |
 | `azlazy queue --peek "queue to peek messages"` | Views messages in the queue, note this function peeks messages so visibility is not changed for consuming applications. `--peekCount 10` can also be used to specify how many messages you want to view. The Maximum peek count available is 32.  |
+| `azlazy queue --from "source queue name" --to "destination queue name"` | Moves queue messages from the source queue to a destination queue |
  
 More coming soon !
 
 # 4. Contributing <a name="contributing"></a>
 
-I haven't written any contributing guidelines yet but you can reach me [here on Faesel.com](https://www.faesel.com/contact). [Development Notes](documentation/contributing.md) are also available.
+I haven't written any contributing guidelines yet but you can reach me here on [Faesel.com contact page](https://www.faesel.com/contact). [Development Notes](documentation/contributing.md) are also available.
 
 # 5. Change Log <a name="changelog"></a>
 
@@ -90,3 +91,4 @@ I haven't written any contributing guidelines yet but you can reach me [here on 
 | 29/10/2020 | v1.0.7 | Bug Fix, resolved problem of package storing data in current directory rather than using the package directory |
 | 30/10/2020 | v1.0.8 | Added command to peek for messages in a queue |
 | 31/10/2020 | v1.0.8 | Added support to display queue messages in both base64 and utf8 format |
+| 01/11/2020 | v1.0.9 | Added command to move messages from one queue to another |
