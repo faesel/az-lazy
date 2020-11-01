@@ -31,5 +31,11 @@ namespace az_lazy.Commands.Queue
 
         [Option("peekCount", Required = false, HelpText = "The number of messages to peek from the queue")]
         public int PeekCount { get; set; }
+
+        [Option('f', "from", Required = false, HelpText = "Queue you want to move messages from")]
+        public string From { get; set; }
+
+        [Option('t', "to", Required = false, HelpText = "Queue you want to move messages to")]
+        public string To { get; set; }
     }
 }

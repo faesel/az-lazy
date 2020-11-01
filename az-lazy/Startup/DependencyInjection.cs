@@ -34,6 +34,7 @@ namespace az_lazy.Startup
             serviceCollection.AddSingleton<ICommandExecutor<QueueOptions>, PeekQueueExecutor>();
             serviceCollection.AddSingleton<ICommandExecutor<QueueOptions>, RemoveQueueExecutor>();
             serviceCollection.AddSingleton<ICommandExecutor<QueueOptions>, WatchQueueExecutor>();
+            serviceCollection.AddSingleton<ICommandExecutor<QueueOptions>, MoveQueueExecutor>();
 
             //Managers
             serviceCollection.AddSingleton<ILocalStorageManager, LocalStorageManager>();

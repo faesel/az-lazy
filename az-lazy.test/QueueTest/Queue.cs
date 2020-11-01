@@ -71,8 +71,6 @@ namespace az_lazy.test.QueueTest
             await normalQueue.FetchAttributesAsync().ConfigureAwait(false);
             await poisonQueue.FetchAttributesAsync().ConfigureAwait(false);
 
-            Console.WriteLine("test faesel");
-
             Assert.Equal(1, normalQueue.ApproximateMessageCount);
             Assert.Equal(0, poisonQueue.ApproximateMessageCount);
         }
@@ -109,6 +107,34 @@ namespace az_lazy.test.QueueTest
             Assert.NotNull(message);
             Assert.Single(message);
             Assert.Equal(message[0].MessageText, messageText);
+        }
+
+        [Fact(DisplayName = "Can move messages from one queue to another")]
+        public async Task CanMoveMessagesSuccessfully()
+        {
+            const string fromQueueName = "fromqueuename";
+
+            await LocalStorageFixture.AzureStorageManager.CreateQueue(DevStorageConnectionString, fromQueueName).ConfigureAwait(false);
+            await LocalStorageFixture.AzureStorageManager.ClearQueue(DevStorageConnectionString, fromQueueName).ConfigureAwait(false);
+            await LocalStorageFixture.AzureStorageManager.AddMessage(DevStorageConnectionString, fromQueueName, @"{ ""test"" : true }").ConfigureAwait(false);
+
+            const string toQueueName = "toqueuename";
+
+            await LocalStorageFixture.AzureStorageManager.CreateQueue(DevStorageConnectionString, toQueueName).ConfigureAwait(false);
+            await LocalStorageFixture.AzureStorageManager.ClearQueue(DevStorageConnectionString, toQueueName).ConfigureAwait(false);
+
+            await LocalStorageFixture.QueueRunner.Run(new QueueOptions { From = fromQueueName, To = toQueueName }).ConfigureAwait(false);
+
+            var queueList = await LocalStorageFixture.AzureStorageManager.GetQueues(DevStorageConnectionString).ConfigureAwait(false);
+
+            var fromQueue = queueList.Find(x => x.Name.Equals(fromQueueName));
+            var toQueue = queueList.Find(x => x.Name.Equals(toQueueName));
+
+            await fromQueue.FetchAttributesAsync().ConfigureAwait(false);
+            await toQueue.FetchAttributesAsync().ConfigureAwait(false);
+
+            Assert.Equal(0, fromQueue.ApproximateMessageCount);
+            Assert.Equal(1, toQueue.ApproximateMessageCount);
         }
     }
 }

@@ -23,6 +23,7 @@ namespace az_lazy.Manager
         Task<bool> AddMessage(string connectionString, string queueName, string message);
         Task WatchQueue(string connectionString, string watch);
         Task<PeekedMessage[]> PeekMessages(string connectionString, string queueToView, int viewCount);
+        Task<bool> MoveMessages(string connectionString, string from, string to);
     }
 
     public class AzureStorageManager : IAzureStorageManager
@@ -130,8 +131,10 @@ namespace az_lazy.Manager
                     throw new QueueException("Enter the queue name rather than the poison queue name to move all the messages");
                 }
 
+                var poisonQueueName = $"{queueName}-poison";
+
                 var queueClient = new QueueClient(connectionString, queueName);
-                var poisonQueueClient = new QueueClient(connectionString, $"{queueName}-poison");
+                var poisonQueueClient = new QueueClient(connectionString,poisonQueueName);
 
                 var queueExists = await queueClient.ExistsAsync().ConfigureAwait(false);
                 var poisonQueueExists = await poisonQueueClient.ExistsAsync().ConfigureAwait(false);
@@ -228,6 +231,60 @@ namespace az_lazy.Manager
                 var messages = await queueClient.PeekMessagesAsync(maxMessages: viewCount).ConfigureAwait(false);
 
                 return messages.Value;
+            }
+            catch (Exception ex)
+            {
+                throw new QueueException(ex);
+            }
+        }
+
+        public async Task<bool> MoveMessages(string connectionString, string from, string to)
+        {
+            try
+            {
+                var fromQueueClient = new QueueClient(connectionString, from);
+                var toQueueClient = new QueueClient(connectionString, to);
+
+                var fromQueueExists = await fromQueueClient.ExistsAsync().ConfigureAwait(false);
+                var toQueueExists = await toQueueClient.ExistsAsync().ConfigureAwait(false);
+
+                if (!fromQueueExists || !toQueueExists)
+                {
+                    throw new QueueException($"Either {from} or {to} queue does not exist");
+                }
+
+                var fromProperties = await fromQueueClient.GetPropertiesAsync().ConfigureAwait(false);
+                var fromQueueCount = fromProperties.Value.ApproximateMessagesCount;
+
+                ConsoleHelper.WriteLineInfo($"Found {fromQueueCount} messages in {from} queue");
+                const string message = "Moving messages";
+                ConsoleHelper.WriteInfoWaiting(message, true);
+
+                QueueMessage[] fromMessagees = null;
+                int processed = 0;
+
+                do
+                {
+                    fromMessagees = await fromQueueClient.ReceiveMessagesAsync(maxMessages: 32).ConfigureAwait(false);
+
+                    foreach (var fromMessage in fromMessagees)
+                    {
+                        await toQueueClient.SendMessageAsync(fromMessage.MessageText).ConfigureAwait(false);
+                        await fromQueueClient.DeleteMessageAsync(fromMessage.MessageId, fromMessage.PopReceipt).ConfigureAwait(false);
+                    }
+
+                    processed += fromMessagees.Length;
+
+                    if (fromMessagees.Length > 0)
+                    {
+                        ConsoleHelper.WriteInfoWaitingPct(message, processed / fromQueueCount * 100, true);
+                    }
+                }
+                while (fromMessagees.Length > 0);
+
+                ConsoleHelper.WriteLineSuccessWaiting(message);
+
+                return true;
             }
             catch (Exception ex)
             {
