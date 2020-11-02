@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using az_lazy.Extensions;
 using az_lazy.Helpers;
@@ -45,7 +46,11 @@ namespace az_lazy.Commands.Queue.Executor
                             System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(rawMessageText)) :
                             rawMessageText;
 
-                        table.AddRow(message.index + 1, message.value.MessageId, messageText, message.value.InsertedOn);
+                        const string replaceWith = "";
+                        var removeLineBreaks = messageText.Replace("\r\n", replaceWith).Replace("\n", replaceWith).Replace("\r", replaceWith);
+                        var removeExtraSpaces = Regex.Replace(removeLineBreaks, @"\s+", " ");
+
+                        table.AddRow(message.index + 1, message.value.MessageId, removeExtraSpaces, message.value.InsertedOn);
                     }
 
                     table.Write();

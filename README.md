@@ -79,7 +79,7 @@ I haven't written any contributing guidelines yet but you can reach me here on [
 
 # 5. Change Log <a name="changelog"></a>
 
-| Date   |      Version      |      Description      |
+| Date Released   |      Version      |      Description      |
 |----------|:-------------|:-------------|
 | 23/10/2020 | v1.0.0 | Added command to create a new queue |
 | 24/10/2020 | v1.0.1 | Added message counts to queue list, and coloured poison queues in red |
@@ -93,3 +93,4 @@ I haven't written any contributing guidelines yet but you can reach me here on [
 | 31/10/2020 | v1.0.8 | Added support to display queue messages in both base64 and utf8 format |
 | 31/10/2020 | v1.0.9 | Added some stability fixes |
 | 01/11/2020 | v1.1.0 | Added command to move messages from one queue to another |
+| - | v1.1.1 | Added a fix for printing out multiline JSON |
