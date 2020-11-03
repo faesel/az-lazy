@@ -43,6 +43,14 @@ Once a connection has been added you can begin using all the other commands, eg
 
 ![](/documentation/images/listqueues.png)
 
+`azlazy queue --watch "process-carnivores"`
+
+![](/documentation/images/watchqueue.png)
+
+`azlazy queue --peek "process-carnivores" --peekCount 3`
+
+![](/documentation/images/peekmessages.png)
+
 # 3. Command List <a name="commandlist"></a>
 
 To view a list of commands through the CLI you can use `azlazy --help`, each command has an alias beginning with the first letter of the command, eg `azlazy connection --list` can be aliased to `azlazy connection -l`.
