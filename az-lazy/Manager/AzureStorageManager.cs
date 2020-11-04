@@ -10,6 +10,9 @@ using Azure.Storage.Queues.Models;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 using az_lazy.Model;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using Azure;
 
 namespace az_lazy.Manager
 {
@@ -24,7 +27,7 @@ namespace az_lazy.Manager
         Task<bool> AddMessage(string connectionString, string queueName, string message);
         Task WatchQueue(string connectionString, string watch);
         Task<PeekedMessage[]> PeekMessages(string connectionString, string queueToView, int viewCount);
-        Task GetContainers(Connection selectedConnection);
+        Task<List<BlobContainerItem>> GetContainers(Connection selectedConnection);
         Task<bool> MoveMessages(string connectionString, string from, string to);
     }
 
@@ -294,9 +297,39 @@ namespace az_lazy.Manager
             }
         }
 
-        public Task GetContainers(Connection selectedConnection)
+        public async Task<List<BlobContainerItem>> GetContainers(Connection selectedConnection)
         {
-            
+            var blobServiceClient = new BlobServiceClient(selectedConnection.ConnectionString);
+            string continuationToken = string.Empty;
+
+            List<BlobContainerItem> containerItems = new List<BlobContainerItem>();
+
+            try
+            {
+                do
+                {
+                    var resultSegment = blobServiceClient.GetBlobContainersAsync()
+                        .AsPages(continuationToken, 10);
+                    
+                    await foreach (Page<BlobContainerItem> containerPage in resultSegment)
+                    {
+                        foreach (BlobContainerItem containerItem in containerPage.Values)
+                        {
+                            containerItems.Add(containerItem);
+                        }
+
+                        continuationToken = containerPage.ContinuationToken;
+                    }
+                } while (!string.IsNullOrEmpty(continuationToken));
+
+                return containerItems;
+            }
+            catch (RequestFailedException e)
+            {
+                Console.WriteLine(e.Message);
+                Console.ReadLine();
+                throw;
+            }
         }
     }
 }

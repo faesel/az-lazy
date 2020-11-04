@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using az_lazy.Helpers;
 using az_lazy.Manager;
@@ -25,8 +26,22 @@ namespace az_lazy.Commands.Container.Executor
 
                 ConsoleHelper.WriteInfoWaiting(message, true);
 
-                var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                var containers = await AzureStorageManager.GetContainers(selectedConnection);
+                try
+                {
+                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
+
+                    var containers = await AzureStorageManager.GetContainers(selectedConnection).ConfigureAwait(false);
+
+                    foreach (var container in containers)
+                    {
+                        ConsoleHelper.WriteLineNormal(container.Name);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ConsoleHelper.WriteLineFailedWaiting(message);
+                    ConsoleHelper.WriteLineError(ex.Message);
+                }
             }
         }
     }
