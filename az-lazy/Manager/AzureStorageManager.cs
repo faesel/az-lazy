@@ -308,8 +308,7 @@ namespace az_lazy.Manager
             {
                 do
                 {
-                    var resultSegment = blobServiceClient.GetBlobContainersAsync()
-                        .AsPages(continuationToken, 10);
+                    var resultSegment = blobServiceClient.GetBlobContainersAsync().AsPages(continuationToken, 1);
                     
                     await foreach (Page<BlobContainerItem> containerPage in resultSegment)
                     {
@@ -327,7 +326,6 @@ namespace az_lazy.Manager
             catch (RequestFailedException e)
             {
                 Console.WriteLine(e.Message);
-                Console.ReadLine();
                 throw;
             }
         }
