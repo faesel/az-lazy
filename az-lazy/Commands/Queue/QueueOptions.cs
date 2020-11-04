@@ -2,7 +2,7 @@ using CommandLine;
 
 namespace az_lazy.Commands.Queue
 {
-    [Verb("queue", HelpText = "Manage azure storage connections")]
+    [Verb("queue", HelpText = "Manage azure storage queues")]
     public class QueueOptions : ICommandOptions
     {
         [Option('l', "list", Required = false, HelpText = "List all connections available")]

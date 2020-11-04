@@ -9,6 +9,7 @@ using Azure.Storage.Queues;
 using Azure.Storage.Queues.Models;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
+using az_lazy.Model;
 
 namespace az_lazy.Manager
 {
@@ -23,6 +24,7 @@ namespace az_lazy.Manager
         Task<bool> AddMessage(string connectionString, string queueName, string message);
         Task WatchQueue(string connectionString, string watch);
         Task<PeekedMessage[]> PeekMessages(string connectionString, string queueToView, int viewCount);
+        Task GetContainers(Connection selectedConnection);
         Task<bool> MoveMessages(string connectionString, string from, string to);
     }
 
@@ -290,6 +292,11 @@ namespace az_lazy.Manager
             {
                 throw new QueueException(ex);
             }
+        }
+
+        public Task GetContainers(Connection selectedConnection)
+        {
+            
         }
     }
 }
