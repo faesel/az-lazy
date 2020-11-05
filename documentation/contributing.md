@@ -4,6 +4,8 @@
 1. [Running the project](#runningproject)
 2. [Running unit tests](#runningtests)
 3. [Todo](#todo)
+4. [Code expectations](#expectations)
+5. [Dev Links](#devlinks)
 
 # 1. Running the project <a name="runningproject"></a>
 
@@ -30,4 +32,14 @@ https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azurite?toc=/a
 
 1. Make tests run through docker with azurite
 2. Add CI process with github
+
+# 4. Code expectations <a name="expectations"></a>
+
+1. Ensure there is a integration test for command
+2. Ensure command names are easy to understand
+3. Ensure commands have a valid alias when possible
+
+# 5. Dev Links <a name="devlinks"></a>
+
+https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-containers-list?tabs=dotnet
 
