@@ -300,33 +300,20 @@ namespace az_lazy.Manager
         public async Task<List<BlobContainerItem>> GetContainers(Connection selectedConnection)
         {
             var blobServiceClient = new BlobServiceClient(selectedConnection.ConnectionString);
-            string continuationToken = string.Empty;
-
             List<BlobContainerItem> containerItems = new List<BlobContainerItem>();
 
             try
             {
-                do
+                await foreach(var container in  blobServiceClient.GetBlobContainersAsync())
                 {
-                    var resultSegment = blobServiceClient.GetBlobContainersAsync().AsPages(continuationToken, 1);
-                    
-                    await foreach (Page<BlobContainerItem> containerPage in resultSegment)
-                    {
-                        foreach (BlobContainerItem containerItem in containerPage.Values)
-                        {
-                            containerItems.Add(containerItem);
-                        }
-
-                        continuationToken = containerPage.ContinuationToken;
-                    }
-                } while (!string.IsNullOrEmpty(continuationToken));
+                    containerItems.Add(container);
+                }
 
                 return containerItems;
             }
-            catch (RequestFailedException e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
-                throw;
+                throw new ContainerException(ex);
             }
         }
     }
