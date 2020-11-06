@@ -110,3 +110,4 @@ I haven't written any contributing guidelines yet but you can reach me here on [
 | 31/10/2020 | v1.0.9 | Added some stability fixes |
 | 01/11/2020 | v1.1.0 | Added command to move messages from one queue to another |
 | 04/11/2020 | v1.1.1 | Added a fix for printing out multiline JSON |
+| 06/11/2020 | v1.1.2 | Added command to list containers |
