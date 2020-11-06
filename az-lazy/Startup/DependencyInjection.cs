@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using az_lazy.Commands.AddConnection;
 using az_lazy.Commands.Connection.Executor;
 using az_lazy.Commands.Queue.Executor;
+using az_lazy.Commands.Container.Executor;
+using az_lazy.Commands.Blob;
 
 namespace az_lazy.Startup
 {
@@ -21,6 +23,7 @@ namespace az_lazy.Startup
             serviceCollection.AddSingleton<IConnectionRunner<AddConnectionOptions>, AddConnectionRunner>();
             serviceCollection.AddSingleton<IConnectionRunner<QueueOptions>, QueueRunner>();
             serviceCollection.AddSingleton<IConnectionRunner<AddQueueOptions>, AddQueueRunner>();
+            serviceCollection.AddSingleton<IConnectionRunner<ContainerOptions>, ContainerRunner>();
 
             //Executors
             serviceCollection.AddSingleton<ICommandExecutor<ConnectionOptions>, Commands.Connection.Executor.ListExecutor>();
@@ -35,6 +38,8 @@ namespace az_lazy.Startup
             serviceCollection.AddSingleton<ICommandExecutor<QueueOptions>, RemoveQueueExecutor>();
             serviceCollection.AddSingleton<ICommandExecutor<QueueOptions>, WatchQueueExecutor>();
             serviceCollection.AddSingleton<ICommandExecutor<QueueOptions>, MoveQueueExecutor>();
+
+            serviceCollection.AddSingleton<ICommandExecutor<ContainerOptions>, Commands.Container.Executor.ListExecutor>();
 
             //Managers
             serviceCollection.AddSingleton<ILocalStorageManager, LocalStorageManager>();

@@ -8,6 +8,7 @@ AzLazy CLI tool is designed for developers, it provides a command line interface
 3. [Command list](#commandlist)
     1. [Connection Commands](#connectioncommand)
     2. [Queue Commands](#queuecommand)
+    3. [Container Commands](#containercommand)
 4. [Contributing](#contributing)
 5. [Change Log](#changelog)
 
@@ -79,6 +80,13 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 | `azlazy queue --peek "queue to peek messages"` | Views messages in the queue, note this function peeks messages so visibility is not changed for consuming applications. `--peekCount 10` can also be used to specify how many messages you want to view. The Maximum peek count available is 32.  |
 | `azlazy queue --from "source queue name" --to "destination queue name"` | Moves queue messages from the source queue to a destination queue |
  
+
+## iii. Container commands <a name="containercommand"></a>
+
+| Command   |      Description      |
+|--------------|:-------------|
+| `azlazy container --list` | View a list of containers in the storage account, along with whether or not its public and when it was last modified |
+
 More coming soon !
 
 # 4. Contributing <a name="contributing"></a>
@@ -102,3 +110,4 @@ I haven't written any contributing guidelines yet but you can reach me here on [
 | 31/10/2020 | v1.0.9 | Added some stability fixes |
 | 01/11/2020 | v1.1.0 | Added command to move messages from one queue to another |
 | 04/11/2020 | v1.1.1 | Added a fix for printing out multiline JSON |
+| 06/11/2020 | v1.1.2 | Added command to list containers |

@@ -6,6 +6,7 @@ using az_lazy.Commands.Connection;
 using az_lazy.Commands.Queue;
 using az_lazy.Commands.AddQueue;
 using CommandLine;
+using az_lazy.Commands.Container.Executor;
 
 namespace az_lazy
 {
@@ -20,22 +21,25 @@ namespace az_lazy
         private readonly IConnectionRunner<AddConnectionOptions> AddConnectionRunner;
         private readonly IConnectionRunner<QueueOptions> QueueRunner;
         private readonly IConnectionRunner<AddQueueOptions> AddQueueRunner;
+        private readonly IConnectionRunner<ContainerOptions> ContainerOptions;
 
         public AzRunner(
             IConnectionRunner<ConnectionOptions> connectionRunner,
             IConnectionRunner<AddConnectionOptions> addConnectionRunner,
             IConnectionRunner<QueueOptions> queueRunner,
-            IConnectionRunner<AddQueueOptions> addQueueRunner)
+            IConnectionRunner<AddQueueOptions> addQueueRunner,
+            IConnectionRunner<ContainerOptions> containerOptions)
         {
             this.ConnectionRunner = connectionRunner;
             this.AddConnectionRunner = addConnectionRunner;
             this.QueueRunner = queueRunner;
             this.AddQueueRunner = addQueueRunner;
+            this.ContainerOptions = containerOptions;
         }
 
         public async Task Startup(string[] args)
         {
-            var parsedResult = Parser.Default.ParseArguments<ConnectionOptions, AddConnectionOptions, QueueOptions, AddQueueOptions>(args);
+            var parsedResult = Parser.Default.ParseArguments<ConnectionOptions, AddConnectionOptions, QueueOptions, AddQueueOptions, ContainerOptions>(args);
 
             var result = await parsedResult
                     .MapResult(
@@ -43,6 +47,7 @@ namespace az_lazy
                         (ConnectionOptions opts) => ConnectionRunner.Run(opts),
                         (QueueOptions opts) => QueueRunner.Run(opts),
                         (AddQueueOptions opts) => AddQueueRunner.Run(opts),
+                        (ContainerOptions opts) => ContainerOptions.Run(opts),
                     errs => DisplayHelp(parsedResult, errs))
                 .ConfigureAwait(false);
 

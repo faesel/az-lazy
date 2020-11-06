@@ -15,6 +15,11 @@ namespace az_lazy.Helpers
             Console.WriteLine(information);
         }
 
+        public static void WriteLineNormal(string information, string extraInformation)
+        {
+            Console.WriteLine($"{information} - {extraInformation.Pastel(InformationColour)}");
+        }
+
         public static void WriteInfo(string information)
         {
             Console.Write(information.Pastel(InformationColour));

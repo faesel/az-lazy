@@ -9,6 +9,10 @@ using Azure.Storage.Queues;
 using Azure.Storage.Queues.Models;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
+using az_lazy.Model;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using Azure;
 
 namespace az_lazy.Manager
 {
@@ -23,6 +27,7 @@ namespace az_lazy.Manager
         Task<bool> AddMessage(string connectionString, string queueName, string message);
         Task WatchQueue(string connectionString, string watch);
         Task<PeekedMessage[]> PeekMessages(string connectionString, string queueToView, int viewCount);
+        Task<List<BlobContainerItem>> GetContainers(Connection selectedConnection);
         Task<bool> MoveMessages(string connectionString, string from, string to);
     }
 
@@ -289,6 +294,26 @@ namespace az_lazy.Manager
             catch (Exception ex)
             {
                 throw new QueueException(ex);
+            }
+        }
+
+        public async Task<List<BlobContainerItem>> GetContainers(Connection selectedConnection)
+        {
+            var blobServiceClient = new BlobServiceClient(selectedConnection.ConnectionString);
+            List<BlobContainerItem> containerItems = new List<BlobContainerItem>();
+
+            try
+            {
+                await foreach(var container in  blobServiceClient.GetBlobContainersAsync())
+                {
+                    containerItems.Add(container);
+                }
+
+                return containerItems;
+            }
+            catch (Exception ex)
+            {
+                throw new ContainerException(ex);
             }
         }
     }
