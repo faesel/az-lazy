@@ -26,7 +26,7 @@ namespace az_lazy.Commands.Connection.Executor
                 if(isSuccessfull)
                 {
                     ConsoleHelper.WriteLineSuccessWaiting(selectMessage);
-                    ConsoleHelper.WriteLineNormal($"Connection {opts.RemoveConnection} is ready to use!");
+                    ConsoleHelper.WriteLineNormal($"Connection {opts.SelectConnection} is ready to use!");
                 }
                 else
                 {
