@@ -8,6 +8,9 @@ namespace az_lazy.Commands.Queue
         [Option('l', "list", Required = false, HelpText = "List all connections available")]
         public bool List { get; set; }
 
+        [Option("contains", Required = false, HelpText = "Use in combination with list, allows you to filter the list returned")]
+        public string Contains { get; set; }
+
         [Option('r', "remove", Required = false, HelpText = "Queue name to remove")]
         public string RemoveQueue { get; set; }
 

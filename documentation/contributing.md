@@ -43,3 +43,6 @@ https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azurite?toc=/a
 
 https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-containers-list?tabs=dotnet
 
+Change table to CsConsoleFormat as it supports word wrap
+
+https://stackoverflow.com/questions/856845/how-to-best-way-to-draw-table-in-console-app-c
