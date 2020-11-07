@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using az_lazy.Helpers;
 using az_lazy.Manager;
@@ -33,6 +34,11 @@ namespace az_lazy.Commands.Queue.Executor
                 {
                     ConsoleHelper.WriteLineSuccessWaiting(message);
                     ConsoleHelper.WriteSepparator();
+
+                    if(!string.IsNullOrEmpty(opts.Contains))
+                    {
+                        queueList = queueList.Where(x => x.Name.Contains(opts.Contains)).ToList();
+                    }
 
                     foreach (var queue in queueList)
                     {

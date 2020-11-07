@@ -71,7 +71,7 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 | Command   |      Description      |
 |--------------|:-------------|
 | `azlazy addqueue --name "queue to add"` |  Creates a new queue with the given name |
-| `azlazy queue --list` |  View a list of queues in the storage account along with the number of messages they are holding, poison queues are highlighted in red |
+| `azlazy queue --list` |  View a list of queues in the storage account along with the number of messages they are holding, poison queues are highlighted in red. You can also filter the list with `--contains` |
 | `azlazy queue --remove "queue to remove"` | Removes the queue with the given name |
 | `azlazy queue --cure "queue to move poison messages to"` | Moves poison queue messages back into the processing queue |
 | `azlazy queue --clear "queue to clear"` | Removes all messages in the queue |
@@ -85,7 +85,7 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 
 | Command   |      Description      |
 |--------------|:-------------|
-| `azlazy container --list` | View a list of containers in the storage account, along with whether or not its public and when it was last modified |
+| `azlazy container --list` | View a list of containers in the storage account, along with whether or not its public and when it was last modified. You can also filter the list with `--contains` |
 
 More coming soon !
 
@@ -111,3 +111,4 @@ I haven't written any contributing guidelines yet but you can reach me here on [
 | 01/11/2020 | v1.1.0 | Added command to move messages from one queue to another |
 | 04/11/2020 | v1.1.1 | Added a fix for printing out multiline JSON |
 | 06/11/2020 | v1.1.2 | Added command to list containers |
+| 06/11/2020 | v1.1.3 | Added a contains filter when listing queues and containers  |

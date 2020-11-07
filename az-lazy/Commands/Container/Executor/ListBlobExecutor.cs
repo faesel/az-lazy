@@ -38,6 +38,11 @@ namespace az_lazy.Commands.Container.Executor
                         ConsoleHelper.WriteSepparator();
                     }
 
+                    if(!string.IsNullOrEmpty(opts.Contains))
+                    {
+                        containers = containers.Where(x => x.Name.Contains(opts.Contains)).ToList();
+                    }
+
                     foreach (var container in containers)
                     {
                         var isPublic = container.Properties.PublicAccess.HasValue ? "(public)" : "(private)";
