@@ -46,7 +46,6 @@ namespace az_lazy
             var parsedResult = Parser.Default
                 .ParseArguments<ConnectionOptions, AddConnectionOptions, QueueOptions, AddQueueOptions, ContainerOptions, AddContainerOptions>(args);
 
-
             var result = await parsedResult
                     .MapResult(
                         (AddConnectionOptions opts) => AddConnectionRunner.Run(opts),
