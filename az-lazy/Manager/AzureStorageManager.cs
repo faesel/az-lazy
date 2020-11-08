@@ -1,4 +1,4 @@
-using System.Linq;
+using System.Net;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -12,7 +12,6 @@ using Microsoft.WindowsAzure.Storage.Queue;
 using az_lazy.Model;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using Azure;
 
 namespace az_lazy.Manager
 {
@@ -29,6 +28,7 @@ namespace az_lazy.Manager
         Task<PeekedMessage[]> PeekMessages(string connectionString, string queueToView, int viewCount);
         Task<List<BlobContainerItem>> GetContainers(Connection selectedConnection);
         Task<bool> MoveMessages(string connectionString, string from, string to);
+        Task CreateContainer(Connection selectedConnection, PublicAccessType publicAccessLevel, string containerName);
     }
 
     public class AzureStorageManager : IAzureStorageManager
@@ -312,6 +312,19 @@ namespace az_lazy.Manager
                 return containerItems;
             }
             catch (Exception ex)
+            {
+                throw new ContainerException(ex);
+            }
+        }
+
+        public async Task CreateContainer(Connection selectedConnection, PublicAccessType publicAccess, string containerName)
+        {
+            try
+            {
+                var blobServiceClient = new BlobServiceClient(selectedConnection.ConnectionString);
+                await blobServiceClient.CreateBlobContainerAsync(containerName, PublicAccessType.Blob).ConfigureAwait(false);
+            }
+            catch(Exception ex)
             {
                 throw new ContainerException(ex);
             }
