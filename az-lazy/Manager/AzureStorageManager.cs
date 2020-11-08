@@ -1,4 +1,4 @@
-using System.Linq;
+using System.Net;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -12,7 +12,6 @@ using Microsoft.WindowsAzure.Storage.Queue;
 using az_lazy.Model;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using Azure;
 
 namespace az_lazy.Manager
 {
@@ -27,8 +26,9 @@ namespace az_lazy.Manager
         Task<bool> AddMessage(string connectionString, string queueName, string message);
         Task WatchQueue(string connectionString, string watch);
         Task<PeekedMessage[]> PeekMessages(string connectionString, string queueToView, int viewCount);
-        Task<List<BlobContainerItem>> GetContainers(Connection selectedConnection);
+        Task<List<BlobContainerItem>> GetContainers(string connectionString);
         Task<bool> MoveMessages(string connectionString, string from, string to);
+        Task<string> CreateContainer(Connection selectedConnection, PublicAccessType publicAccessLevel, string containerName);
     }
 
     public class AzureStorageManager : IAzureStorageManager
@@ -297,9 +297,9 @@ namespace az_lazy.Manager
             }
         }
 
-        public async Task<List<BlobContainerItem>> GetContainers(Connection selectedConnection)
+        public async Task<List<BlobContainerItem>> GetContainers(string connectionString)
         {
-            var blobServiceClient = new BlobServiceClient(selectedConnection.ConnectionString);
+            var blobServiceClient = new BlobServiceClient(connectionString);
             List<BlobContainerItem> containerItems = new List<BlobContainerItem>();
 
             try
@@ -312,6 +312,23 @@ namespace az_lazy.Manager
                 return containerItems;
             }
             catch (Exception ex)
+            {
+                throw new ContainerException(ex);
+            }
+        }
+
+        public async Task<string> CreateContainer(Connection selectedConnection, PublicAccessType publicAccess, string containerName)
+        {
+            try
+            {
+                var blobServiceClient = new BlobServiceClient(selectedConnection.ConnectionString);
+                await blobServiceClient.CreateBlobContainerAsync(containerName, PublicAccessType.Blob).ConfigureAwait(false);
+
+                return publicAccess == PublicAccessType.None ?
+                    string.Empty :
+                    $"{blobServiceClient.Uri}/{containerName}";
+            }
+            catch(Exception ex)
             {
                 throw new ContainerException(ex);
             }

@@ -9,6 +9,7 @@ using az_lazy.Commands.Connection.Executor;
 using az_lazy.Commands.Queue.Executor;
 using az_lazy.Commands.Container.Executor;
 using az_lazy.Commands.Blob;
+using az_lazy.Commands.AddContainer;
 
 namespace az_lazy.Startup
 {
@@ -24,6 +25,7 @@ namespace az_lazy.Startup
             serviceCollection.AddSingleton<IConnectionRunner<QueueOptions>, QueueRunner>();
             serviceCollection.AddSingleton<IConnectionRunner<AddQueueOptions>, AddQueueRunner>();
             serviceCollection.AddSingleton<IConnectionRunner<ContainerOptions>, ContainerRunner>();
+            serviceCollection.AddSingleton<IConnectionRunner<AddContainerOptions>, AddContainerRunner>();
 
             //Executors
             serviceCollection.AddSingleton<ICommandExecutor<ConnectionOptions>, Commands.Connection.Executor.ListExecutor>();
