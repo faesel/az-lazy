@@ -43,7 +43,8 @@ namespace az_lazy
 
         public async Task Startup(string[] args)
         {
-            var parsedResult = Parser.Default.ParseArguments<ConnectionOptions, AddConnectionOptions, QueueOptions, AddQueueOptions, ContainerOptions, AddContainerOptions>(args);
+            var parsedResult = Parser.Default
+                .ParseArguments<ConnectionOptions, AddConnectionOptions, QueueOptions, AddQueueOptions, ContainerOptions, AddContainerOptions>(args);
 
             var result = await parsedResult
                     .MapResult(
@@ -61,15 +62,6 @@ namespace az_lazy
 
         public Task<bool> DisplayHelp<T>(ParserResult<T> result, IEnumerable<Error> errs)
         {
-            // var helpText = HelpText.AutoBuild(result, h =>
-            // {
-            //     h.AdditionalNewLineAfterOption = false;
-            //     h.Heading = "Myapp 2.0.0-beta"; //change header
-            //     h.Copyright = "Copyright (c) 2019 Global.com"; //change copyright text
-            //     return HelpText.DefaultParsingErrorsHandler(result, h);
-            // }, e => e);
-            // Console.WriteLine(helpText);
-
             return Task.FromResult(true);
         }
     }

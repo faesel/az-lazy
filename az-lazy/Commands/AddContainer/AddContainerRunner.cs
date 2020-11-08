@@ -40,6 +40,7 @@ namespace az_lazy.Commands.AddContainer
                     await AzureStorageManager.CreateContainer(selectedConnection, publicAccessLevel, opts.Name).ConfigureAwait(false);
 
                     ConsoleHelper.WriteLineSuccessWaiting(message);
+                    ConsoleHelper.WriteLineAdditionalInfo($"Finished creating container {opts.Name}", $"Public Access Level: {publicAccessLevel}");
 
                     return true;
                 }
