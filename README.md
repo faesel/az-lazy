@@ -52,6 +52,10 @@ Once a connection has been added you can begin using all the other commands, eg
 
 ![](/documentation/images/peekmessages.png)
 
+`azlazy addcontainer --name "dinosaurpictures" --publicAccess "Blob"`
+
+![](/documentation/images/addcontainer.png)
+
 # 3. Command List <a name="commandlist"></a>
 
 To view a list of commands through the CLI you can use `azlazy --help`, each command has an alias beginning with the first letter of the command, eg `azlazy connection --list` can be aliased to `azlazy connection -l`.
