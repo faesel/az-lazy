@@ -28,7 +28,7 @@ namespace az_lazy.Manager
         Task<PeekedMessage[]> PeekMessages(string connectionString, string queueToView, int viewCount);
         Task<List<BlobContainerItem>> GetContainers(Connection selectedConnection);
         Task<bool> MoveMessages(string connectionString, string from, string to);
-        Task CreateContainer(Connection selectedConnection, PublicAccessType publicAccessLevel, string containerName);
+        Task<string> CreateContainer(Connection selectedConnection, PublicAccessType publicAccessLevel, string containerName);
     }
 
     public class AzureStorageManager : IAzureStorageManager
@@ -317,12 +317,16 @@ namespace az_lazy.Manager
             }
         }
 
-        public async Task CreateContainer(Connection selectedConnection, PublicAccessType publicAccess, string containerName)
+        public async Task<string> CreateContainer(Connection selectedConnection, PublicAccessType publicAccess, string containerName)
         {
             try
             {
                 var blobServiceClient = new BlobServiceClient(selectedConnection.ConnectionString);
                 await blobServiceClient.CreateBlobContainerAsync(containerName, PublicAccessType.Blob).ConfigureAwait(false);
+
+                return publicAccess == PublicAccessType.None ?
+                    string.Empty :
+                    $"{blobServiceClient.Uri}/{containerName}";
             }
             catch(Exception ex)
             {

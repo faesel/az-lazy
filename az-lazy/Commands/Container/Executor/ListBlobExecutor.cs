@@ -45,8 +45,10 @@ namespace az_lazy.Commands.Container.Executor
 
                     foreach (var container in containers)
                     {
-                        var isPublic = container.Properties.PublicAccess.HasValue ? "(public)" : "(private)";
-                        var lastModified = container.Properties.LastModified.DateTime.ToShortDateString();
+                        var containerProperties = container.Properties;
+
+                        var isPublic = containerProperties.PublicAccess.HasValue ? "(public)" : "(private)";
+                        var lastModified = containerProperties.LastModified.DateTime.ToShortDateString();
 
                         ConsoleHelper.WriteLineNormal(container.Name, $"{isPublic} {lastModified}");
                     }
