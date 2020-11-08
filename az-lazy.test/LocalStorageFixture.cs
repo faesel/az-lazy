@@ -1,7 +1,9 @@
 ﻿using az_lazy.Commands;
 using az_lazy.Commands.AddConnection;
+using az_lazy.Commands.AddContainer;
 using az_lazy.Commands.AddQueue;
 using az_lazy.Commands.Connection;
+using az_lazy.Commands.Container.Executor;
 using az_lazy.Commands.Queue;
 using az_lazy.Manager;
 using az_lazy.Startup;
@@ -20,6 +22,8 @@ namespace az_lazy.test
         public IConnectionRunner<AddConnectionOptions> AddConnectionRunner;
         public IConnectionRunner<AddQueueOptions> AddQueueRunner;
         public IConnectionRunner<QueueOptions> QueueRunner;
+        public IConnectionRunner<ContainerOptions> ContainerRunner;
+        public IConnectionRunner<AddContainerOptions> AddContainerRunner;
 
         public LocalStorageFixture()
         {
@@ -37,6 +41,8 @@ namespace az_lazy.test
             ConnectionRunner = ServiceProvider.GetService<IConnectionRunner<ConnectionOptions>>();
             AddQueueRunner = ServiceProvider.GetService<IConnectionRunner<AddQueueOptions>>();
             QueueRunner = ServiceProvider.GetService<IConnectionRunner<QueueOptions>>();
+            ContainerRunner = ServiceProvider.GetService<IConnectionRunner<ContainerOptions>>();
+            AddContainerRunner = ServiceProvider.GetService<IConnectionRunner<AddContainerOptions>>();
         }
     }
 }

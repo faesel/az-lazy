@@ -30,7 +30,7 @@ namespace az_lazy.Commands.Container.Executor
                 try
                 {
                     var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    var containers = await AzureStorageManager.GetContainers(selectedConnection).ConfigureAwait(false);
+                    var containers = await AzureStorageManager.GetContainers(selectedConnection.ConnectionString).ConfigureAwait(false);
 
                     if(containers.Count > 0)
                     {

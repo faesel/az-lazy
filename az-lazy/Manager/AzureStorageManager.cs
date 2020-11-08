@@ -26,7 +26,7 @@ namespace az_lazy.Manager
         Task<bool> AddMessage(string connectionString, string queueName, string message);
         Task WatchQueue(string connectionString, string watch);
         Task<PeekedMessage[]> PeekMessages(string connectionString, string queueToView, int viewCount);
-        Task<List<BlobContainerItem>> GetContainers(Connection selectedConnection);
+        Task<List<BlobContainerItem>> GetContainers(string connectionString);
         Task<bool> MoveMessages(string connectionString, string from, string to);
         Task<string> CreateContainer(Connection selectedConnection, PublicAccessType publicAccessLevel, string containerName);
     }
@@ -297,9 +297,9 @@ namespace az_lazy.Manager
             }
         }
 
-        public async Task<List<BlobContainerItem>> GetContainers(Connection selectedConnection)
+        public async Task<List<BlobContainerItem>> GetContainers(string connectionString)
         {
-            var blobServiceClient = new BlobServiceClient(selectedConnection.ConnectionString);
+            var blobServiceClient = new BlobServiceClient(connectionString);
             List<BlobContainerItem> containerItems = new List<BlobContainerItem>();
 
             try
