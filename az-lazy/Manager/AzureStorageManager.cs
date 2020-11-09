@@ -26,9 +26,10 @@ namespace az_lazy.Manager
         Task<bool> AddMessage(string connectionString, string queueName, string message);
         Task WatchQueue(string connectionString, string watch);
         Task<PeekedMessage[]> PeekMessages(string connectionString, string queueToView, int viewCount);
+        Task RemoveContainer(string connectionString, string removeContainer);
         Task<List<BlobContainerItem>> GetContainers(string connectionString);
         Task<bool> MoveMessages(string connectionString, string from, string to);
-        Task<string> CreateContainer(Connection selectedConnection, PublicAccessType publicAccessLevel, string containerName);
+        Task<string> CreateContainer(string connectionString, PublicAccessType publicAccessLevel, string containerName);
     }
 
     public class AzureStorageManager : IAzureStorageManager
@@ -317,16 +318,29 @@ namespace az_lazy.Manager
             }
         }
 
-        public async Task<string> CreateContainer(Connection selectedConnection, PublicAccessType publicAccess, string containerName)
+        public async Task<string> CreateContainer(string connectionString, PublicAccessType publicAccess, string containerName)
         {
             try
             {
-                var blobServiceClient = new BlobServiceClient(selectedConnection.ConnectionString);
+                var blobServiceClient = new BlobServiceClient(connectionString);
                 await blobServiceClient.CreateBlobContainerAsync(containerName, PublicAccessType.Blob).ConfigureAwait(false);
 
                 return publicAccess == PublicAccessType.None ?
                     string.Empty :
                     $"{blobServiceClient.Uri}/{containerName}";
+            }
+            catch(Exception ex)
+            {
+                throw new ContainerException(ex);
+            }
+        }
+
+        public async Task RemoveContainer(string connectionString, string removeContainer)
+        {
+            try
+            {
+                var blobServiceClient = new BlobServiceClient(connectionString);
+                await blobServiceClient.DeleteBlobContainerAsync(removeContainer).ConfigureAwait(false);
             }
             catch(Exception ex)
             {

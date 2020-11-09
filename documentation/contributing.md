@@ -46,3 +46,8 @@ https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-containers-lis
 Change table to CsConsoleFormat as it supports word wrap
 
 https://stackoverflow.com/questions/856845/how-to-best-way-to-draw-table-in-console-app-c
+
+Blob tree structure
+
+https://stackoverflow.com/questions/59714051/is-there-a-way-to-get-file-structure-from-azure-blob
+https://andrewlock.net/creating-an-ascii-art-tree-in-csharp/

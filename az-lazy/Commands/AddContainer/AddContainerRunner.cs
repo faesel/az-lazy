@@ -37,7 +37,7 @@ namespace az_lazy.Commands.AddContainer
                         Enum.TryParse(opts.PublicAccess, true, out publicAccessLevel);
                     }
 
-                    var uri = await AzureStorageManager.CreateContainer(selectedConnection, publicAccessLevel, opts.Name).ConfigureAwait(false);
+                    var uri = await AzureStorageManager.CreateContainer(selectedConnection.ConnectionString, publicAccessLevel, opts.Name).ConfigureAwait(false);
 
                     ConsoleHelper.WriteLineSuccessWaiting(message);
                     ConsoleHelper.WriteLineInfo($"Public Access Level: {publicAccessLevel}");

@@ -10,5 +10,8 @@ namespace az_lazy.Commands.Container.Executor
 
         [Option("contains", Required = false, HelpText = "Use in combination with list, allows you to filter the list returned")]
         public string Contains { get; set; }
+
+        [Option('r', "remove", Required = false, HelpText = "Container name to remove")]
+        public string RemoveContainer { get; set; }
     }
 }
