@@ -85,7 +85,6 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 | `azlazy queue --peek "queue to peek messages"` | Views messages in the queue, note this function peeks messages so visibility is not changed for consuming applications. `--peekCount 10` can also be used to specify how many messages you want to view. The Maximum peek count available is 32.  |
 | `azlazy queue --from "source queue name" --to "destination queue name"` | Moves queue messages from the source queue to a destination queue |
  
-
 ## iii. Container commands <a name="containercommand"></a>
 
 | Command   |      Description      |
@@ -93,6 +92,7 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 | `azlazy container --help` | Displays a list of commands you can use for containers |
 | `azlazy container --list` | View a list of containers in the storage account, along with whether or not its public and when it was last modified. You can also filter the list with `--contains` |
 | `azlazy addcontainer --name "container to add" --publicAccess "Blob"` | Creates a new container with the given name, the containers public access level can be set using `--publicAccess`. Possible options are `None`, `Blob`, `BlobContainer`. By default any container created will not be publicly accessible and so will be set to `None` |
+| `azlazy container --remove "container to remove"` | Removes a container with the given game |
 
 More coming soon !
 
