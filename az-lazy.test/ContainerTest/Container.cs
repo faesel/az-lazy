@@ -1,5 +1,7 @@
 using System.Threading.Tasks;
 using az_lazy.Commands.AddContainer;
+using az_lazy.Commands.Container.Executor;
+using Azure.Storage.Blobs.Models;
 using Xunit;
 
 namespace az_lazy.test.ContainerTest
@@ -26,6 +28,19 @@ namespace az_lazy.test.ContainerTest
             var containerList = await LocalStorageFixture.AzureStorageManager.GetContainers(DevStorageConnectionString).ConfigureAwait(false);
 
             Assert.Contains(containerList, x => x.Name.Equals(containerName));
+        }
+
+        [Fact(DisplayName = "Can successfully remove a container container")]
+        public async Task CanRemoveContainerSuccessfully()
+        {
+            const string containerName = "deletecontainer";
+
+            await LocalStorageFixture.AzureStorageManager.CreateContainer(DevStorageConnectionString, PublicAccessType.None, containerName).ConfigureAwait(false);
+
+            await LocalStorageFixture.ContainerRunner.Run(new ContainerOptions { RemoveContainer = containerName }).ConfigureAwait(false);
+            var containerList = await LocalStorageFixture.AzureStorageManager.GetContainers(DevStorageConnectionString).ConfigureAwait(false);
+
+            Assert.DoesNotContain(containerList, x => x.Name.Equals(containerName));
         }
     }
 }
