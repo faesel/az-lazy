@@ -1,4 +1,3 @@
-using System.Net;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -9,15 +8,11 @@ using Azure.Storage.Queues;
 using Azure.Storage.Queues.Models;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
-using az_lazy.Model;
-using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
 
 namespace az_lazy.Manager
 {
-    public interface IAzureStorageManager
+    public interface IAzureQueueManager
     {
-        Task<bool> TestConnection(string connectionString);
         Task<List<CloudQueue>> GetQueues(string connectionString);
         Task<bool> CreateQueue(string connectionString, string queueName);
         Task<bool> RemoveQueue(string connectionString, string queueName);
@@ -26,13 +21,10 @@ namespace az_lazy.Manager
         Task<bool> AddMessage(string connectionString, string queueName, string message);
         Task WatchQueue(string connectionString, string watch);
         Task<PeekedMessage[]> PeekMessages(string connectionString, string queueToView, int viewCount);
-        Task RemoveContainer(string connectionString, string removeContainer);
-        Task<List<BlobContainerItem>> GetContainers(string connectionString);
         Task<bool> MoveMessages(string connectionString, string from, string to);
-        Task<string> CreateContainer(string connectionString, PublicAccessType publicAccessLevel, string containerName);
     }
 
-    public class AzureStorageManager : IAzureStorageManager
+    public class AzureQueueManager : IAzureQueueManager
     {
         public async Task<bool> TestConnection(string connectionString)
         {
@@ -295,56 +287,6 @@ namespace az_lazy.Manager
             catch (Exception ex)
             {
                 throw new QueueException(ex);
-            }
-        }
-
-        public async Task<List<BlobContainerItem>> GetContainers(string connectionString)
-        {
-            var blobServiceClient = new BlobServiceClient(connectionString);
-            List<BlobContainerItem> containerItems = new List<BlobContainerItem>();
-
-            try
-            {
-                await foreach(var container in  blobServiceClient.GetBlobContainersAsync())
-                {
-                    containerItems.Add(container);
-                }
-
-                return containerItems;
-            }
-            catch (Exception ex)
-            {
-                throw new ContainerException(ex);
-            }
-        }
-
-        public async Task<string> CreateContainer(string connectionString, PublicAccessType publicAccess, string containerName)
-        {
-            try
-            {
-                var blobServiceClient = new BlobServiceClient(connectionString);
-                await blobServiceClient.CreateBlobContainerAsync(containerName, PublicAccessType.Blob).ConfigureAwait(false);
-
-                return publicAccess == PublicAccessType.None ?
-                    string.Empty :
-                    $"{blobServiceClient.Uri}/{containerName}";
-            }
-            catch(Exception ex)
-            {
-                throw new ContainerException(ex);
-            }
-        }
-
-        public async Task RemoveContainer(string connectionString, string removeContainer)
-        {
-            try
-            {
-                var blobServiceClient = new BlobServiceClient(connectionString);
-                await blobServiceClient.DeleteBlobContainerAsync(removeContainer).ConfigureAwait(false);
-            }
-            catch(Exception ex)
-            {
-                throw new ContainerException(ex);
             }
         }
     }

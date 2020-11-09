@@ -9,11 +9,11 @@ namespace az_lazy.Commands.Queue.Executor
     public class ListExecutor : ICommandExecutor<QueueOptions>
     {
         private readonly ILocalStorageManager LocalStorageManager;
-        private readonly IAzureStorageManager AzureStorageManager;
+        private readonly IAzureQueueManager AzureStorageManager;
 
         public ListExecutor(
             ILocalStorageManager localStorageManager,
-            IAzureStorageManager azureStorageManager)
+            IAzureQueueManager azureStorageManager)
         {
             this.LocalStorageManager = localStorageManager;
             this.AzureStorageManager = azureStorageManager;

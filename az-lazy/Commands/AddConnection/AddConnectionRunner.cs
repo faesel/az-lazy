@@ -9,14 +9,17 @@ namespace az_lazy.Commands.AddConnection
     public class AddConnectionRunner : IConnectionRunner<AddConnectionOptions>
     {
         private readonly ILocalStorageManager LocalStorageManager;
-        private readonly IAzureStorageManager AzureStorageManager;
+        private readonly IAzureQueueManager AzureStorageManager;
+        private readonly IAzureConnectionManager AzureConnectionManager;
 
         public AddConnectionRunner(
             ILocalStorageManager localStorageManager,
-            IAzureStorageManager azureStorageManager)
+            IAzureQueueManager azureStorageManager,
+            IAzureConnectionManager azureConnectionManager)
         {
             this.LocalStorageManager = localStorageManager;
             this.AzureStorageManager = azureStorageManager;
+            this.AzureConnectionManager = azureConnectionManager;
         }
 
         public async Task<bool> Run(AddConnectionOptions opts)
@@ -32,7 +35,7 @@ namespace az_lazy.Commands.AddConnection
 
                 try
                 {
-                    isConnected = await AzureStorageManager.TestConnection(opts.ConnectionString).ConfigureAwait(false);
+                    isConnected = await AzureConnectionManager.TestConnection(opts.ConnectionString).ConfigureAwait(false);
                 }
                 catch (ConnectionException connectionException)
                 {

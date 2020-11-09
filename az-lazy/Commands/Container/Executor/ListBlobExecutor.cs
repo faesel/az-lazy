@@ -9,14 +9,14 @@ namespace az_lazy.Commands.Container.Executor
     public class ListExecutor: ICommandExecutor<ContainerOptions>
     {
         private readonly ILocalStorageManager LocalStorageManager;
-        private readonly IAzureStorageManager AzureStorageManager;
+        private readonly IAzureContainerManager AzureContainerManager;
 
         public ListExecutor(
             ILocalStorageManager localStorageManager,
-            IAzureStorageManager azureStorageManager)
+            IAzureContainerManager azureContainerManager)
         {
             this.LocalStorageManager = localStorageManager;
-            this.AzureStorageManager = azureStorageManager;
+            this.AzureContainerManager = azureContainerManager;
         }
 
         public async Task Execute(ContainerOptions opts)
@@ -30,7 +30,7 @@ namespace az_lazy.Commands.Container.Executor
                 try
                 {
                     var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    var containers = await AzureStorageManager.GetContainers(selectedConnection.ConnectionString).ConfigureAwait(false);
+                    var containers = await AzureContainerManager.GetContainers(selectedConnection.ConnectionString).ConfigureAwait(false);
 
                     if(containers.Count > 0)
                     {

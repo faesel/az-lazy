@@ -46,7 +46,9 @@ namespace az_lazy.Startup
 
             //Managers
             serviceCollection.AddSingleton<ILocalStorageManager, LocalStorageManager>();
-            serviceCollection.AddSingleton<IAzureStorageManager, AzureStorageManager>();
+            serviceCollection.AddSingleton<IAzureQueueManager, AzureQueueManager>();
+            serviceCollection.AddSingleton<IAzureContainerManager, AzureContainerManager>();
+            serviceCollection.AddSingleton<IAzureConnectionManager, AzureConnectionManager>();
 
             return serviceCollection;
         }

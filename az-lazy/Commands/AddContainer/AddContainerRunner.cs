@@ -10,14 +10,17 @@ namespace az_lazy.Commands.AddContainer
     public class AddContainerRunner : IConnectionRunner<AddContainerOptions>
     {
         private readonly ILocalStorageManager LocalStorageManager;
-        private readonly IAzureStorageManager AzureStorageManager;
+        private readonly IAzureQueueManager AzureStorageManager;
+        private readonly IAzureContainerManager AzureContainerManager;
 
         public AddContainerRunner(
             ILocalStorageManager localStorageManager,
-            IAzureStorageManager azureStorageManager)
+            IAzureQueueManager azureStorageManager,
+            IAzureContainerManager azureContainerManager)
         {
             this.LocalStorageManager = localStorageManager;
             this.AzureStorageManager = azureStorageManager;
+            this.AzureContainerManager = azureContainerManager;
         }
 
         public async Task<bool> Run(AddContainerOptions opts)
@@ -37,7 +40,7 @@ namespace az_lazy.Commands.AddContainer
                         Enum.TryParse(opts.PublicAccess, true, out publicAccessLevel);
                     }
 
-                    var uri = await AzureStorageManager.CreateContainer(selectedConnection.ConnectionString, publicAccessLevel, opts.Name).ConfigureAwait(false);
+                    var uri = await AzureContainerManager.CreateContainer(selectedConnection.ConnectionString, publicAccessLevel, opts.Name).ConfigureAwait(false);
 
                     ConsoleHelper.WriteLineSuccessWaiting(message);
                     ConsoleHelper.WriteLineInfo($"Public Access Level: {publicAccessLevel}");
