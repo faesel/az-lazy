@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using az_lazy.Commands.AddQueue;
 using az_lazy.Commands.Queue;
 using Xunit;
@@ -25,7 +23,7 @@ namespace az_lazy.test.QueueTest
             const string queueName = "addedqueue";
 
             await LocalStorageFixture.AddQueueRunner.Run(new AddQueueOptions { Name = queueName }).ConfigureAwait(false);
-            var queueList = await LocalStorageFixture.AzureStorageManager.GetQueues(DevStorageConnectionString).ConfigureAwait(false);
+            var queueList = await LocalStorageFixture.AzureQueueManager.GetQueues(DevStorageConnectionString).ConfigureAwait(false);
 
             Assert.Contains(queueList, x => x.Name.Equals(queueName));
         }
@@ -36,13 +34,13 @@ namespace az_lazy.test.QueueTest
             const string queueName = "removequeue";
 
             await LocalStorageFixture.AddQueueRunner.Run(new AddQueueOptions { Name = queueName }).ConfigureAwait(false);
-            var queueList = await LocalStorageFixture.AzureStorageManager.GetQueues(DevStorageConnectionString).ConfigureAwait(false);
+            var queueList = await LocalStorageFixture.AzureQueueManager.GetQueues(DevStorageConnectionString).ConfigureAwait(false);
 
             Assert.Contains(queueList, x => x.Name.Equals(queueName));
 
             await LocalStorageFixture.QueueRunner.Run(new QueueOptions { RemoveQueue = queueName }).ConfigureAwait(false);
 
-            queueList = await LocalStorageFixture.AzureStorageManager.GetQueues(DevStorageConnectionString).ConfigureAwait(false);
+            queueList = await LocalStorageFixture.AzureQueueManager.GetQueues(DevStorageConnectionString).ConfigureAwait(false);
 
             Assert.DoesNotContain(queueList, x => x.Name.Equals(queueName));
         }
@@ -52,18 +50,18 @@ namespace az_lazy.test.QueueTest
         {
             const string normalQueueName = "posionmovetest";
 
-            await LocalStorageFixture.AzureStorageManager.CreateQueue(DevStorageConnectionString, normalQueueName).ConfigureAwait(false);
-            await LocalStorageFixture.AzureStorageManager.ClearQueue(DevStorageConnectionString, normalQueueName).ConfigureAwait(false);
+            await LocalStorageFixture.AzureQueueManager.CreateQueue(DevStorageConnectionString, normalQueueName).ConfigureAwait(false);
+            await LocalStorageFixture.AzureQueueManager.ClearQueue(DevStorageConnectionString, normalQueueName).ConfigureAwait(false);
 
             const string poisonQueueName = "posionmovetest-poison";
 
-            await LocalStorageFixture.AzureStorageManager.CreateQueue(DevStorageConnectionString, poisonQueueName).ConfigureAwait(false);
-            await LocalStorageFixture.AzureStorageManager.ClearQueue(DevStorageConnectionString, poisonQueueName).ConfigureAwait(false);
-            await LocalStorageFixture.AzureStorageManager.AddMessage(DevStorageConnectionString, poisonQueueName, @"{ ""poison"" : true }").ConfigureAwait(false);
+            await LocalStorageFixture.AzureQueueManager.CreateQueue(DevStorageConnectionString, poisonQueueName).ConfigureAwait(false);
+            await LocalStorageFixture.AzureQueueManager.ClearQueue(DevStorageConnectionString, poisonQueueName).ConfigureAwait(false);
+            await LocalStorageFixture.AzureQueueManager.AddMessage(DevStorageConnectionString, poisonQueueName, @"{ ""poison"" : true }").ConfigureAwait(false);
 
             await LocalStorageFixture.QueueRunner.Run(new QueueOptions { CureQueue = normalQueueName }).ConfigureAwait(false);
 
-            var queueList = await LocalStorageFixture.AzureStorageManager.GetQueues(DevStorageConnectionString).ConfigureAwait(false);
+            var queueList = await LocalStorageFixture.AzureQueueManager.GetQueues(DevStorageConnectionString).ConfigureAwait(false);
 
             var normalQueue = queueList.Find(x => x.Name.Equals(normalQueueName));
             var poisonQueue = queueList.Find(x => x.Name.Equals(poisonQueueName));
@@ -80,12 +78,12 @@ namespace az_lazy.test.QueueTest
         {
             const string queueName = "clearqueue";
 
-            await LocalStorageFixture.AzureStorageManager.CreateQueue(DevStorageConnectionString, queueName).ConfigureAwait(false);
-            await LocalStorageFixture.AzureStorageManager.AddMessage(DevStorageConnectionString, queueName, "{}").ConfigureAwait(false);
+            await LocalStorageFixture.AzureQueueManager.CreateQueue(DevStorageConnectionString, queueName).ConfigureAwait(false);
+            await LocalStorageFixture.AzureQueueManager.AddMessage(DevStorageConnectionString, queueName, "{}").ConfigureAwait(false);
 
             await LocalStorageFixture.QueueRunner.Run(new QueueOptions { ClearQueue = queueName }).ConfigureAwait(false);
 
-            var queueList = await LocalStorageFixture.AzureStorageManager.GetQueues(DevStorageConnectionString).ConfigureAwait(false);
+            var queueList = await LocalStorageFixture.AzureQueueManager.GetQueues(DevStorageConnectionString).ConfigureAwait(false);
             var clearedQueue = queueList.Find(x => x.Name.Equals(queueName));
             await clearedQueue.FetchAttributesAsync().ConfigureAwait(false);
 
@@ -98,11 +96,11 @@ namespace az_lazy.test.QueueTest
             const string queueName = "peekmessage";
             const string messageText = @"{ ""test"" : true }";
 
-            await LocalStorageFixture.AzureStorageManager.CreateQueue(DevStorageConnectionString, queueName).ConfigureAwait(false);
-            await LocalStorageFixture.AzureStorageManager.ClearQueue(DevStorageConnectionString, queueName).ConfigureAwait(false);
+            await LocalStorageFixture.AzureQueueManager.CreateQueue(DevStorageConnectionString, queueName).ConfigureAwait(false);
+            await LocalStorageFixture.AzureQueueManager.ClearQueue(DevStorageConnectionString, queueName).ConfigureAwait(false);
             await LocalStorageFixture.QueueRunner.Run(new QueueOptions { AddQueue = queueName, AddMessage = messageText }).ConfigureAwait(false);
 
-            var message = await LocalStorageFixture.AzureStorageManager.PeekMessages(DevStorageConnectionString, queueName, 1).ConfigureAwait(false);
+            var message = await LocalStorageFixture.AzureQueueManager.PeekMessages(DevStorageConnectionString, queueName, 1).ConfigureAwait(false);
 
             Assert.NotNull(message);
             Assert.Single(message);
@@ -114,18 +112,18 @@ namespace az_lazy.test.QueueTest
         {
             const string fromQueueName = "fromqueuename";
 
-            await LocalStorageFixture.AzureStorageManager.CreateQueue(DevStorageConnectionString, fromQueueName).ConfigureAwait(false);
-            await LocalStorageFixture.AzureStorageManager.ClearQueue(DevStorageConnectionString, fromQueueName).ConfigureAwait(false);
-            await LocalStorageFixture.AzureStorageManager.AddMessage(DevStorageConnectionString, fromQueueName, @"{ ""test"" : true }").ConfigureAwait(false);
+            await LocalStorageFixture.AzureQueueManager.CreateQueue(DevStorageConnectionString, fromQueueName).ConfigureAwait(false);
+            await LocalStorageFixture.AzureQueueManager.ClearQueue(DevStorageConnectionString, fromQueueName).ConfigureAwait(false);
+            await LocalStorageFixture.AzureQueueManager.AddMessage(DevStorageConnectionString, fromQueueName, @"{ ""test"" : true }").ConfigureAwait(false);
 
             const string toQueueName = "toqueuename";
 
-            await LocalStorageFixture.AzureStorageManager.CreateQueue(DevStorageConnectionString, toQueueName).ConfigureAwait(false);
-            await LocalStorageFixture.AzureStorageManager.ClearQueue(DevStorageConnectionString, toQueueName).ConfigureAwait(false);
+            await LocalStorageFixture.AzureQueueManager.CreateQueue(DevStorageConnectionString, toQueueName).ConfigureAwait(false);
+            await LocalStorageFixture.AzureQueueManager.ClearQueue(DevStorageConnectionString, toQueueName).ConfigureAwait(false);
 
             await LocalStorageFixture.QueueRunner.Run(new QueueOptions { From = fromQueueName, To = toQueueName }).ConfigureAwait(false);
 
-            var queueList = await LocalStorageFixture.AzureStorageManager.GetQueues(DevStorageConnectionString).ConfigureAwait(false);
+            var queueList = await LocalStorageFixture.AzureQueueManager.GetQueues(DevStorageConnectionString).ConfigureAwait(false);
 
             var fromQueue = queueList.Find(x => x.Name.Equals(fromQueueName));
             var toQueue = queueList.Find(x => x.Name.Equals(toQueueName));

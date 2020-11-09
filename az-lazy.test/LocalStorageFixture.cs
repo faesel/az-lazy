@@ -15,7 +15,9 @@ namespace az_lazy.test
     {
         private readonly ServiceProvider ServiceProvider;
         public ILocalStorageManager LocalStorageManager;
-        public IAzureStorageManager AzureStorageManager;
+        public IAzureQueueManager AzureQueueManager;
+        public IAzureConnectionManager AzureConnectionManager;
+        public IAzureContainerManager AzureContainerManager;
 
         //Runners
         public IConnectionRunner<ConnectionOptions> ConnectionRunner;
@@ -35,7 +37,9 @@ namespace az_lazy.test
             LocalStorageManager = ServiceProvider.GetService<ILocalStorageManager>();
             LocalStorageManager.AddDevelopmentConnection();
 
-            AzureStorageManager = ServiceProvider.GetService<IAzureStorageManager>();
+            AzureQueueManager = ServiceProvider.GetService<IAzureQueueManager>();
+            AzureConnectionManager = ServiceProvider.GetService<IAzureConnectionManager>();
+            AzureContainerManager = ServiceProvider.GetService<IAzureContainerManager>();
 
             AddConnectionRunner = ServiceProvider.GetService<IConnectionRunner<AddConnectionOptions>>();
             ConnectionRunner = ServiceProvider.GetService<IConnectionRunner<ConnectionOptions>>();

@@ -8,11 +8,11 @@ namespace az_lazy.Commands.Queue.Executor
     public class AddMessageExecutor : ICommandExecutor<QueueOptions>
     {
         private readonly ILocalStorageManager LocalStorageManager;
-        private readonly IAzureStorageManager AzureStorageManager;
+        private readonly IAzureQueueManager AzureStorageManager;
 
         public AddMessageExecutor(
             ILocalStorageManager localStorageManager,
-            IAzureStorageManager azureStorageManager)
+            IAzureQueueManager azureStorageManager)
         {
             this.LocalStorageManager = localStorageManager;
             this.AzureStorageManager = azureStorageManager;

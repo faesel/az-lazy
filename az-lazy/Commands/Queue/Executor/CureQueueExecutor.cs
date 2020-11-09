@@ -8,11 +8,11 @@ namespace az_lazy.Commands.Queue.Executor
     public class CureQueueExecutor : ICommandExecutor<QueueOptions>
     {
         private readonly ILocalStorageManager LocalStorageManager;
-        private readonly IAzureStorageManager AzureStorageManager;
+        private readonly IAzureQueueManager AzureStorageManager;
 
         public CureQueueExecutor(
             ILocalStorageManager localStorageManager,
-            IAzureStorageManager azureStorageManager)
+            IAzureQueueManager azureStorageManager)
         {
             this.LocalStorageManager = localStorageManager;
             this.AzureStorageManager = azureStorageManager;

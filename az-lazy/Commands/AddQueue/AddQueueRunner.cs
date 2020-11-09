@@ -8,11 +8,11 @@ namespace az_lazy.Commands.AddQueue
     public class AddQueueRunner : IConnectionRunner<AddQueueOptions>
     {
         private readonly ILocalStorageManager LocalStorageManager;
-        private readonly IAzureStorageManager AzureStorageManager;
+        private readonly IAzureQueueManager AzureStorageManager;
 
         public AddQueueRunner(
             ILocalStorageManager localStorageManager,
-            IAzureStorageManager azureStorageManager)
+            IAzureQueueManager azureStorageManager)
         {
             this.LocalStorageManager = localStorageManager;
             this.AzureStorageManager = azureStorageManager;

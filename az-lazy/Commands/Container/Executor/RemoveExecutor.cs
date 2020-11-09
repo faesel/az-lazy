@@ -8,14 +8,14 @@ namespace az_lazy.Commands.Container.Executor
     public class RemoveExecutor : ICommandExecutor<ContainerOptions>
     {
         private readonly ILocalStorageManager LocalStorageManager;
-        private readonly IAzureStorageManager AzureStorageManager;
+        private readonly IAzureContainerManager AzureContainerManager;
 
         public RemoveExecutor(
             ILocalStorageManager localStorageManager,
-            IAzureStorageManager azureStorageManager)
+            IAzureContainerManager azureContainerManager)
         {
             this.LocalStorageManager = localStorageManager;
-            this.AzureStorageManager = azureStorageManager;
+            this.AzureContainerManager = azureContainerManager;
         }
 
         public async Task Execute(ContainerOptions opts)
@@ -28,7 +28,7 @@ namespace az_lazy.Commands.Container.Executor
                 try
                 {
                     var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    await AzureStorageManager.RemoveContainer(selectedConnection.ConnectionString, opts.RemoveContainer).ConfigureAwait(false);
+                    await AzureContainerManager.RemoveContainer(selectedConnection.ConnectionString, opts.RemoveContainer).ConfigureAwait(false);
 
                     ConsoleHelper.WriteLineSuccessWaiting(message);
                     ConsoleHelper.WriteLineNormal($"Finished removing container {opts.RemoveContainer}");
