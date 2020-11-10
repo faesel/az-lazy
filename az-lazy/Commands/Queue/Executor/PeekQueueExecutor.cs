@@ -1,12 +1,10 @@
 using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Alba.CsConsoleFormat;
 using az_lazy.Extensions;
 using az_lazy.Helpers;
 using az_lazy.Manager;
-using ConsoleTables;
 
 namespace az_lazy.Commands.Queue.Executor
 {
