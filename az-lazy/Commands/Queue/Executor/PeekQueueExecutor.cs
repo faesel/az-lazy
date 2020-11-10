@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Alba.CsConsoleFormat;
 using az_lazy.Extensions;
 using az_lazy.Helpers;
 using az_lazy.Manager;
@@ -36,25 +37,38 @@ namespace az_lazy.Commands.Queue.Executor
 
                     ConsoleHelper.WriteLineSuccessWaiting(infoMessage);
 
-                    var table = new ConsoleTable("Number", "Message Id", "Message", "Inserted On");
+                    var headerThickness = new LineThickness(LineWidth.Double, LineWidth.Double, LineWidth.Double, LineWidth.Double);
+                    var doc = new Document(
+                        new Span("Message Count:") { Color = ConsoleColor.Yellow }, peekedMessages.Length, "\n",
+                        new Grid {
+                            Color = ConsoleColor.Gray,
+                            Columns = { GridLength.Auto, GridLength.Auto, GridLength.Auto, GridLength.Auto },
+                            Children = {
 
-                    foreach (var message in peekedMessages.Select((value, index) => new { value, index }))
-                    {
-                        var rawMessageText = message.value.MessageText;
-                        var isBase64 = rawMessageText.IsBase64();
-                        var messageText = isBase64 ?
-                            System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(rawMessageText)) :
-                            rawMessageText;
+                                new Cell("Number") { Stroke = headerThickness, Color = ConsoleColor.Yellow },
+                                new Cell("Message Id") { Stroke = headerThickness, Color = ConsoleColor.Yellow },
+                                new Cell("Message Text") { Stroke = headerThickness, TextWrap = TextWrap.WordWrap, Color = ConsoleColor.Yellow },
+                                new Cell("Inserted On") { Stroke = headerThickness, Color = ConsoleColor.Yellow },
 
-                        const string replaceWith = "";
-                        var removeLineBreaks = messageText.Replace("\r\n", replaceWith).Replace("\n", replaceWith).Replace("\r", replaceWith);
-                        var removeExtraSpaces = Regex.Replace(removeLineBreaks, @"\s+", " ");
+                                peekedMessages.Select((value, index) => {
+                                    var rawMessageText = value.MessageText;
+                                    var isBase64 = rawMessageText.IsBase64();
+                                    var messageText = isBase64 ?
+                                        System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(rawMessageText)) :
+                                        rawMessageText;
 
-                        table.AddRow(message.index + 1, message.value.MessageId, removeExtraSpaces, message.value.InsertedOn);
-                    }
+                                    return new[] {
+                                        new Cell(index + 1),
+                                        new Cell(value.MessageId),
+                                        new Cell(messageText),
+                                        new Cell(value.InsertedOn),
+                                    };
+                                })
+                            }
+                        }
+                    );
 
-                    table.Write();
-                    Console.WriteLine();
+                    ConsoleRenderer.RenderDocument(doc);
                 }
                 catch (Exception ex)
                 {

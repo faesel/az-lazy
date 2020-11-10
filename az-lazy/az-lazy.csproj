@@ -34,7 +34,7 @@
     <PackageReference Include="Azure.Storage.Blobs" Version="12.6.0"/>
     <PackageReference Include="Pastel" Version="1.3.2"/>
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.3"/>
-    <PackageReference Include="ConsoleTables" Version="2.4.2"/>
+    <PackageReference Include="Alba.CsConsoleFormat" Version="1.0.0"/>
     <None Include="LICENSE.txt" Pack="true" PackagePath="$(PackageLicenseFile)"/>
     <None Include="icon.png" Pack="true" PackagePath="\"/>
   </ItemGroup>
