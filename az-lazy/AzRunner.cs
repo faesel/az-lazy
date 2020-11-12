@@ -43,6 +43,8 @@ namespace az_lazy
 
         public async Task Startup(string[] args)
         {
+            args = new string[] { "container", "--tree", "dfsdf" };
+
             var parsedResult = Parser.Default
                 .ParseArguments<ConnectionOptions, AddConnectionOptions, QueueOptions, AddQueueOptions, ContainerOptions, AddContainerOptions>(args);
 

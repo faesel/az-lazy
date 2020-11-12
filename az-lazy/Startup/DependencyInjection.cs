@@ -43,6 +43,7 @@ namespace az_lazy.Startup
 
             serviceCollection.AddSingleton<ICommandExecutor<ContainerOptions>, Commands.Container.Executor.ListExecutor>();
             serviceCollection.AddSingleton<ICommandExecutor<ContainerOptions>, Commands.Container.Executor.RemoveExecutor>();
+            serviceCollection.AddSingleton<ICommandExecutor<ContainerOptions>, Commands.Container.Executor.TreeExecutor>();
 
             //Managers
             serviceCollection.AddSingleton<ILocalStorageManager, LocalStorageManager>();
