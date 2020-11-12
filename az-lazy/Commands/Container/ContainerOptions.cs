@@ -13,5 +13,8 @@ namespace az_lazy.Commands.Container.Executor
 
         [Option('r', "remove", Required = false, HelpText = "Container name to remove")]
         public string RemoveContainer { get; set; }
+
+        [Option('t', "tree", Required = false, HelpText = "List all containers available")]
+        public string Tree { get; set; }
     }
 }
