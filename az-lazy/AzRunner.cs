@@ -43,8 +43,6 @@ namespace az_lazy
 
         public async Task Startup(string[] args)
         {
-            args = new string[] { "container", "--tree", "newcontainer", "--depth", "4" };
-
             var parsedResult = Parser.Default
                 .ParseArguments<ConnectionOptions, AddConnectionOptions, QueueOptions, AddQueueOptions, ContainerOptions, AddContainerOptions>(args);
 
