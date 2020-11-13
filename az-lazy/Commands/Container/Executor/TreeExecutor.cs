@@ -21,16 +21,10 @@ namespace az_lazy.Commands.Container.Executor
         {
             if(!string.IsNullOrEmpty(opts.Tree))
             {
-                var tree = new Tree(new System.Collections.Generic.List<TreeNode>()
-                {
-                    new TreeNode() { Name = "One" },
-                    new TreeNode() { Name = "Two" },
-                    new TreeNode() { Name = "Three", Children = new System.Collections.Generic.List<TreeNode>() 
-                        {
-                            new TreeNode() { Name = "Four" }
-                        } 
-                    },
-                });
+                var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                var treeNodes = await AzureContainerManager.ContainerTree(selectedConnection.ConnectionString, opts.Tree, opts.Depth).ConfigureAwait(false);
+
+                new Tree(treeNodes);
             }
         }
     }
