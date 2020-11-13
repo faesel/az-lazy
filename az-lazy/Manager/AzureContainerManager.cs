@@ -72,22 +72,29 @@ namespace az_lazy.Manager
 
         public async Task<List<TreeNode>> ContainerTree(string connectionString, string containerName, int? depth)
         {
-            var container = new BlobContainerClient(connectionString, containerName);
+            try
+            {
+                var container = new BlobContainerClient(connectionString, containerName);
 
-            var containerChildren = new List<TreeNode>();
-            var treeNodes = new List<TreeNode>() {
-                new TreeNode {
-                    Name = container.Name,
-                    Children = containerChildren
-                }
-            };
+                var containerChildren = new List<TreeNode>();
+                var treeNodes = new List<TreeNode>() {
+                    new TreeNode {
+                        Name = container.Name,
+                        Children = containerChildren
+                    }
+                };
 
-            await ContainerTree(container, "", 0, containerChildren, depth).ConfigureAwait(false);
+                await ContainerTree(container, "", 0, containerChildren, depth).ConfigureAwait(false);
 
-            return treeNodes;
+                return treeNodes;
+            }
+            catch(Exception ex)
+            {
+                throw new ContainerException(ex);
+            }
         }
 
-        public async Task ContainerTree(BlobContainerClient container, string prefix, int level, List<TreeNode> children, int? depth)
+        private async Task ContainerTree(BlobContainerClient container, string prefix, int level, List<TreeNode> children, int? depth)
         {
             await foreach (var page in container.GetBlobsByHierarchyAsync(prefix: prefix, delimiter: "/").AsPages())
             {
@@ -95,7 +102,11 @@ namespace az_lazy.Manager
                 {
                     if(pageValues.IsBlob)
                     {
-                        children.Add(new TreeNode { Name = string.IsNullOrEmpty(prefix) ? pageValues.Blob.Name : pageValues.Blob.Name.Replace(prefix, string.Empty) });
+                        var blob = pageValues.Blob;
+                        children.Add(new TreeNode {
+                            Name = string.IsNullOrEmpty(prefix) ? blob.Name : blob.Name.Replace(prefix, string.Empty),
+                            Information = $"({blob.Properties.ContentLength / 1024}kb) {blob.Properties.LastModified.Value.DateTime.ToShortDateString()}"
+                        });
                     }
 
                     if (!depth.HasValue || level + 1 != depth.Value)

@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using az_lazy.Exceptions;
 using az_lazy.Helpers;
 using az_lazy.Manager;
 
@@ -21,10 +22,27 @@ namespace az_lazy.Commands.Container.Executor
         {
             if(!string.IsNullOrEmpty(opts.Tree))
             {
-                var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                var treeNodes = await AzureContainerManager.ContainerTree(selectedConnection.ConnectionString, opts.Tree, opts.Depth).ConfigureAwait(false);
+                string message = $"Getting blobs in container {opts.Tree}";
+                ConsoleHelper.WriteInfoWaiting(message, true);
 
-                new Tree(treeNodes);
+                try
+                {
+                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                    var treeNodes = await AzureContainerManager.ContainerTree(selectedConnection.ConnectionString, opts.Tree, opts.Depth).ConfigureAwait(false);
+
+                    if(treeNodes.Count > 0)
+                    {
+                        ConsoleHelper.WriteLineSuccessWaiting(message);
+                        ConsoleHelper.WriteSepparator();
+                    }
+
+                    new Tree(treeNodes);
+                }
+                catch(ContainerException ex)
+                {
+                    ConsoleHelper.WriteLineFailedWaiting(message);
+                    ConsoleHelper.WriteLineError(ex.Message);
+                }
             }
         }
     }
