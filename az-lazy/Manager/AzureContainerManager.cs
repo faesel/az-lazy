@@ -15,7 +15,7 @@ namespace az_lazy.Manager
         Task<List<BlobContainerItem>> GetContainers(string connectionString);
         Task<string> CreateContainer(string connectionString, PublicAccessType publicAccessLevel, string containerName);
         Task RemoveContainer(string connectionString, string removeContainer);
-        Task<List<TreeNode>> ContainerTree(string connectionString, string containerName, int? depth);
+        Task<List<TreeNode>> ContainerTree(string connectionString, string containerName, int? depth, bool detailed);
     }
 
     public class AzureContainerManager : IAzureContainerManager
@@ -72,7 +72,7 @@ namespace az_lazy.Manager
             }
         }
 
-        public async Task<List<TreeNode>> ContainerTree(string connectionString, string containerName, int? depth)
+        public async Task<List<TreeNode>> ContainerTree(string connectionString, string containerName, int? depth, bool detailed)
         {
             try
             {
@@ -86,7 +86,7 @@ namespace az_lazy.Manager
                     }
                 };
 
-                await ContainerTree(container, "", 0, containerChildren, depth).ConfigureAwait(false);
+                await ContainerTree(container, "", 0, containerChildren, depth, detailed).ConfigureAwait(false);
 
                 return treeNodes;
             }
@@ -96,7 +96,7 @@ namespace az_lazy.Manager
             }
         }
 
-        private async Task ContainerTree(BlobContainerClient container, string prefix, int level, List<TreeNode> children, int? depth)
+        private async Task ContainerTree(BlobContainerClient container, string prefix, int level, List<TreeNode> children, int? depth, bool detailed)
         {
             const string folderDelimiter = "/";
 
@@ -109,7 +109,7 @@ namespace az_lazy.Manager
                         var blob = pageValues.Blob;
                         children.Add(new TreeNode {
                             Name = string.IsNullOrEmpty(prefix) ? blob.Name : blob.Name.Replace(prefix, string.Empty),
-                            Information = $"({blob.Properties.ContentLength / 1024}kb) {blob.Properties.LastModified.Value.DateTime.ToShortDateString()}"
+                            Information = detailed ? $"({blob.Properties.ContentLength / 1024}kb) {blob.Properties.LastModified.Value.DateTime.ToShortDateString()}" : string.Empty
                         });
                     }
 
@@ -119,7 +119,7 @@ namespace az_lazy.Manager
                         var prefixName = string.IsNullOrEmpty(prefix) ? pageValues.Prefix.Replace(folderDelimiter, string.Empty) : pageValues.Prefix.Replace(prefix, string.Empty).Replace(folderDelimiter, string.Empty);
                         var prefixChildren = new List<TreeNode>();
                         children.Add(new TreeNode { Name = prefixName, Children = prefixChildren });
-                        await ContainerTree(container, pageValues.Prefix, incrementedLevel, prefixChildren, depth).ConfigureAwait(false);
+                        await ContainerTree(container, pageValues.Prefix, incrementedLevel, prefixChildren, depth, detailed).ConfigureAwait(false);
                     }
                 }
             }
