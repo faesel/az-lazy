@@ -6,10 +6,6 @@ namespace az_lazy.Helpers
 {
     public static class ConsoleHelper
     {
-        private static readonly Color InformationColour = Color.DarkGray;
-        private static readonly Color FailedColour = Color.IndianRed;
-        private static readonly Color SuccessColour = Color.LightGreen;
-
         public static void WriteLineNormal(string information)
         {
             Console.WriteLine(information);
@@ -17,22 +13,22 @@ namespace az_lazy.Helpers
 
         public static void WriteLineNormal(string information, string extraInformation)
         {
-            Console.WriteLine($"{information} - {extraInformation.Pastel(InformationColour)}");
+            Console.WriteLine($"{information} - {extraInformation.Pastel(Colours.InformationColour)}");
         }
 
         public static void WriteInfo(string information)
         {
-            Console.Write(information.Pastel(InformationColour));
+            Console.Write(information.Pastel(Colours.InformationColour));
         }
 
         public static void WriteLineInfo(string information)
         {
-            Console.WriteLine(information.Pastel(InformationColour));
+            Console.WriteLine(information.Pastel(Colours.InformationColour));
         }
 
         public static void WriteInfoWaiting(string information, bool resetPosition = false)
         {
-            Console.Write($"{information.Pastel(InformationColour)} ...");
+            Console.Write($"{information.Pastel(Colours.InformationColour)} ...");
 
             if(resetPosition)
             {
@@ -50,7 +46,7 @@ namespace az_lazy.Helpers
 
         public static void WriteInfoWaitingPct(string information, int pct, bool resetPosition = false)
         {
-            Console.Write($"{information.Pastel(InformationColour)} ... %{pct}");
+            Console.Write($"{information.Pastel(Colours.InformationColour)} ... %{pct}");
 
             if(resetPosition)
             {
@@ -68,32 +64,32 @@ namespace az_lazy.Helpers
 
         public static void WriteLineAdditionalInfo(string information, string additionalInformation)
         {
-            Console.WriteLine($"{information} - {additionalInformation.Pastel(InformationColour)}");
+            Console.WriteLine($"{information} - {additionalInformation.Pastel(Colours.InformationColour)}");
         }
 
         public static void WriteLineError(string information)
         {
-            Console.WriteLine($"{information.Pastel(FailedColour)}");
+            Console.WriteLine($"{information.Pastel(Colours.FailedColour)}");
         }
 
         public static void WriteSuccessWaiting(string information)
         {
-            Console.Write($"{information.Pastel(InformationColour)} ... {"Successfull".Pastel(SuccessColour)}");
+            Console.Write($"{information.Pastel(Colours.InformationColour)} ... {"Successfull".Pastel(Colours.SuccessColour)}");
         }
 
         public static void WriteLineSuccessWaiting(string information)
         {
-            Console.WriteLine($"{information.Pastel(InformationColour)} ... {"Successfull".Pastel(SuccessColour)}");
+            Console.WriteLine($"{information.Pastel(Colours.InformationColour)} ... {"Successfull".Pastel(Colours.SuccessColour)}");
         }
 
         public static void WriteFailedWaiting(string information)
         {
-            Console.Write($"{information.Pastel(InformationColour)} ... {"Failed".Pastel(FailedColour)}");
+            Console.Write($"{information.Pastel(Colours.InformationColour)} ... {"Failed".Pastel(Colours.FailedColour)}");
         }
 
         public static void WriteLineFailedWaiting(string information)
         {
-            Console.WriteLine($"{information.Pastel(InformationColour)} ... {"Failed".Pastel(FailedColour)}");
+            Console.WriteLine($"{information.Pastel(Colours.InformationColour)} ... {"Failed".Pastel(Colours.FailedColour)}");
         }
 
         public static void WriteSepparator()

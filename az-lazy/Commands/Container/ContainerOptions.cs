@@ -14,7 +14,13 @@ namespace az_lazy.Commands.Container.Executor
         [Option('r', "remove", Required = false, HelpText = "Container name to remove")]
         public string RemoveContainer { get; set; }
 
-        [Option('t', "tree", Required = false, HelpText = "List all containers available")]
+        [Option('t', "tree", Required = false, HelpText = "Shows the contents of the container in a tree view")]
         public string Tree { get; set; }
+
+        [Option('d', "depth", Required = false, HelpText = "Specifies the depth of view the container in a tree view")]
+        public int? Depth { get; set; }
+
+        [Option("detailed", Required = false, HelpText = "Uncovers more detail for each blob")]
+        public bool Detailed { get; set; }
     }
 }

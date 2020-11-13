@@ -1,17 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using Pastel;
 
 namespace az_lazy.Helpers
 {
     public class Tree
     {
-        private static readonly Color TreeColor = Color.Yellow;
-        private static readonly string _cross = " ├─".Pastel(TreeColor);
-        private static readonly string _corner = " └─".Pastel(TreeColor);
-        private static readonly string _vertical = " │ ".Pastel(TreeColor);
-        private const string _space = "   ";
+        private static readonly string cross = " ├─".Pastel(Colours.HighlightColour);
+        private static readonly string corner = " └─".Pastel(Colours.HighlightColour);
+        private static readonly string vertical = " │ ".Pastel(Colours.HighlightColour);
+        private const string space = "   ";
 
         public Tree(List<TreeNode> treeNodeList)
         {
@@ -21,32 +19,35 @@ namespace az_lazy.Helpers
             }
         }
 
-        static void PrintNode(TreeNode node, string indent)
+        private static void PrintNode(TreeNode node, string indent)
         {
-            Console.WriteLine(node.Name);
+            var information = string.IsNullOrEmpty(node.Information) ?  
+                string.Empty : $" - {node.Information.Pastel(Colours.InformationColour)}";
+
+            Console.WriteLine(node.Name + information);
 
             var numberOfChildren = node.Children.Count;
             for (var i = 0; i < numberOfChildren; i++)
             {
                 var child = node.Children[i];
-                var isLast = (i == (numberOfChildren - 1));
+                var isLast = i == (numberOfChildren - 1);
                 PrintChildNode(child, indent, isLast);
             }
         }
 
-        static void PrintChildNode(TreeNode node, string indent, bool isLast)
+        private static void PrintChildNode(TreeNode node, string indent, bool isLast)
         {
             Console.Write(indent);
 
             if (isLast)
             {
-                Console.Write(_corner);
-                indent += _space;
+                Console.Write(corner);
+                indent += space;
             }
             else
             {
-                Console.Write(_cross);
-                indent += _vertical;
+                Console.Write(cross);
+                indent += vertical;
             }
 
             PrintNode(node, indent);

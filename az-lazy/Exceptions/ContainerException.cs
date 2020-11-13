@@ -7,7 +7,7 @@ namespace az_lazy.Exceptions
         {
         }
 
-        public ContainerException(Exception ex) : base($"Failed queue operation {ex.Message}")
+        public ContainerException(Exception ex) : base($"Failed container operation {ex.Message}")
         {
         }
 
