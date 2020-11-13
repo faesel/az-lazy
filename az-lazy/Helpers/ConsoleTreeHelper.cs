@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using Pastel;
 
 namespace az_lazy.Helpers
@@ -22,8 +21,8 @@ namespace az_lazy.Helpers
 
         private static void PrintNode(TreeNode node, string indent)
         {
-
-            var information = string.IsNullOrEmpty(node.Information) ? string.Empty : $" - {node.Information.Pastel(Colours.InformationColour)}";
+            var information = string.IsNullOrEmpty(node.Information) ?  
+                string.Empty : $" - {node.Information.Pastel(Colours.InformationColour)}";
 
             Console.WriteLine(node.Name + information);
 

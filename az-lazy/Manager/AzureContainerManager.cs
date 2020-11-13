@@ -20,6 +20,8 @@ namespace az_lazy.Manager
 
     public class AzureContainerManager : IAzureContainerManager
     {
+        
+
         public async Task<List<BlobContainerItem>> GetContainers(string connectionString)
         {
             var blobServiceClient = new BlobServiceClient(connectionString);
@@ -96,7 +98,9 @@ namespace az_lazy.Manager
 
         private async Task ContainerTree(BlobContainerClient container, string prefix, int level, List<TreeNode> children, int? depth)
         {
-            await foreach (var page in container.GetBlobsByHierarchyAsync(prefix: prefix, delimiter: "/").AsPages())
+            const string folderDelimiter = "/";
+
+            await foreach (var page in container.GetBlobsByHierarchyAsync(prefix: prefix, delimiter: folderDelimiter).AsPages())
             {
                 foreach (var pageValues in page.Values)
                 {
@@ -109,15 +113,13 @@ namespace az_lazy.Manager
                         });
                     }
 
-                    if (!depth.HasValue || level + 1 != depth.Value)
+                    var incrementedLevel = level + 1;
+                    if ((!depth.HasValue || incrementedLevel != depth.Value) && pageValues.IsPrefix)
                     {
-                        if(pageValues.IsPrefix)
-                        {
-                            var prefixName = string.IsNullOrEmpty(prefix) ? pageValues.Prefix.Replace("/", string.Empty) : pageValues.Prefix.Replace(prefix, string.Empty).Replace("/", string.Empty);
-                            var prefixChildren = new List<TreeNode>();
-                            children.Add(new TreeNode { Name = prefixName, Children = prefixChildren });
-                            await ContainerTree(container, pageValues.Prefix, level + 1, prefixChildren, depth).ConfigureAwait(false);
-                        }
+                        var prefixName = string.IsNullOrEmpty(prefix) ? pageValues.Prefix.Replace(folderDelimiter, string.Empty) : pageValues.Prefix.Replace(prefix, string.Empty).Replace(folderDelimiter, string.Empty);
+                        var prefixChildren = new List<TreeNode>();
+                        children.Add(new TreeNode { Name = prefixName, Children = prefixChildren });
+                        await ContainerTree(container, pageValues.Prefix, incrementedLevel, prefixChildren, depth).ConfigureAwait(false);
                     }
                 }
             }
