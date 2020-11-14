@@ -21,7 +21,7 @@ namespace az_lazy.Helpers
 
         private static void PrintNode(TreeNode node, string indent)
         {
-            var information = string.IsNullOrEmpty(node.Information) ?  
+            var information = string.IsNullOrEmpty(node.Information) ?
                 string.Empty : $" - {node.Information.Pastel(Colours.InformationColour)}";
 
             Console.WriteLine(node.Name + information);

@@ -42,7 +42,6 @@ namespace az_lazy.Commands.Queue.Executor
                             Color = ConsoleColor.Gray,
                             Columns = { GridLength.Auto, GridLength.Auto, GridLength.Auto, GridLength.Auto },
                             Children = {
-
                                 new Cell("Number") { Stroke = headerThickness, Color = ConsoleColor.Yellow },
                                 new Cell("Message Id") { Stroke = headerThickness, Color = ConsoleColor.Yellow },
                                 new Cell("Message Text") { Stroke = headerThickness, TextWrap = TextWrap.WordWrap, Color = ConsoleColor.Yellow },

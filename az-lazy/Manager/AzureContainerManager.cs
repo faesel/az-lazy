@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using az_lazy.Exceptions;
 using az_lazy.Helpers;
+using az_lazy.Model;
 using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
@@ -16,12 +17,11 @@ namespace az_lazy.Manager
         Task<string> CreateContainer(string connectionString, PublicAccessType publicAccessLevel, string containerName);
         Task RemoveContainer(string connectionString, string removeContainer);
         Task<List<TreeNode>> ContainerTree(string connectionString, string containerName, int? depth, bool detailed);
+        Task RemoveBlob(string selectedConnection, string containerName, string blobToRemove);
     }
 
     public class AzureContainerManager : IAzureContainerManager
     {
-        
-
         public async Task<List<BlobContainerItem>> GetContainers(string connectionString)
         {
             var blobServiceClient = new BlobServiceClient(connectionString);
@@ -122,6 +122,19 @@ namespace az_lazy.Manager
                         await ContainerTree(container, pageValues.Prefix, incrementedLevel, prefixChildren, depth, detailed).ConfigureAwait(false);
                     }
                 }
+            }
+        }
+
+        public async Task RemoveBlob(string selectedConnection, string containerName, string blobToRemove)
+        {
+            try
+            {
+                var container = new BlobContainerClient(selectedConnection, containerName);
+                await container.DeleteBlobIfExistsAsync(blobToRemove);
+            }
+            catch (Exception ex)
+            {
+                throw new ContainerException(ex);
             }
         }
     }

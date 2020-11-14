@@ -9,6 +9,7 @@ AzLazy CLI tool is designed for developers, it provides a command line interface
     1. [Connection Commands](#connectioncommand)
     2. [Queue Commands](#queuecommand)
     3. [Container Commands](#containercommand)
+    4. [Blob Commands](#blobcommand)
 4. [Contributing](#contributing)
 5. [Change Log](#changelog)
 
@@ -98,6 +99,12 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 | `azlazy addcontainer --name "container to add" --publicAccess "Blob"` | Creates a new container with the given name, the containers public access level can be set using `--publicAccess`. Possible options are `None`, `Blob`, `BlobContainer`. By default any container created will not be publicly accessible and so will be set to `None` |
 | `azlazy container --remove "container to remove"` | Removes a container with the given game |
 | `azlazy container --tree "container to view"` | Returns a tree view of the container `--detailed` command can also be used view file sizes and last modified dates. For large containers `--depth 2` command can be used to limit how deep the folders are traversed |
+
+## iv. Blob commands  <a name="blobcommand"></a>
+
+| Command   |      Description      |
+|--------------|:-------------|
+| `azlazy blob --container "container name" --remove "blob to remove"` | removes a blob from a given container, note the blob name needs to contain the full path |
 
 More coming soon !
 

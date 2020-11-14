@@ -9,16 +9,13 @@ namespace az_lazy.Commands.AddConnection
     public class AddConnectionRunner : IConnectionRunner<AddConnectionOptions>
     {
         private readonly ILocalStorageManager LocalStorageManager;
-        private readonly IAzureQueueManager AzureStorageManager;
         private readonly IAzureConnectionManager AzureConnectionManager;
 
         public AddConnectionRunner(
             ILocalStorageManager localStorageManager,
-            IAzureQueueManager azureStorageManager,
             IAzureConnectionManager azureConnectionManager)
         {
             this.LocalStorageManager = localStorageManager;
-            this.AzureStorageManager = azureStorageManager;
             this.AzureConnectionManager = azureConnectionManager;
         }
 
