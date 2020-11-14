@@ -104,6 +104,7 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 
 | Command   |      Description      |
 |--------------|:-------------|
+| `azlazy blob --help` | Displays a list of commands you can use for blobs |
 | `azlazy blob --container "container name" --remove "blob to remove"` | removes a blob from a given container, note the blob name needs to contain the full path |
 
 More coming soon !
