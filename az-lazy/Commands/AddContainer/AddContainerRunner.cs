@@ -10,16 +10,13 @@ namespace az_lazy.Commands.AddContainer
     public class AddContainerRunner : IConnectionRunner<AddContainerOptions>
     {
         private readonly ILocalStorageManager LocalStorageManager;
-        private readonly IAzureQueueManager AzureStorageManager;
         private readonly IAzureContainerManager AzureContainerManager;
 
         public AddContainerRunner(
             ILocalStorageManager localStorageManager,
-            IAzureQueueManager azureStorageManager,
             IAzureContainerManager azureContainerManager)
         {
             this.LocalStorageManager = localStorageManager;
-            this.AzureStorageManager = azureStorageManager;
             this.AzureContainerManager = azureContainerManager;
         }
 

@@ -6,7 +6,7 @@ using az_lazy.Manager;
 
 namespace az_lazy.Commands.Container.Executor
 {
-    public class ListExecutor: ICommandExecutor<ContainerOptions>
+    public class ListExecutor : ICommandExecutor<ContainerOptions>
     {
         private readonly ILocalStorageManager LocalStorageManager;
         private readonly IAzureContainerManager AzureContainerManager;

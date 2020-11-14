@@ -26,6 +26,7 @@ namespace az_lazy.Startup
             serviceCollection.AddSingleton<IConnectionRunner<AddQueueOptions>, AddQueueRunner>();
             serviceCollection.AddSingleton<IConnectionRunner<ContainerOptions>, ContainerRunner>();
             serviceCollection.AddSingleton<IConnectionRunner<AddContainerOptions>, AddContainerRunner>();
+            serviceCollection.AddSingleton<IConnectionRunner<BlobOptions>, BlobRunner>();
 
             //Executors
             serviceCollection.AddSingleton<ICommandExecutor<ConnectionOptions>, Commands.Connection.Executor.ListExecutor>();
@@ -42,8 +43,10 @@ namespace az_lazy.Startup
             serviceCollection.AddSingleton<ICommandExecutor<QueueOptions>, MoveQueueExecutor>();
 
             serviceCollection.AddSingleton<ICommandExecutor<ContainerOptions>, Commands.Container.Executor.ListExecutor>();
-            serviceCollection.AddSingleton<ICommandExecutor<ContainerOptions>, Commands.Container.Executor.RemoveExecutor>();
-            serviceCollection.AddSingleton<ICommandExecutor<ContainerOptions>, Commands.Container.Executor.TreeExecutor>();
+            serviceCollection.AddSingleton<ICommandExecutor<ContainerOptions>, RemoveExecutor>();
+            serviceCollection.AddSingleton<ICommandExecutor<ContainerOptions>, TreeExecutor>();
+
+            serviceCollection.AddSingleton<ICommandExecutor<BlobOptions>, Commands.Blob.Executor.RemoveExecutor>();
 
             //Managers
             serviceCollection.AddSingleton<ILocalStorageManager, LocalStorageManager>();
