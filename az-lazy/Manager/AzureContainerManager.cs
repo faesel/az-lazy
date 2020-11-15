@@ -152,7 +152,7 @@ namespace az_lazy.Manager
                 var fileType = MimeTypeMap.GetMimeType(Path.GetExtension(fileToUpload));
                 var uplodPath = string.IsNullOrEmpty(containerLocation) ? string.Empty : $"{containerLocation}";
 
-                if (!uplodPath.EndsWith(@"/"))
+                if (!uplodPath.EndsWith(@"/") && !string.IsNullOrEmpty(containerLocation))
                 {
                     uplodPath += @"/";
                 }
