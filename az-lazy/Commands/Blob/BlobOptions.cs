@@ -10,5 +10,11 @@ namespace az_lazy.Commands.Blob
 
         [Option('r', "remove", Required = false, HelpText = "Name of the blob to remove")]
         public string Remove { get; set; }
+
+        [Option('r', "uploadFile", Required = false, HelpText = "File path to upload")]
+        public string UploadFile { get; set; }
+
+        [Option('r', "uploadPath", Required = false, HelpText = "Path and file name to upload to")]
+        public string UploadPath { get; set; }
     }
 }

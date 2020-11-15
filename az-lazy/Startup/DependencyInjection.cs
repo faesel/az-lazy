@@ -10,6 +10,7 @@ using az_lazy.Commands.Queue.Executor;
 using az_lazy.Commands.Container.Executor;
 using az_lazy.Commands.Blob;
 using az_lazy.Commands.AddContainer;
+using az_lazy.Commands.Blob.Executor;
 
 namespace az_lazy.Startup
 {
@@ -43,10 +44,11 @@ namespace az_lazy.Startup
             serviceCollection.AddSingleton<ICommandExecutor<QueueOptions>, MoveQueueExecutor>();
 
             serviceCollection.AddSingleton<ICommandExecutor<ContainerOptions>, Commands.Container.Executor.ListExecutor>();
-            serviceCollection.AddSingleton<ICommandExecutor<ContainerOptions>, RemoveExecutor>();
+            serviceCollection.AddSingleton<ICommandExecutor<ContainerOptions>, Commands.Container.Executor.RemoveExecutor>();
             serviceCollection.AddSingleton<ICommandExecutor<ContainerOptions>, TreeExecutor>();
 
             serviceCollection.AddSingleton<ICommandExecutor<BlobOptions>, Commands.Blob.Executor.RemoveExecutor>();
+            serviceCollection.AddSingleton<ICommandExecutor<BlobOptions>, UploadExecutor>();
 
             //Managers
             serviceCollection.AddSingleton<ILocalStorageManager, LocalStorageManager>();

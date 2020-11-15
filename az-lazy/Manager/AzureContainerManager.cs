@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Threading.Tasks;
 using az_lazy.Exceptions;
 using az_lazy.Helpers;
-using az_lazy.Model;
-using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using MimeTypes;
 
 namespace az_lazy.Manager
 {
@@ -17,7 +16,8 @@ namespace az_lazy.Manager
         Task<string> CreateContainer(string connectionString, PublicAccessType publicAccessLevel, string containerName);
         Task RemoveContainer(string connectionString, string removeContainer);
         Task<List<TreeNode>> ContainerTree(string connectionString, string containerName, int? depth, bool detailed);
-        Task RemoveBlob(string selectedConnection, string containerName, string blobToRemove);
+        Task RemoveBlob(string connectionString, string containerName, string blobToRemove);
+        Task UploadBlob(string connectionString, string containerName, string fileToUpload, string containerLocation);
     }
 
     public class AzureContainerManager : IAzureContainerManager
@@ -125,12 +125,49 @@ namespace az_lazy.Manager
             }
         }
 
-        public async Task RemoveBlob(string selectedConnection, string containerName, string blobToRemove)
+        public async Task RemoveBlob(string connectionString, string containerName, string blobToRemove)
         {
             try
             {
-                var container = new BlobContainerClient(selectedConnection, containerName);
+                var container = new BlobContainerClient(connectionString, containerName);
                 await container.DeleteBlobIfExistsAsync(blobToRemove);
+            }
+            catch (Exception ex)
+            {
+                throw new ContainerException(ex);
+            }
+        }
+
+        public async Task UploadBlob(string connectionString, string containerName, string fileToUpload, string containerLocation)
+        {
+            try
+            {
+                var fileName = Path.GetFileName(fileToUpload);
+
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    throw new ContainerException($"Path {fileToUpload} does not contain a file name");
+                }
+
+                var fileType = MimeTypeMap.GetMimeType(Path.GetExtension(fileToUpload));
+                var uplodPath = string.IsNullOrEmpty(containerLocation) ? string.Empty : $"{containerLocation}";
+
+                if (!uplodPath.EndsWith(@"/"))
+                {
+                    uplodPath += @"/";
+                }
+
+                using FileStream fileStream = File.OpenRead(fileToUpload);
+                var container = new BlobContainerClient(connectionString, containerName);
+                var blobClient = container.GetBlobClient($"{uplodPath}{fileName}");
+
+                await blobClient.UploadAsync(fileStream, new BlobUploadOptions
+                {
+                    HttpHeaders = new BlobHttpHeaders
+                    {
+                        ContentType = fileType
+                    }
+                });
             }
             catch (Exception ex)
             {
