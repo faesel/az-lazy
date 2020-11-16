@@ -40,9 +40,3 @@ https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azurite?toc=/a
 3. Ensure commands have a valid alias when possible
 
 # 5. Dev Links <a name="devlinks"></a>
-
-
-Blob tree structure
-
-https://stackoverflow.com/questions/59714051/is-there-a-way-to-get-file-structure-from-azure-blob
-https://andrewlock.net/creating-an-ascii-art-tree-in-csharp/
