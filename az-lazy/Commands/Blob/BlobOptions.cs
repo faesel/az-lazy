@@ -16,5 +16,8 @@ namespace az_lazy.Commands.Blob
 
         [Option('r', "uploadPath", Required = false, HelpText = "Path and file name to upload to")]
         public string UploadPath { get; set; }
+
+        [Option('s', "sync", Required = false, HelpText = "Syncs the current folder your executing from into the container, you can use uploadPath to optionally specify a subroute in the container")]
+        public string Sync { get; set; }
     }
 }
