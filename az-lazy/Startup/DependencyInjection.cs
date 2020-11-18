@@ -33,6 +33,7 @@ namespace az_lazy.Startup
             serviceCollection.AddSingleton<ICommandExecutor<ConnectionOptions>, Commands.Connection.Executor.ListExecutor>();
             serviceCollection.AddSingleton<ICommandExecutor<ConnectionOptions>, RemoveConnectionExecutor>();
             serviceCollection.AddSingleton<ICommandExecutor<ConnectionOptions>, SelectConnectionExecutor>();
+            serviceCollection.AddSingleton<ICommandExecutor<ConnectionOptions>, ListRemoteExecutor>();
 
             serviceCollection.AddSingleton<ICommandExecutor<QueueOptions>, Commands.Queue.Executor.ListExecutor>();
             serviceCollection.AddSingleton<ICommandExecutor<QueueOptions>, AddMessageExecutor>();
@@ -55,6 +56,7 @@ namespace az_lazy.Startup
             serviceCollection.AddSingleton<IAzureQueueManager, AzureQueueManager>();
             serviceCollection.AddSingleton<IAzureContainerManager, AzureContainerManager>();
             serviceCollection.AddSingleton<IAzureConnectionManager, AzureConnectionManager>();
+            serviceCollection.AddSingleton<IAzurePowerShellManager, AzurePowerShellManager>();
 
             return serviceCollection;
         }
