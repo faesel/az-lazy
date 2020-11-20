@@ -18,6 +18,7 @@ namespace az_lazy.Manager
         Task<List<TreeNode>> ContainerTree(string connectionString, string containerName, int? depth, bool detailed);
         Task RemoveBlob(string connectionString, string containerName, string blobToRemove);
         Task UploadBlob(string connectionString, string containerName, string fileToUpload, string containerLocation);
+        Task UploadBlobFromFolder(string connectionString, string containerName, string searchDirectory, string containerLocation);
     }
 
     public class AzureContainerManager : IAzureContainerManager
@@ -150,16 +151,16 @@ namespace az_lazy.Manager
                 }
 
                 var fileType = MimeTypeMap.GetMimeType(Path.GetExtension(fileToUpload));
-                var uplodPath = string.IsNullOrEmpty(containerLocation) ? string.Empty : $"{containerLocation}";
+                var uploadPath = string.IsNullOrEmpty(containerLocation) ? string.Empty : $"{containerLocation}";
 
-                if (!uplodPath.EndsWith(@"/") && !string.IsNullOrEmpty(containerLocation))
+                if (!uploadPath.EndsWith("/") && !string.IsNullOrEmpty(containerLocation))
                 {
-                    uplodPath += @"/";
+                    uploadPath += "/";
                 }
 
                 using FileStream fileStream = File.OpenRead(fileToUpload);
                 var container = new BlobContainerClient(connectionString, containerName);
-                var blobClient = container.GetBlobClient($"{uplodPath}{fileName}");
+                var blobClient = container.GetBlobClient($"{uploadPath}{fileName}");
 
                 await blobClient.UploadAsync(fileStream, new BlobUploadOptions
                 {
@@ -167,9 +168,26 @@ namespace az_lazy.Manager
                     {
                         ContentType = fileType
                     }
-                });
+                }).ConfigureAwait(false);
             }
             catch (Exception ex)
+            {
+                throw new ContainerException(ex);
+            }
+        }
+
+        public async Task UploadBlobFromFolder(string connectionString, string containerName, string searchDirectory, string containerLocation)
+        {
+            try
+            {
+                foreach(var file in Directory.GetFiles(searchDirectory, "*", SearchOption.AllDirectories))
+                {
+                    Console.WriteLine($"Uploading {file}");
+                    await UploadBlob(connectionString, containerLocation, file, containerLocation).ConfigureAwait(false);
+                    Console.WriteLine($"Uploading {file} DONE");
+                }
+            }
+            catch(Exception ex)
             {
                 throw new ContainerException(ex);
             }
