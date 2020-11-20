@@ -20,17 +20,12 @@ namespace az_lazy.Commands.Blob.Executor
             this.AzureContainerManager = azureContainerManager;
         }
 
-        public async Task Execute(BlobOptions options)
+        public async Task Execute(BlobOptions opts)
         {
-            if(!string.IsNullOrEmpty(options.Sync))
+            if(!string.IsNullOrEmpty(opts.Sync))
             {
-                Console.WriteLine("Files:");
-                var files = Directory.GetFiles(options.Sync, "*", SearchOption.AllDirectories);
-
-                foreach(var file in files)
-                {
-                    Console.WriteLine(file.Replace(options.Sync + @"\", string.Empty));
-                }
+                var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                await AzureContainerManager.UploadBlobFromFolder(selectedConnection.ConnectionString, opts.Container, opts.Sync, opts.UploadPath).ConfigureAwait(false);
             }
         }
     }
