@@ -183,7 +183,14 @@ namespace az_lazy.Manager
                 foreach(var file in Directory.GetFiles(searchDirectory, "*", SearchOption.AllDirectories))
                 {
                     Console.WriteLine($"Uploading {file}");
-                    await UploadBlob(connectionString, containerLocation, file, containerLocation).ConfigureAwait(false);
+
+                    var subfolderAndFile = file
+                        .Replace(searchDirectory, string.Empty)
+                        .Replace(Path.GetFileName(file), string.Empty);
+
+                    Console.WriteLine(subfolderAndFile);
+
+                    await UploadBlob(connectionString, containerName, file, subfolderAndFile).ConfigureAwait(false);
                     Console.WriteLine($"Uploading {file} DONE");
                 }
             }
