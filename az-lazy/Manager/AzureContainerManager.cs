@@ -1,3 +1,5 @@
+using System.Threading;
+using System.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -164,6 +166,7 @@ namespace az_lazy.Manager
 
                 await blobClient.UploadAsync(fileStream, new BlobUploadOptions
                 {
+                    
                     HttpHeaders = new BlobHttpHeaders
                     {
                         ContentType = fileType
@@ -180,18 +183,36 @@ namespace az_lazy.Manager
         {
             try
             {
-                foreach(var file in Directory.GetFiles(searchDirectory, "*", SearchOption.AllDirectories))
+                var files = Directory.GetFiles(searchDirectory, "*", SearchOption.AllDirectories).ToList();
+
+                ConsoleHelper.WriteLineInfo($"Found {files.Count} files, beginning upload ...");
+
+                using (var progress = new ProgressBar())
                 {
-                    Console.WriteLine($"Uploading {file}");
+                    foreach(var file in files)
+                    {
+                        var fileName = Path.GetFileName(file);
 
-                    var subfolderAndFile = file
-                        .Replace(searchDirectory, string.Empty)
-                        .Replace(Path.GetFileName(file), string.Empty);
+                        var subfolderAndFile = file
+                            .Replace(searchDirectory, string.Empty)
+                            .Replace(fileName, string.Empty);
 
-                    Console.WriteLine(subfolderAndFile);
+                        if(!string.IsNullOrEmpty(containerLocation))
+                            subfolderAndFile = containerLocation + subfolderAndFile;
 
-                    await UploadBlob(connectionString, containerName, file, subfolderAndFile).ConfigureAwait(false);
-                    Console.WriteLine($"Uploading {file} DONE");
+                        if(subfolderAndFile.StartsWith(@"\"))
+                            subfolderAndFile = subfolderAndFile[1..];
+
+                        if(subfolderAndFile.EndsWith(@"\"))
+                            subfolderAndFile = subfolderAndFile[0..^1];
+
+                        
+
+                        await UploadBlob(connectionString, containerName, file, subfolderAndFile).ConfigureAwait(false);
+
+                        var percentageComplete = (double)files.IndexOf(file) / files.Count * 100;
+                        progress.Report((percentageComplete / 100, @$" Uploading - {subfolderAndFile}\{fileName}"));
+                    }
                 }
             }
             catch(Exception ex)

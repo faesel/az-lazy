@@ -22,10 +22,25 @@ namespace az_lazy.Commands.Blob.Executor
 
         public async Task Execute(BlobOptions opts)
         {
-            if(!string.IsNullOrEmpty(opts.Sync))
+            if(!string.IsNullOrEmpty(opts.Directory))
             {
-                var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                await AzureContainerManager.UploadBlobFromFolder(selectedConnection.ConnectionString, opts.Container, opts.Sync, opts.UploadPath).ConfigureAwait(false);
+                var message = $"Syncing directory {opts.Directory}";
+                ConsoleHelper.WriteLineInfo(message);
+                ConsoleHelper.WriteSepparator();
+
+                try
+                {
+                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                    await AzureContainerManager.UploadBlobFromFolder(selectedConnection.ConnectionString, opts.Container, opts.Directory, opts.UploadPath).ConfigureAwait(false);
+
+                    Console.WriteLine(string.Empty);
+                    ConsoleHelper.WriteLineSuccessWaiting(message);
+                }
+                catch(Exception ex)
+                {
+                    ConsoleHelper.WriteLineFailedWaiting("Unable to sync directory");
+                    ConsoleHelper.WriteLineError(ex.Message);
+                }
             }
         }
     }
