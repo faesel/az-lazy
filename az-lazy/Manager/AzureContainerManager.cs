@@ -206,8 +206,6 @@ namespace az_lazy.Manager
                         if(subfolderAndFile.EndsWith(@"\"))
                             subfolderAndFile = subfolderAndFile[0..^1];
 
-                        
-
                         await UploadBlob(connectionString, containerName, file, subfolderAndFile).ConfigureAwait(false);
 
                         var percentageComplete = (double)files.IndexOf(file) / files.Count * 100;
