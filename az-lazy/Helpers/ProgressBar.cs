@@ -1,7 +1,6 @@
 using System;
 using System.Text;
 using System.Threading;
-using Pastel;
 
 namespace az_lazy.Helpers
 {
@@ -10,13 +9,9 @@ namespace az_lazy.Helpers
         private const int blockCount = 30;
         private readonly TimeSpan animationInterval = TimeSpan.FromSeconds(1.0 / 8);
         private const string animation = @"|/-\";
-
         private readonly Timer timer;
-
         private double currentProgress = 0;
-
         private string progressInformation = string.Empty;
-
         private string currentText = string.Empty;
         private bool disposed = false;
         private int animationIndex = 0;

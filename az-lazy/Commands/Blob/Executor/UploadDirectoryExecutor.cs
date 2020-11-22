@@ -1,5 +1,3 @@
-using System.IO;
-using az_lazy.Exceptions;
 using az_lazy.Helpers;
 using az_lazy.Manager;
 using System;
@@ -7,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace az_lazy.Commands.Blob.Executor
 {
-    public class SyncExecutor : ICommandExecutor<BlobOptions>
+    public class UploadDirectoryExecutor : ICommandExecutor<BlobOptions>
     {
         private readonly ILocalStorageManager LocalStorageManager;
         private readonly IAzureContainerManager AzureContainerManager;
 
-        public SyncExecutor(
+        public UploadDirectoryExecutor(
             ILocalStorageManager localStorageManager,
             IAzureContainerManager azureContainerManager)
         {
