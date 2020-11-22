@@ -49,7 +49,7 @@ namespace az_lazy.Startup
 
             serviceCollection.AddSingleton<ICommandExecutor<BlobOptions>, Commands.Blob.Executor.RemoveExecutor>();
             serviceCollection.AddSingleton<ICommandExecutor<BlobOptions>, UploadExecutor>();
-            serviceCollection.AddSingleton<ICommandExecutor<BlobOptions>, SyncExecutor>();
+            serviceCollection.AddSingleton<ICommandExecutor<BlobOptions>, UploadDirectoryExecutor>();
 
             //Managers
             serviceCollection.AddSingleton<ILocalStorageManager, LocalStorageManager>();
