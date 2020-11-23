@@ -11,6 +11,7 @@ using az_lazy.Commands.Container.Executor;
 using az_lazy.Commands.Blob;
 using az_lazy.Commands.AddContainer;
 using az_lazy.Commands.Blob.Executor;
+using az_lazy.Commands.Table;
 
 namespace az_lazy.Startup
 {
@@ -28,6 +29,7 @@ namespace az_lazy.Startup
             serviceCollection.AddSingleton<IConnectionRunner<ContainerOptions>, ContainerRunner>();
             serviceCollection.AddSingleton<IConnectionRunner<AddContainerOptions>, AddContainerRunner>();
             serviceCollection.AddSingleton<IConnectionRunner<BlobOptions>, BlobRunner>();
+            serviceCollection.AddSingleton<IConnectionRunner<TableOptions>, TableRunner>();
 
             //Executors
             serviceCollection.AddSingleton<ICommandExecutor<ConnectionOptions>, Commands.Connection.Executor.ListExecutor>();
@@ -51,11 +53,14 @@ namespace az_lazy.Startup
             serviceCollection.AddSingleton<ICommandExecutor<BlobOptions>, UploadExecutor>();
             serviceCollection.AddSingleton<ICommandExecutor<BlobOptions>, UploadDirectoryExecutor>();
 
+            serviceCollection.AddSingleton<ICommandExecutor<TableOptions>, Commands.Table.Executor.ListExecutor>();
+
             //Managers
             serviceCollection.AddSingleton<ILocalStorageManager, LocalStorageManager>();
             serviceCollection.AddSingleton<IAzureQueueManager, AzureQueueManager>();
             serviceCollection.AddSingleton<IAzureContainerManager, AzureContainerManager>();
             serviceCollection.AddSingleton<IAzureConnectionManager, AzureConnectionManager>();
+            serviceCollection.AddSingleton<IAzureTableManager, AzureTableManager>();
 
             return serviceCollection;
         }
