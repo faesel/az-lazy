@@ -10,6 +10,7 @@ AzLazy CLI tool is designed for developers, it provides a command line interface
     2. [Queue Commands](#queuecommand)
     3. [Container Commands](#containercommand)
     4. [Blob Commands](#blobcommand)
+    4. [Table Commands](#tablecommand)
 4. [Contributing](#contributing)
 5. [Change Log](#changelog)
 
@@ -112,6 +113,13 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 | `azlazy blob --container "container name" --remove "blob to remove"` | removes a blob from a given container, note the blob name needs to contain the full path |
 | `azlazy blob --container "container name" --uploadFile "c:\dinofiles\safaripics\t-rex.png" --uploadPath "safaripics"` | Uploads a blob from a given path to the container, `--uploadPath` allows you to specify the location in blob storage. In the example given the file `t-rex.png` will be uploaded to `safaripics\t-rex.png` if no upload path is provided the file will be uploaded to the root of the container. |
 | `azlazy blob --container "container name" --uploadDirectory "c:\dinofiles" --uploadPath "safaripics"` | Upload all the files in a given directory to a container. When uploading, the folder structure of of the directory is reflected into the container. `--uploadPath` can also be optionally specified to copy the files into a subdirectory. |
+
+## v. Table commands <a name="tablecommand">
+
+| Command   |      Description      |
+|--------------|:-------------|
+| `azlazy table --help` | Displays a list of commands you can use for tables |
+| `azlazy table --list` | View a list of tables in the storage account |
 
 More coming soon !
 
