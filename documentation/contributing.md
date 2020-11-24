@@ -50,3 +50,6 @@ https://docs.microsoft.com/en-us/powershell/scripting/developer/hosting/adding-a
 Progress bar implementations
 https://gist.github.com/DanielSWolf/0ab6a96899cc5377bf54
 https://github.com/Mpdreamz/shellprogressbar
+
+Spectre.Console
+https://spectresystems.github.io/spectre.console/
