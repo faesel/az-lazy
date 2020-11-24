@@ -119,7 +119,7 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 | Command   |      Description      |
 |--------------|:-------------|
 | `azlazy table --help` | Displays a list of commands you can use for tables |
-| `azlazy table --list` | View a list of tables in the storage account |
+| `azlazy table --list` | View a list of tables in the storage account. You can also filter the list with `--contains`  |
 
 More coming soon !
 
