@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using az_lazy.Helpers;
 using az_lazy.Manager;
@@ -26,12 +27,17 @@ namespace az_lazy.Commands.Table.Executor
                 ConsoleHelper.WriteInfoWaiting(message, true);
 
                 var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                var tables = await AzureTableManager.GetTables(selectedConnection.ConnectionString);
+                var tables = await AzureTableManager.GetTables(selectedConnection.ConnectionString).ConfigureAwait(false);
 
                 if (tables.Count > 0)
                 {
                     ConsoleHelper.WriteLineSuccessWaiting(message);
                     ConsoleHelper.WriteSepparator();
+
+                    if(!string.IsNullOrEmpty(opts.Contains))
+                    {
+                        tables = tables.Where(x => x.Name.Contains(opts.Contains)).ToList();
+                    }
 
                     foreach (var table in tables)
                     {
