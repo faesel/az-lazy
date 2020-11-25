@@ -35,6 +35,7 @@ namespace az_lazy.Startup
             serviceCollection.AddSingleton<ICommandExecutor<ConnectionOptions>, Commands.Connection.Executor.ListExecutor>();
             serviceCollection.AddSingleton<ICommandExecutor<ConnectionOptions>, RemoveConnectionExecutor>();
             serviceCollection.AddSingleton<ICommandExecutor<ConnectionOptions>, SelectConnectionExecutor>();
+            serviceCollection.AddSingleton<ICommandExecutor<ConnectionOptions>, WipeExecutor>();
 
             serviceCollection.AddSingleton<ICommandExecutor<QueueOptions>, Commands.Queue.Executor.ListExecutor>();
             serviceCollection.AddSingleton<ICommandExecutor<QueueOptions>, AddMessageExecutor>();
