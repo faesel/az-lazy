@@ -79,7 +79,7 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 | `azlazy connection --list` | Show a list of connections available, the selected connection will highlighted with a `[*]` symbol |
 | `azlazy connection --remove "name of connection"` | Removes a connection from the connections list |
 | `azlazy connection --select "name of connection"` | Selects a connection from the connections list |
-| `azlazy connection --wipe"` | Removes all connections from the list, aside from the development connection |
+| `azlazy connection --wipe` | Removes all connections from the list, aside from the development connection |
 
 ## ii. Queue commands <a name="queuecommand"></a>
 
