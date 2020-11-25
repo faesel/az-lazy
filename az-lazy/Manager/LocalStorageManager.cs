@@ -1,3 +1,4 @@
+using System.Linq;
 using System.IO;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace az_lazy.Manager
         void AddDevelopmentConnection();
         bool SelectConnection(string connectionName);
         bool RemoveConnection(string connectionName);
+        bool RemoveAllConnections(string connectionName);
         List<Connection> GetConnections();
         Connection GetSelectedConnection();
     }
@@ -117,6 +119,22 @@ namespace az_lazy.Manager
             }
 
             return false;
+        }
+
+        public bool RemoveAllConnections(string connectionName)
+        {
+            using var db = new LiteDatabase(ConnectionCollection);
+            var collection = db.GetCollection<Connection>(nameof(ModelNames.Connection));
+
+            var connectionToRemove = collection
+                .Find(x => !x.IsDevelopmentStorage).ToList();
+
+            foreach(var connection in connectionToRemove)
+            {
+                collection.Delete(new BsonValue(connection.Id));
+            }
+
+            return true;
         }
     }
 }
