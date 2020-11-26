@@ -44,12 +44,5 @@ https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azurite?toc=/a
 Adding colour to documentation
 https://stackoverflow.com/questions/11509830/how-to-add-color-to-githubs-readme-md-file
 
-Invoking powershell
-https://docs.microsoft.com/en-us/powershell/scripting/developer/hosting/adding-and-invoking-commands?view=powershell-7.1
-
-Progress bar implementations
-https://gist.github.com/DanielSWolf/0ab6a96899cc5377bf54
-https://github.com/Mpdreamz/shellprogressbar
-
 Spectre.Console
 https://spectresystems.github.io/spectre.console/
