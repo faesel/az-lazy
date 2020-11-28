@@ -35,7 +35,8 @@ namespace az_lazy.Commands.Table.Executor
                     var sampledEntities = await AzureTableManager.Sample(selectedConnection.ConnectionString, opts.Sample, opts.SampleCount).ConfigureAwait(false);
 
                     ConsoleHelper.WriteLineSuccessWaiting(infoMessage);
-                    if(sampledEntities == nulll || sampledEntities.Count == 0)
+
+                    if(sampledEntities == null || sampledEntities.Count == 0)
                     {
                         ConsoleHelper.WriteInfo("No rows found");
                     }
