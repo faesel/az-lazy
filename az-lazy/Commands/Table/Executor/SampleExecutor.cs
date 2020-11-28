@@ -56,7 +56,6 @@ namespace az_lazy.Commands.Table.Executor
                     foreach(var cell in headingCells)
                     {
                         grid.Columns.Add(new Column() { Name = cell.Name, Width = GridLength.Auto });
-                        Console.WriteLine(cell.Name);
                     }
 
                     foreach(var row in sampledEntities)
