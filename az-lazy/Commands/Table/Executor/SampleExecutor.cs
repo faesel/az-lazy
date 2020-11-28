@@ -35,6 +35,10 @@ namespace az_lazy.Commands.Table.Executor
                     var sampledEntities = await AzureTableManager.Sample(selectedConnection.ConnectionString, opts.Sample, opts.SampleCount).ConfigureAwait(false);
 
                     ConsoleHelper.WriteLineSuccessWaiting(infoMessage);
+                    if(sampledEntities == nulll || sampledEntities.Count == 0)
+                    {
+                        ConsoleHelper.WriteInfo("No rows found");
+                    }
 
                     var headerThickness = new LineThickness(LineWidth.Double, LineWidth.Double, LineWidth.Double, LineWidth.Double);
                     var grid = new Grid {
