@@ -11,7 +11,7 @@
     <Authors>Faesel Saeed</Authors>
     <Owners>Faesel Saeed</Owners>
     <Title>Azure CLI tool for managing everything in azure storage</Title>
-    <Description>AzLazy is a dotnet tool help facilitate developers who are working with azure storage, it can speed up tasks with view queues, peeking messages, dealing with poison queues etc.</Description>
+    <Description>AzLazy is a dotnet tool to help facilitate developers who are working with azure storage, it can speed up tasks like viewing queues, peeking messages, dealing with poison queues etc.</Description>
     <Copyright>Copyright 2020 Faesel Saeed</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>

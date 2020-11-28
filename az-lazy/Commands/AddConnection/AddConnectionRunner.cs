@@ -6,7 +6,7 @@ using az_lazy.Manager;
 
 namespace az_lazy.Commands.AddConnection
 {
-    public class AddConnectionRunner : IConnectionRunner<AddConnectionOptions>
+    public class AddConnectionRunner : ICommandRunner<AddConnectionOptions>
     {
         private readonly ILocalStorageManager LocalStorageManager;
         private readonly IAzureConnectionManager AzureConnectionManager;

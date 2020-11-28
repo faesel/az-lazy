@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace az_lazy.Commands.Connection
 {
-    public class ConnectionRunner : IConnectionRunner<ConnectionOptions>
+    public class ConnectionRunner : ICommandRunner<ConnectionOptions>
     {
         public readonly IEnumerable<ICommandExecutor<ConnectionOptions>> CommandExecutors;
 

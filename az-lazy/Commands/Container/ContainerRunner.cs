@@ -4,7 +4,7 @@ using az_lazy.Commands.Container.Executor;
 
 namespace az_lazy.Commands.Blob
 {
-    public class ContainerRunner : IConnectionRunner<ContainerOptions>
+    public class ContainerRunner : ICommandRunner<ContainerOptions>
     {
         public readonly IEnumerable<ICommandExecutor<ContainerOptions>> CommandExecutors;
 

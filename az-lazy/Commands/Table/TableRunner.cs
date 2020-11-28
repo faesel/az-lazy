@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace az_lazy.Commands.Table
 {
-    public class TableRunner : IConnectionRunner<TableOptions>
+    public class TableRunner : ICommandRunner<TableOptions>
     {
         public readonly IEnumerable<ICommandExecutor<TableOptions>> CommandExecutors;
 

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace az_lazy.Commands.Blob
 {
-    public class BlobRunner : IConnectionRunner<BlobOptions>
+    public class BlobRunner : ICommandRunner<BlobOptions>
     {
         public readonly IEnumerable<ICommandExecutor<BlobOptions>> CommandExecutors;
 
