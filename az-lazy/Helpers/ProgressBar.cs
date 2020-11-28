@@ -69,7 +69,7 @@ namespace az_lazy.Helpers
             outputBuilder.Append('\b', currentText.Length - commonPrefixLength);
 
             // Output new suffix
-            outputBuilder.Append(text.Substring(commonPrefixLength));
+            outputBuilder.Append(text, commonPrefixLength, text.Length - commonPrefixLength);
 
             // If the new text is shorter than the old one: delete overlapping characters
             int overlapCount = currentText.Length - text.Length;

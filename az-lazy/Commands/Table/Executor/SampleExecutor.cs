@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Alba.CsConsoleFormat;
 using az_lazy.Helpers;
 using az_lazy.Manager;
+using az_lazy.Model;
 
 namespace az_lazy.Commands.Table.Executor
 {
@@ -35,38 +37,54 @@ namespace az_lazy.Commands.Table.Executor
                     ConsoleHelper.WriteLineSuccessWaiting(infoMessage);
 
                     var headerThickness = new LineThickness(LineWidth.Double, LineWidth.Double, LineWidth.Double, LineWidth.Double);
-                    var doc = new Document(
-                        new Span("Entity Count:") { Color = ConsoleColor.Yellow }, sampledEntities.Count, "\n",
-                        new Grid {
-                            Color = ConsoleColor.Gray,
-                            Columns = { GridLength.Auto, GridLength.Auto, GridLength.Auto, GridLength.Auto },
-                            Children = {
-                                new Cell("Number") { Stroke = headerThickness, Color = ConsoleColor.Yellow },
-                                new Cell("PartitionKey") { Stroke = headerThickness, Color = ConsoleColor.Yellow },
-                                new Cell("RowKey") { Stroke = headerThickness, TextWrap = TextWrap.WordWrap, Color = ConsoleColor.Yellow },
+                    var grid = new Grid {
+                        Color = ConsoleColor.Gray,
+                    };
 
-                                sampledEntities.First().Properties.Select(x => x.Key)
+                    var headingCells = new List<Cell>();
+                    headingCells.Add(new Cell("Number") { Color = ConsoleColor.Yellow });
+                    headingCells.Add(new Cell("Partition Key") { Color = ConsoleColor.Yellow });
+                    headingCells.Add(new Cell("Row Key") { Color = ConsoleColor.Yellow });
 
-                                new Cell("Timestamp") { Stroke = headerThickness, Color = ConsoleColor.Yellow },
+                    foreach(var column in sampledEntities[0].Properties)
+                    {
+                        headingCells.Add(new Cell(column.Key) { Color = ConsoleColor.Yellow });
+                    }
+                    headingCells.Add(new Cell("Timestamp") { Color = ConsoleColor.Yellow });
+                    grid.Children.Add(headingCells.ToArray());
 
-                                sampledEntities.Select((value, index) => {
-                                    return new[] {
-                                        new Cell(index + 1),
-                                        new Cell(value.PartitionKey),
-                                        new Cell(value.RowKey),
-                                        new Cell(value.Timestamp.ToString()),
-                                    };
-                                })
-                            }
+                    foreach(var cell in headingCells)
+                    {
+                        grid.Columns.Add(new Column() { Name = cell.Name, Width = GridLength.Auto });
+                        Console.WriteLine(cell.Name);
+                    }
+
+                    foreach(var row in sampledEntities)
+                    {
+                        var cellList = new List<Cell>();
+                        cellList.Add(new Cell(sampledEntities.IndexOf(row) + 1));
+                        cellList.Add(new Cell(row.PartitionKey));
+                        cellList.Add(new Cell(row.RowKey));
+
+                        foreach(var rowData in row.Properties)
+                        {
+                            cellList.Add(new Cell(rowData.Value));
                         }
+                        cellList.Add(new Cell(row.Timestamp));
+
+                        grid.Children.Add(cellList.ToArray());
+                    }
+
+                    var doc = new Document(
+                        grid
                     );
 
                     ConsoleRenderer.RenderDocument(doc);
                 }
                 catch (Exception ex)
                 {
-                    ConsoleHelper.WriteLineFailedWaiting($"Failed to watch queue {opts.Watch}");
                     ConsoleHelper.WriteLineError(ex.Message);
+                    ConsoleHelper.WriteLineFailedWaiting($"Failed to sample table {opts.Sample}");
                 }
             }
         }

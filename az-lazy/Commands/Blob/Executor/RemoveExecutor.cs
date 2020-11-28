@@ -28,7 +28,7 @@ namespace az_lazy.Commands.Blob.Executor
                 try
                 {
                     var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    await AzureContainerManager.RemoveBlob(selectedConnection.ConnectionString, opts.Container, opts.Remove);
+                    await AzureContainerManager.RemoveBlob(selectedConnection.ConnectionString, opts.Container, opts.Remove).ConfigureAwait(false);
 
                     ConsoleHelper.WriteLineSuccessWaiting(message);
                     ConsoleHelper.WriteLineNormal($"Finished removing blob {opts.Remove}");

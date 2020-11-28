@@ -14,7 +14,7 @@ namespace az_lazy.Commands.Table
         [Option('s', "sample", Required = false, HelpText = "The name of the table to sample data from")]
         public string Sample { get; set; }
 
-        [Option('sc', "sampleCount", Required = false, HelpText = "Used in combination with sample, specify how many rows to sample out of the table. Default sample is 10")]
+        [Option("sampleCount", Required = false, HelpText = "Used in combination with sample, specify how many rows to sample out of the table. Default sample is 10")]
         public int SampleCount { get; set; }
     }
 }

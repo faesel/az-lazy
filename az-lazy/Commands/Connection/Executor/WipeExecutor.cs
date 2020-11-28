@@ -18,7 +18,7 @@ namespace az_lazy.Commands.Connection.Executor
         {
             if (opts.Wipe)
             {
-                var removeMessage = $"Removing all connections";
+                const string removeMessage = "Removing all connections";
                 ConsoleHelper.WriteInfoWaiting(removeMessage, true);
 
                 var isSuccessfull = LocalStorageManager.RemoveAllConnections(opts.RemoveConnection);
@@ -26,7 +26,7 @@ namespace az_lazy.Commands.Connection.Executor
                 if(isSuccessfull)
                 {
                     ConsoleHelper.WriteLineSuccessWaiting(removeMessage);
-                    ConsoleHelper.WriteLineNormal($"Finished removing connections");
+                    ConsoleHelper.WriteLineNormal("Finished removing connections");
                 }
                 else
                 {

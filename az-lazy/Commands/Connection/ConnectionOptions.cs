@@ -16,6 +16,5 @@ namespace az_lazy.Commands.Connection
 
         [Option('w', "wipe", Required = false, HelpText = "Wipes out al connections from the list")]
         public bool Wipe { get; set; }
-
     }
 }

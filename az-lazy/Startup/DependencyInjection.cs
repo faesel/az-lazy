@@ -55,6 +55,7 @@ namespace az_lazy.Startup
             serviceCollection.AddSingleton<ICommandExecutor<BlobOptions>, UploadDirectoryExecutor>();
 
             serviceCollection.AddSingleton<ICommandExecutor<TableOptions>, Commands.Table.Executor.ListExecutor>();
+            serviceCollection.AddSingleton<ICommandExecutor<TableOptions>, Commands.Table.Executor.SampleExecutor>();
 
             //Managers
             serviceCollection.AddSingleton<ILocalStorageManager, LocalStorageManager>();

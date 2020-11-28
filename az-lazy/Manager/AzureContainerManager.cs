@@ -133,7 +133,7 @@ namespace az_lazy.Manager
             try
             {
                 var container = new BlobContainerClient(connectionString, containerName);
-                await container.DeleteBlobIfExistsAsync(blobToRemove);
+                await container.DeleteBlobIfExistsAsync(blobToRemove).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -166,7 +166,6 @@ namespace az_lazy.Manager
 
                 await blobClient.UploadAsync(fileStream, new BlobUploadOptions
                 {
-                    
                     HttpHeaders = new BlobHttpHeaders
                     {
                         ContentType = fileType
@@ -187,30 +186,28 @@ namespace az_lazy.Manager
 
                 ConsoleHelper.WriteLineInfo($"Found {files.Count} files, beginning upload ...");
 
-                using (var progress = new ProgressBar())
+                using var progress = new ProgressBar();
+                foreach (var file in files)
                 {
-                    foreach(var file in files)
-                    {
-                        var fileName = Path.GetFileName(file);
+                    var fileName = Path.GetFileName(file);
 
-                        var subfolderAndFile = file
-                            .Replace(searchDirectory, string.Empty)
-                            .Replace(fileName, string.Empty);
+                    var subfolderAndFile = file
+                        .Replace(searchDirectory, string.Empty)
+                        .Replace(fileName, string.Empty);
 
-                        if(!string.IsNullOrEmpty(containerLocation))
-                            subfolderAndFile = containerLocation + subfolderAndFile;
+                    if (!string.IsNullOrEmpty(containerLocation))
+                        subfolderAndFile = containerLocation + subfolderAndFile;
 
-                        if(subfolderAndFile.StartsWith(@"\"))
-                            subfolderAndFile = subfolderAndFile[1..];
+                    if (subfolderAndFile.StartsWith(@"\"))
+                        subfolderAndFile = subfolderAndFile[1..];
 
-                        if(subfolderAndFile.EndsWith(@"\"))
-                            subfolderAndFile = subfolderAndFile[0..^1];
+                    if (subfolderAndFile.EndsWith(@"\"))
+                        subfolderAndFile = subfolderAndFile[0..^1];
 
-                        await UploadBlob(connectionString, containerName, file, subfolderAndFile).ConfigureAwait(false);
+                    await UploadBlob(connectionString, containerName, file, subfolderAndFile).ConfigureAwait(false);
 
-                        var percentageComplete = (double)files.IndexOf(file) / files.Count * 100;
-                        progress.Report((percentageComplete / 100, @$" Uploading - {subfolderAndFile}\{fileName}"));
-                    }
+                    var percentageComplete = (double)files.IndexOf(file) / files.Count * 100;
+                    progress.Report((percentageComplete / 100, @$" Uploading - {subfolderAndFile}\{fileName}"));
                 }
             }
             catch(Exception ex)
