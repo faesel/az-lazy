@@ -59,35 +59,6 @@ namespace az_lazy.Manager
             while(selectToken != null && takeCount <= sampleCount);
 
             return tableEntities;
-
-            // var tableEntity = new TableEntities();
-            // tableEntity.ColumnNames.Add("PartitionKey");
-            // tableEntity.ColumnNames.Add("RowKey");
-
-            // foreach(var property in tableEntities[0].Properties)
-            // {
-            //     tableEntity.ColumnNames.Add(property.Key);
-            // }
-
-            // tableEntity.ColumnNames.Add("Timestamp");
-
-            // foreach(var row in tableEntities)
-            // {
-            //     var tableRow = new TableRow();
-
-            //     tableRow.RowValues.Add(row.PartitionKey);
-            //     tableRow.RowValues.Add(row.RowKey);
-
-            //     foreach(var property in row.Properties)
-            //     {
-            //         tableRow.RowValues.Add(property.Value.ToString());
-            //     }
-
-            //     tableRow.RowValues.Add(row.Timestamp);
-            //     tableEntity.Rows.Add(tableRow);
-            // }
-
-            // return tableEntity;
         }
     }
 }
