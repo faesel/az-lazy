@@ -9,11 +9,13 @@ namespace az_lazy.Manager
     public interface IAzureTableManager
     {
         Task<List<CloudTable>> GetTables(string connectionString);
-        Task Sample(string sample, int sampleCount);
+        Task<List<DynamicTableEntity>> Sample(string connectionString, string sample, int sampleCount);
     }
 
     public class AzureTableManager : IAzureTableManager
     {
+        private const int DefaultSampleCount = 10;
+
         public async Task<List<CloudTable>> GetTables(string connectionString)
         {
             var cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
@@ -30,28 +32,32 @@ namespace az_lazy.Manager
             }
             while (token != null);
 
-            await Test(connectionString);
-
             return cloudTableList;
         }
 
-        public async Task Sample(string sample, int sampleCount)
+        public async Task<List<DynamicTableEntity>> Sample(string connectionString, string sample, int sampleCount)
         {
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionstring);
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
-            CloudTable table = tableClient.GetTableReference("test");
+            CloudTable table = tableClient.GetTableReference(sample);
+
+            sampleCount = sampleCount == 0 ? DefaultSampleCount : sampleCount;
 
             TableContinuationToken selectToken = null;
+            List<DynamicTableEntity> tableEntities = new List<DynamicTableEntity>();
+
+            int takeCount = 0;
+
             do
             {
-                var results = await table.ExecuteQuerySegmentedAsync(new TableQuery().Take(10), selectToken).ConfigureAwait(false);
-                var partitionKey = results.Results.First().PartitionKey;
-                var rowKey = results.Results.First().RowKey;
-                var propKey = results.Results.First().Properties.First().Key;
-                var propValue = results.Results.First().Properties.First().Value;
+                var segment = await table.ExecuteQuerySegmentedAsync(new TableQuery().Take(sampleCount), selectToken).ConfigureAwait(false);
+                tableEntities.AddRange(segment.Results);
 
+                takeCount += sampleCount;
             }
-            while(selectToken != null);
+            while(selectToken != null || takeCount >= sampleCount);
+
+            return tableEntities;
         }
     }
 }
