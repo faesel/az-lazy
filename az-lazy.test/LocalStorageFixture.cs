@@ -2,6 +2,7 @@
 using az_lazy.Commands.AddConnection;
 using az_lazy.Commands.AddContainer;
 using az_lazy.Commands.AddQueue;
+using az_lazy.Commands.Blob;
 using az_lazy.Commands.Connection;
 using az_lazy.Commands.Container.Executor;
 using az_lazy.Commands.Queue;
@@ -20,12 +21,13 @@ namespace az_lazy.test
         public IAzureContainerManager AzureContainerManager;
 
         //Runners
-        public IConnectionRunner<ConnectionOptions> ConnectionRunner;
-        public IConnectionRunner<AddConnectionOptions> AddConnectionRunner;
-        public IConnectionRunner<AddQueueOptions> AddQueueRunner;
-        public IConnectionRunner<QueueOptions> QueueRunner;
-        public IConnectionRunner<ContainerOptions> ContainerRunner;
-        public IConnectionRunner<AddContainerOptions> AddContainerRunner;
+        public ICommandRunner<ConnectionOptions> ConnectionRunner;
+        public ICommandRunner<AddConnectionOptions> AddConnectionRunner;
+        public ICommandRunner<AddQueueOptions> AddQueueRunner;
+        public ICommandRunner<QueueOptions> QueueRunner;
+        public ICommandRunner<ContainerOptions> ContainerRunner;
+        public ICommandRunner<AddContainerOptions> AddContainerRunner;
+        public ICommandRunner<BlobOptions> BlobRunner;
 
         public LocalStorageFixture()
         {
@@ -41,12 +43,13 @@ namespace az_lazy.test
             AzureConnectionManager = ServiceProvider.GetService<IAzureConnectionManager>();
             AzureContainerManager = ServiceProvider.GetService<IAzureContainerManager>();
 
-            AddConnectionRunner = ServiceProvider.GetService<IConnectionRunner<AddConnectionOptions>>();
-            ConnectionRunner = ServiceProvider.GetService<IConnectionRunner<ConnectionOptions>>();
-            AddQueueRunner = ServiceProvider.GetService<IConnectionRunner<AddQueueOptions>>();
-            QueueRunner = ServiceProvider.GetService<IConnectionRunner<QueueOptions>>();
-            ContainerRunner = ServiceProvider.GetService<IConnectionRunner<ContainerOptions>>();
-            AddContainerRunner = ServiceProvider.GetService<IConnectionRunner<AddContainerOptions>>();
+            AddConnectionRunner = ServiceProvider.GetService<ICommandRunner<AddConnectionOptions>>();
+            ConnectionRunner = ServiceProvider.GetService<ICommandRunner<ConnectionOptions>>();
+            AddQueueRunner = ServiceProvider.GetService<ICommandRunner<AddQueueOptions>>();
+            QueueRunner = ServiceProvider.GetService<ICommandRunner<QueueOptions>>();
+            ContainerRunner = ServiceProvider.GetService<ICommandRunner<ContainerOptions>>();
+            AddContainerRunner = ServiceProvider.GetService<ICommandRunner<AddContainerOptions>>();
+            BlobRunner = ServiceProvider.GetService<ICommandRunner<BlobOptions>>();
         }
     }
 }

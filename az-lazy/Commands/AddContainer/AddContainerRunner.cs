@@ -7,7 +7,7 @@ using Azure.Storage.Blobs.Models;
 
 namespace az_lazy.Commands.AddContainer
 {
-    public class AddContainerRunner : IConnectionRunner<AddContainerOptions>
+    public class AddContainerRunner : ICommandRunner<AddContainerOptions>
     {
         private readonly ILocalStorageManager LocalStorageManager;
         private readonly IAzureContainerManager AzureContainerManager;

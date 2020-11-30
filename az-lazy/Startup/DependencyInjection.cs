@@ -22,14 +22,14 @@ namespace az_lazy.Startup
             serviceCollection.AddSingleton<IAzRunner, AzRunner>();
 
             //Command Runners
-            serviceCollection.AddSingleton<IConnectionRunner<ConnectionOptions>, ConnectionRunner>();
-            serviceCollection.AddSingleton<IConnectionRunner<AddConnectionOptions>, AddConnectionRunner>();
-            serviceCollection.AddSingleton<IConnectionRunner<QueueOptions>, QueueRunner>();
-            serviceCollection.AddSingleton<IConnectionRunner<AddQueueOptions>, AddQueueRunner>();
-            serviceCollection.AddSingleton<IConnectionRunner<ContainerOptions>, ContainerRunner>();
-            serviceCollection.AddSingleton<IConnectionRunner<AddContainerOptions>, AddContainerRunner>();
-            serviceCollection.AddSingleton<IConnectionRunner<BlobOptions>, BlobRunner>();
-            serviceCollection.AddSingleton<IConnectionRunner<TableOptions>, TableRunner>();
+            serviceCollection.AddSingleton<ICommandRunner<ConnectionOptions>, ConnectionRunner>();
+            serviceCollection.AddSingleton<ICommandRunner<AddConnectionOptions>, AddConnectionRunner>();
+            serviceCollection.AddSingleton<ICommandRunner<QueueOptions>, QueueRunner>();
+            serviceCollection.AddSingleton<ICommandRunner<AddQueueOptions>, AddQueueRunner>();
+            serviceCollection.AddSingleton<ICommandRunner<ContainerOptions>, ContainerRunner>();
+            serviceCollection.AddSingleton<ICommandRunner<AddContainerOptions>, AddContainerRunner>();
+            serviceCollection.AddSingleton<ICommandRunner<BlobOptions>, BlobRunner>();
+            serviceCollection.AddSingleton<ICommandRunner<TableOptions>, TableRunner>();
 
             //Executors
             serviceCollection.AddSingleton<ICommandExecutor<ConnectionOptions>, Commands.Connection.Executor.ListExecutor>();

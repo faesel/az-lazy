@@ -21,4 +21,10 @@
     <ProjectReference Include="..\az-lazy\az-lazy.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="TestData\Files\test.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

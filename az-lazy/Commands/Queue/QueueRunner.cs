@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace az_lazy.Commands.Queue
 {
-    public class QueueRunner : IConnectionRunner<QueueOptions>
+    public class QueueRunner : ICommandRunner<QueueOptions>
     {
         public readonly IEnumerable<ICommandExecutor<QueueOptions>> CommandExecutors;
 

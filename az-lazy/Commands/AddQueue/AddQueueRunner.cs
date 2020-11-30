@@ -5,7 +5,7 @@ using az_lazy.Manager;
 
 namespace az_lazy.Commands.AddQueue
 {
-    public class AddQueueRunner : IConnectionRunner<AddQueueOptions>
+    public class AddQueueRunner : ICommandRunner<AddQueueOptions>
     {
         private readonly ILocalStorageManager LocalStorageManager;
         private readonly IAzureQueueManager AzureStorageManager;

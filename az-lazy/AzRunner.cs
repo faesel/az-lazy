@@ -20,24 +20,24 @@ namespace az_lazy
 
     public class AzRunner : IAzRunner
     {
-        private readonly IConnectionRunner<ConnectionOptions> ConnectionRunner;
-        private readonly IConnectionRunner<AddConnectionOptions> AddConnectionRunner;
-        private readonly IConnectionRunner<QueueOptions> QueueRunner;
-        private readonly IConnectionRunner<AddQueueOptions> AddQueueRunner;
-        private readonly IConnectionRunner<ContainerOptions> ContainerRunner;
-        private readonly IConnectionRunner<AddContainerOptions> AddContainerRunner;
-        private readonly IConnectionRunner<BlobOptions> BlobRunner;
-        private readonly IConnectionRunner<TableOptions> TableRunner;
+        private readonly ICommandRunner<ConnectionOptions> ConnectionRunner;
+        private readonly ICommandRunner<AddConnectionOptions> AddConnectionRunner;
+        private readonly ICommandRunner<QueueOptions> QueueRunner;
+        private readonly ICommandRunner<AddQueueOptions> AddQueueRunner;
+        private readonly ICommandRunner<ContainerOptions> ContainerRunner;
+        private readonly ICommandRunner<AddContainerOptions> AddContainerRunner;
+        private readonly ICommandRunner<BlobOptions> BlobRunner;
+        private readonly ICommandRunner<TableOptions> TableRunner;
 
         public AzRunner(
-            IConnectionRunner<ConnectionOptions> connectionRunner,
-            IConnectionRunner<AddConnectionOptions> addConnectionRunner,
-            IConnectionRunner<QueueOptions> queueRunner,
-            IConnectionRunner<AddQueueOptions> addQueueRunner,
-            IConnectionRunner<ContainerOptions> containerRunner,
-            IConnectionRunner<AddContainerOptions> addContainerRunner,
-            IConnectionRunner<BlobOptions> blobRunner,
-            IConnectionRunner<TableOptions> tableRunner)
+            ICommandRunner<ConnectionOptions> connectionRunner,
+            ICommandRunner<AddConnectionOptions> addConnectionRunner,
+            ICommandRunner<QueueOptions> queueRunner,
+            ICommandRunner<AddQueueOptions> addQueueRunner,
+            ICommandRunner<ContainerOptions> containerRunner,
+            ICommandRunner<AddContainerOptions> addContainerRunner,
+            ICommandRunner<BlobOptions> blobRunner,
+            ICommandRunner<TableOptions> tableRunner)
         {
             this.ConnectionRunner = connectionRunner;
             this.AddConnectionRunner = addConnectionRunner;
