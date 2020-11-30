@@ -25,17 +25,19 @@ namespace az_lazy.test.BlobTest
         public async Task CanUploadNewBlob()
         {
             const string containerName = "newuploadcontainer";
+            const string fileName = "test.txt";
 
             await LocalStorageFixture.AzureContainerManager.RemoveContainer(DevStorageConnectionString, containerName).ConfigureAwait(false);
             await LocalStorageFixture.AzureContainerManager.CreateContainer(DevStorageConnectionString, PublicAccessType.None, containerName).ConfigureAwait(false);
 
-            var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestData", "Files", "test.txt");
+            var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestData", "Files", fileName);
 
             await LocalStorageFixture.BlobRunner.Run(new BlobOptions { Container = containerName, UploadFile = path }).ConfigureAwait(false);
 
             var blobNodes = await LocalStorageFixture.AzureContainerManager.ContainerTree(DevStorageConnectionString, containerName, depth: 1, false).ConfigureAwait(false);
 
-            Assert.Single(blobNodes);
+            Assert.Single(blobNodes[0].Children);
+            Assert.Equal(fileName, blobNodes[0].Children[0].Name);
         }
 
         [Fact(DisplayName = "Can successfully delete a blob from a container")]
@@ -54,7 +56,7 @@ namespace az_lazy.test.BlobTest
 
             var blobNodes = await LocalStorageFixture.AzureContainerManager.ContainerTree(DevStorageConnectionString, containerName, depth: 1, false).ConfigureAwait(false);
 
-            Assert.Empty(blobNodes);
+            Assert.Empty(blobNodes[0].Children);
         }
     }
 }
