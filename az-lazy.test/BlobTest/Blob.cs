@@ -27,7 +27,14 @@ namespace az_lazy.test.BlobTest
             const string containerName = "newuploadcontainer";
             const string fileName = "test.txt";
 
-            await LocalStorageFixture.AzureContainerManager.RemoveContainer(DevStorageConnectionString, containerName).ConfigureAwait(false);
+            try
+            {
+                await LocalStorageFixture.AzureContainerManager.RemoveContainer(DevStorageConnectionString, containerName).ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                //Suppress, its most likely becuase the container doesnt exist
+            }
             await LocalStorageFixture.AzureContainerManager.CreateContainer(DevStorageConnectionString, PublicAccessType.None, containerName).ConfigureAwait(false);
 
             var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestData", "Files", fileName);
@@ -46,7 +53,14 @@ namespace az_lazy.test.BlobTest
             const string containerName = "deleteblobcontainer";
             const string fileName = "test.txt";
 
-            await LocalStorageFixture.AzureContainerManager.RemoveContainer(DevStorageConnectionString, containerName).ConfigureAwait(false);
+            try
+            {
+                await LocalStorageFixture.AzureContainerManager.RemoveContainer(DevStorageConnectionString, containerName).ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                //Suppress, its most likely becuase the container doesnt exist
+            }
             await LocalStorageFixture.AzureContainerManager.CreateContainer(DevStorageConnectionString, PublicAccessType.None, containerName).ConfigureAwait(false);
 
             var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestData", "Files", fileName);
