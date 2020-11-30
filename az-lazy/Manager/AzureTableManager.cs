@@ -1,9 +1,6 @@
-using System.Linq;
-using System.Data;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos.Table;
-using az_lazy.Model;
 
 namespace az_lazy.Manager
 {
