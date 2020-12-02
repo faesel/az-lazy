@@ -6,8 +6,9 @@ services:
     hostname: azurite
     ports:
       - "10000:10000"
+      - "10001:10001"
     volumes:
-      - ./test/azurite:/data
+      - ./az-lazy.test/azurite:/data
     networks:
       - az-lazy-nt
 
