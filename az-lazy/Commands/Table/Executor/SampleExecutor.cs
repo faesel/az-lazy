@@ -22,15 +22,15 @@ namespace az_lazy.Commands.Table.Executor
 
         public async Task Execute(TableOptions opts)
         {
-            if(!string.IsNullOrEmpty(opts.Table) && opts.SampleCount > 0)
+            if(!string.IsNullOrEmpty(opts.Sample))
             {
-                var infoMessage = $"Sampleing table {opts.Table}";
+                var infoMessage = $"Sampleing table {opts.Sample}";
                 ConsoleHelper.WriteInfoWaiting(infoMessage, true);
 
                 try
                 {
                     var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    var sampledEntities = await AzureTableManager.Sample(selectedConnection.ConnectionString, opts.Table, opts.SampleCount).ConfigureAwait(false);
+                    var sampledEntities = await AzureTableManager.Sample(selectedConnection.ConnectionString, opts.Sample, opts.SampleCount).ConfigureAwait(false);
 
                     ConsoleHelper.WriteLineSuccessWaiting(infoMessage);
 
@@ -86,7 +86,7 @@ namespace az_lazy.Commands.Table.Executor
                 catch (Exception ex)
                 {
                     ConsoleHelper.WriteLineError(ex.Message);
-                    ConsoleHelper.WriteLineFailedWaiting($"Failed to sample table {opts.Table}");
+                    ConsoleHelper.WriteLineFailedWaiting($"Failed to sample table {opts.Sample}");
                 }
             }
         }
