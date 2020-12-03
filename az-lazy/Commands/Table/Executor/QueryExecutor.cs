@@ -7,12 +7,12 @@ using az_lazy.Manager;
 
 namespace az_lazy.Commands.Table.Executor
 {
-    public class SampleExecutor : ICommandExecutor<TableOptions>
+    public class QueryExecutor: ICommandExecutor<TableOptions>
     {
         private readonly ILocalStorageManager LocalStorageManager;
         private readonly IAzureTableManager AzureTableManager;
 
-        public SampleExecutor(
+        public QueryExecutor(
             ILocalStorageManager localStorageManager,
             IAzureTableManager azureTableManager)
         {
@@ -22,15 +22,15 @@ namespace az_lazy.Commands.Table.Executor
 
         public async Task Execute(TableOptions opts)
         {
-            if(!string.IsNullOrEmpty(opts.Sample))
+            if(!string.IsNullOrEmpty(opts.Table) && (!string.IsNullOrEmpty(opts.PartitionKey) || !string.IsNullOrEmpty(opts.RowKey)))
             {
-                var infoMessage = $"Sampleing table {opts.Sample}";
+                var infoMessage = $"Sampleing table {opts.Table}";
                 ConsoleHelper.WriteInfoWaiting(infoMessage, true);
 
                 try
                 {
                     var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    var sampledEntities = await AzureTableManager.Sample(selectedConnection.ConnectionString, opts.Sample, opts.SampleCount).ConfigureAwait(false);
+                    var sampledEntities = await AzureTableManager.Query(selectedConnection.ConnectionString, opts.Table, opts.PartitionKey, opts.RowKey).ConfigureAwait(false);
 
                     ConsoleHelper.WriteLineSuccessWaiting(infoMessage);
 
@@ -83,10 +83,10 @@ namespace az_lazy.Commands.Table.Executor
 
                     ConsoleRenderer.RenderDocument(doc);
                 }
-                catch (Exception ex)
+                catch(Exception ex)
                 {
                     ConsoleHelper.WriteLineError(ex.Message);
-                    ConsoleHelper.WriteLineFailedWaiting($"Failed to sample table {opts.Sample}");
+                    ConsoleHelper.WriteLineFailedWaiting($"Failed to sample table {opts.Table}");
                 }
             }
         }
