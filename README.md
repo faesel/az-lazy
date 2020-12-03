@@ -122,6 +122,7 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 | `azlazy table --help` | Displays a list of commands you can use for tables |
 | `azlazy table --list` | View a list of tables in the storage account. You can also filter the list with `--contains`  |
 | `azlazy table --sample "table name"` | Samples the data from a table, by default 10 rows will be selected. To sample more rows `--sampleCount 30` can be used |
+| `azlazy table --query "table name"` | Query's rows in a table by either `--partitionKey` or `--rowKey` |
 
 More coming soon !
 
