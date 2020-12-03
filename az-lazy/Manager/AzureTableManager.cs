@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using az_lazy.Exceptions;
 using Microsoft.Azure.Cosmos.Table;
 
 namespace az_lazy.Manager
@@ -8,6 +10,7 @@ namespace az_lazy.Manager
     {
         Task<List<CloudTable>> GetTables(string connectionString);
         Task<List<DynamicTableEntity>> Sample(string connectionString, string sample, int sampleCount);
+        Task<List<DynamicTableEntity>> Query(string connectionString, string tableName, string partitionKey, string rowKey);
     }
 
     public class AzureTableManager : IAzureTableManager
@@ -31,6 +34,40 @@ namespace az_lazy.Manager
             while (token != null);
 
             return cloudTableList;
+        }
+
+        public async Task<List<DynamicTableEntity>> Query(string connectionString, string tableName, string partitionKey, string rowKey)
+        {
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
+            CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
+            CloudTable table = tableClient.GetTableReference(tableName);
+
+            List<string> tableQueries = new List<string>();
+
+            if(!string.IsNullOrEmpty(partitionKey))
+            {
+                tableQueries.Add(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, partitionKey));
+            }
+
+            if(!string.IsNullOrEmpty(rowKey))
+            {
+                tableQueries.Add(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, rowKey));
+            }
+
+            var query = tableQueries.Count == 1 ?
+                tableQueries[0] : TableQuery.CombineFilters(tableQueries[0], TableOperators.And, tableQueries[1]);
+
+            TableContinuationToken selectToken = null;
+            List<DynamicTableEntity> tableEntities = new List<DynamicTableEntity>();
+
+            do
+            {
+                var segment = await table.ExecuteQuerySegmentedAsync(new TableQuery { FilterString = query }, selectToken).ConfigureAwait(false);
+                tableEntities.AddRange(segment.Results);
+            }
+            while(selectToken != null);
+
+            return tableEntities;
         }
 
         public async Task<List<DynamicTableEntity>> Sample(string connectionString, string sample, int sampleCount)
