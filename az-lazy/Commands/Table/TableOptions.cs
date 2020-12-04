@@ -12,13 +12,16 @@ namespace az_lazy.Commands.Table
         public string Contains { get; set; }
 
         [Option('q', "query", Required = false, HelpText = "The table name to query")]
-        public string Table { get; set; }
+        public string Query { get; set; }
 
         [Option('p', "partitionKey", Required = false, HelpText = "Partition key to query the table with")]
         public string PartitionKey { get; set; }
 
         [Option('r', "rowKey", Required = false, HelpText = "Row key to query the table with")]
         public string RowKey { get; set; }
+
+        [Option('t', "take", Required = false, HelpText = "Number of rows to take when querying")]
+        public int Take { get; set; }
 
         [Option('s', "sample", Required = false, HelpText = "Table name to sample")]
         public string Sample { get; set; }

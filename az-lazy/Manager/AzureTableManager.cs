@@ -10,7 +10,7 @@ namespace az_lazy.Manager
     {
         Task<List<CloudTable>> GetTables(string connectionString);
         Task<List<DynamicTableEntity>> Sample(string connectionString, string sample, int sampleCount);
-        Task<List<DynamicTableEntity>> Query(string connectionString, string tableName, string partitionKey, string rowKey);
+        Task<List<DynamicTableEntity>> Query(string connectionString, string tableName, string partitionKey, string rowKey, int take);
     }
 
     public class AzureTableManager : IAzureTableManager
@@ -36,7 +36,7 @@ namespace az_lazy.Manager
             return cloudTableList;
         }
 
-        public async Task<List<DynamicTableEntity>> Query(string connectionString, string tableName, string partitionKey, string rowKey)
+        public async Task<List<DynamicTableEntity>> Query(string connectionString, string tableName, string partitionKey, string rowKey, int take)
         {
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
@@ -57,12 +57,18 @@ namespace az_lazy.Manager
             var query = tableQueries.Count == 1 ?
                 tableQueries[0] : TableQuery.CombineFilters(tableQueries[0], TableOperators.And, tableQueries[1]);
 
+            int? takeCount = null;
+            if(take > 0)
+            {
+                takeCount = take;
+            }
+
             TableContinuationToken selectToken = null;
             List<DynamicTableEntity> tableEntities = new List<DynamicTableEntity>();
 
             do
             {
-                var segment = await table.ExecuteQuerySegmentedAsync(new TableQuery { FilterString = query }, selectToken).ConfigureAwait(false);
+                var segment = await table.ExecuteQuerySegmentedAsync(new TableQuery { FilterString = query }.Take(takeCount), selectToken).ConfigureAwait(false);
                 tableEntities.AddRange(segment.Results);
             }
             while(selectToken != null);
