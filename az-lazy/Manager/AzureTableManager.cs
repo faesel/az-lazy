@@ -71,8 +71,6 @@ namespace az_lazy.Manager
             TableContinuationToken selectToken = null;
             List<DynamicTableEntity> tableEntities = new List<DynamicTableEntity>();
 
-            Console.WriteLine(query);
-
             do
             {
                 var segment = await table.ExecuteQuerySegmentedAsync(new TableQuery { FilterString = query }.Take(takeCount), selectToken).ConfigureAwait(false);
