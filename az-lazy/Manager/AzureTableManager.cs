@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -44,18 +45,22 @@ namespace az_lazy.Manager
 
             List<string> tableQueries = new List<string>();
 
-            if(!string.IsNullOrEmpty(partitionKey))
+            string query = string.Empty;
+            if(!string.IsNullOrEmpty(partitionKey) || !string.IsNullOrEmpty(rowKey))
             {
-                tableQueries.Add(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, partitionKey));
-            }
+                if(!string.IsNullOrEmpty(partitionKey))
+                {
+                    tableQueries.Add(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, partitionKey));
+                }
 
-            if(!string.IsNullOrEmpty(rowKey))
-            {
-                tableQueries.Add(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, rowKey));
-            }
+                if(!string.IsNullOrEmpty(rowKey))
+                {
+                    tableQueries.Add(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, rowKey));
+                }
 
-            var query = tableQueries.Count == 1 ?
-                tableQueries[0] : TableQuery.CombineFilters(tableQueries[0], TableOperators.And, tableQueries[1]);
+                query = tableQueries.Count == 1 ?
+                    tableQueries[0] : TableQuery.CombineFilters(tableQueries[0], TableOperators.And, tableQueries[1]);
+            }
 
             int? takeCount = null;
             if(take > 0)
