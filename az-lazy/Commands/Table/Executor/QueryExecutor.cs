@@ -22,16 +22,16 @@ namespace az_lazy.Commands.Table.Executor
 
         public async Task Execute(TableOptions opts)
         {
-            if(!string.IsNullOrEmpty(opts.Query) && (!string.IsNullOrEmpty(opts.PartitionKey) || !string.IsNullOrEmpty(opts.RowKey)))
+            if(!string.IsNullOrEmpty(opts.Query))
             {
-                var infoMessage = $"Sampleing table {opts.Query}";
+                var infoMessage = $"Querying table {opts.Query}";
                 ConsoleHelper.WriteInfoWaiting(infoMessage, true);
 
                 try
                 {
                     var selectedConnection = LocalStorageManager.GetSelectedConnection();
                     var sampledEntities = await AzureTableManager.Query(
-                        selectedConnection.ConnectionString, 
+                        selectedConnection.ConnectionString,
                         opts.Query,
                         opts.PartitionKey,
                         opts.RowKey,
@@ -91,7 +91,7 @@ namespace az_lazy.Commands.Table.Executor
                 catch(Exception ex)
                 {
                     ConsoleHelper.WriteLineError(ex.Message);
-                    ConsoleHelper.WriteLineFailedWaiting($"Failed to sample table {opts.Query}");
+                    ConsoleHelper.WriteLineFailedWaiting($"Failed to query table {opts.Query}");
                 }
             }
         }
