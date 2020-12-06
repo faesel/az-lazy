@@ -28,5 +28,7 @@ namespace az_lazy.Commands.Table
 
         [Option("sampleCount", Required = false, HelpText = "Used in combination with sample, specify how many rows to sample out of the table. Default sample is 10")]
         public int SampleCount { get; set; }
+        [Option('d', "delete", Required = false, HelpText = "Table name to start deleting rows from")]
+        public string Delete { get; set; }
     }
 }
