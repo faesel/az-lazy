@@ -5,7 +5,7 @@ using az_lazy.Manager;
 
 namespace az_lazy.Commands.Table.Executor
 {
-    public class ListExecutor: ICommandExecutor<TableOptions>
+    public class ListExecutor : ICommandExecutor<TableOptions>
     {
         private readonly ILocalStorageManager LocalStorageManager;
         private readonly IAzureTableManager AzureTableManager;

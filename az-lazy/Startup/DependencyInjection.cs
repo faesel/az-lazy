@@ -57,6 +57,7 @@ namespace az_lazy.Startup
             serviceCollection.AddSingleton<ICommandExecutor<TableOptions>, Commands.Table.Executor.ListExecutor>();
             serviceCollection.AddSingleton<ICommandExecutor<TableOptions>, Commands.Table.Executor.SampleExecutor>();
             serviceCollection.AddSingleton<ICommandExecutor<TableOptions>, Commands.Table.Executor.QueryExecutor>();
+            serviceCollection.AddSingleton<ICommandExecutor<TableOptions>, Commands.Table.Executor.DeleteExecutor>();
 
             //Managers
             serviceCollection.AddSingleton<ILocalStorageManager, LocalStorageManager>();
