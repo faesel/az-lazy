@@ -19,8 +19,8 @@ jobs:
       run: docker-compose up -d
     - name: Install dependencies
       run: dotnet restore
-    - name: Build
+    - name: Build Project
       run: dotnet build --configuration Release --no-restore
-    - name: Test
+    - name: Run Integration Tests
       run: dotnet test
 
