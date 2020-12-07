@@ -20,24 +20,31 @@ namespace az_lazy.Commands.Table.Executor
 
         public async Task Execute(TableOptions opts)
         {
-            if(!string.IsNullOrEmpty(opts.Delete) && (!string.IsNullOrEmpty(opts.PartitionKey) || !string.IsNullOrEmpty(opts.RowKey)))
+            if(!string.IsNullOrEmpty(opts.Delete))
             {
-                try
+                if(!string.IsNullOrEmpty(opts.PartitionKey) || !string.IsNullOrEmpty(opts.RowKey))
                 {
-                    const string message = "Deleting rows";
+                    try
+                    {
+                        const string message = "Deleting rows";
 
-                    ConsoleHelper.WriteInfoWaiting(message, true);
+                        ConsoleHelper.WriteInfoWaiting(message, true);
 
-                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    var deleteCount = await AzureTableManager.DeleteRow(selectedConnection.ConnectionString, opts.Delete, opts.PartitionKey, opts.RowKey).ConfigureAwait(false);
+                        var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                        var deleteCount = await AzureTableManager.DeleteRow(selectedConnection.ConnectionString, opts.Delete, opts.PartitionKey, opts.RowKey).ConfigureAwait(false);
 
-                    ConsoleHelper.WriteLineSuccessWaiting(message);
-                    ConsoleHelper.WriteLineNormal($"Finished deleting rows, {deleteCount} rows removed");
+                        ConsoleHelper.WriteLineSuccessWaiting(message);
+                        ConsoleHelper.WriteLineNormal($"Finished deleting rows, {deleteCount} rows removed");
+                    }
+                    catch(Exception ex)
+                    {
+                        ConsoleHelper.WriteLineError(ex.Message);
+                        ConsoleHelper.WriteLineFailedWaiting($"Failed to sample table {opts.Sample}");
+                    }
                 }
-                catch(Exception ex)
+                else
                 {
-                    ConsoleHelper.WriteLineError(ex.Message);
-                    ConsoleHelper.WriteLineFailedWaiting($"Failed to sample table {opts.Sample}");
+                    ConsoleHelper.WriteLineError("PartitionKey or RowKey are required in order to delete rows");
                 }
             }
         }

@@ -6,7 +6,7 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>azlazy</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
-    <Version>1.2.5</Version>
+    <Version>1.2.6</Version>
     <Id>azlazy</Id>
     <Authors>Faesel Saeed</Authors>
     <Owners>Faesel Saeed</Owners>
