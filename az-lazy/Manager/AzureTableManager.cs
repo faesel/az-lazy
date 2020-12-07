@@ -1,3 +1,4 @@
+using System.Net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace az_lazy.Manager
         Task<List<CloudTable>> GetTables(string connectionString);
         Task<List<DynamicTableEntity>> Sample(string connectionString, string sample, int sampleCount);
         Task<List<DynamicTableEntity>> Query(string connectionString, string tableName, string partitionKey, string rowKey, int take);
+        Task<int> DeleteRow(string connectionString, string tableName, string partitionKey, string rowKey);
     }
 
     public class AzureTableManager : IAzureTableManager
@@ -104,6 +106,41 @@ namespace az_lazy.Manager
             while(selectToken != null && takeCount <= sampleCount);
 
             return tableEntities;
+        }
+
+        public async Task<int> DeleteRow(string connectionString, string tableName, string partitionKey, string rowKey)
+        {
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
+            CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
+            CloudTable table = tableClient.GetTableReference(tableName);
+
+            List<string> tableQueries = new List<string>();
+            if(!string.IsNullOrEmpty(partitionKey))
+            {
+                tableQueries.Add(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, partitionKey));
+            }
+
+            if(!string.IsNullOrEmpty(rowKey))
+            {
+                tableQueries.Add(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, rowKey));
+            }
+
+            string query = tableQueries.Count == 1 ?
+                tableQueries[0] : TableQuery.CombineFilters(tableQueries[0], TableOperators.And, tableQueries[1]);
+
+            int deleteCount = 0;
+            foreach (var item in table.ExecuteQuery(new TableQuery { FilterString = query }))
+            {
+                var deleteOperation = TableOperation.Delete(item);
+                var result = await table.ExecuteAsync(deleteOperation).ConfigureAwait(false);
+
+                if(result.HttpStatusCode == (int)HttpStatusCode.NoContent)
+                {
+                    deleteCount++;
+                }
+            }
+
+            return deleteCount;
         }
     }
 }

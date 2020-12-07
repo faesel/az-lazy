@@ -1,4 +1,6 @@
+using System;
 using System.Threading.Tasks;
+using az_lazy.Helpers;
 using az_lazy.Manager;
 
 namespace az_lazy.Commands.Table.Executor
@@ -20,7 +22,30 @@ namespace az_lazy.Commands.Table.Executor
         {
             if(!string.IsNullOrEmpty(opts.Delete))
             {
+                if(!string.IsNullOrEmpty(opts.PartitionKey) || !string.IsNullOrEmpty(opts.RowKey))
+                {
+                    try
+                    {
+                        const string message = "Deleting rows";
 
+                        ConsoleHelper.WriteInfoWaiting(message, true);
+
+                        var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                        var deleteCount = await AzureTableManager.DeleteRow(selectedConnection.ConnectionString, opts.Delete, opts.PartitionKey, opts.RowKey).ConfigureAwait(false);
+
+                        ConsoleHelper.WriteLineSuccessWaiting(message);
+                        ConsoleHelper.WriteLineNormal($"Finished deleting rows, {deleteCount} rows removed");
+                    }
+                    catch(Exception ex)
+                    {
+                        ConsoleHelper.WriteLineError(ex.Message);
+                        ConsoleHelper.WriteLineFailedWaiting($"Failed to sample table {opts.Sample}");
+                    }
+                }
+                else
+                {
+                    ConsoleHelper.WriteLineError("PartitionKey or RowKey are required in order to delete rows");
+                }
             }
         }
     }
