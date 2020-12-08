@@ -38,6 +38,7 @@ Unit tests are designed to run against the Azurite and are dependent on docker, 
 1. Ensure there is a integration test for command
 2. Ensure command names are easy to understand
 3. Ensure commands have a valid alias when possible
+4. Build succeeds
 
 # 5. Dev Links <a name="devlinks"></a>
 
