@@ -124,6 +124,7 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 | `azlazy table --sample "table name"` | Samples the data from a table, by default 10 rows will be selected. To sample more rows `--sampleCount 30` can be used |
 | `azlazy table --query "table name"` | Query's rows in a table, you can also filter by `--partitionKey` or `--rowKey`. To limit the number of records being returned back you can use `--take 10` |
 | `azlazy table --delete "table name"` | Removes rows from a table using either the `--partitionKey`, `--rowKey` or both together |
+| `azlazy table --remove "table name"` | Removes the entire table from storage |
 
 More coming soon !
 
