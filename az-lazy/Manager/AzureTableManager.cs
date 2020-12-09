@@ -14,6 +14,7 @@ namespace az_lazy.Manager
         Task<List<DynamicTableEntity>> Sample(string connectionString, string sample, int sampleCount);
         Task<List<DynamicTableEntity>> Query(string connectionString, string tableName, string partitionKey, string rowKey, int take);
         Task<int> DeleteRow(string connectionString, string tableName, string partitionKey, string rowKey);
+        Task<bool> Remove(string connectionString, string tableToRemote);
     }
 
     public class AzureTableManager : IAzureTableManager
@@ -141,6 +142,15 @@ namespace az_lazy.Manager
             }
 
             return deleteCount;
+        }
+
+        public async Task<bool> Remove(string connectionString, string tableToRemote)
+        {
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
+            CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
+            CloudTable table = tableClient.GetTableReference(tableToRemote);
+
+            return await table.DeleteIfExistsAsync().ConfigureAwait(false);
         }
     }
 }
