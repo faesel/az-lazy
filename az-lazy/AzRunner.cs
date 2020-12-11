@@ -10,6 +10,7 @@ using az_lazy.Commands.Container.Executor;
 using az_lazy.Commands.AddContainer;
 using az_lazy.Commands.Blob;
 using az_lazy.Commands.Table;
+using az_lazy.Commands.AddTable;
 
 namespace az_lazy
 {
@@ -28,6 +29,7 @@ namespace az_lazy
         private readonly ICommandRunner<AddContainerOptions> AddContainerRunner;
         private readonly ICommandRunner<BlobOptions> BlobRunner;
         private readonly ICommandRunner<TableOptions> TableRunner;
+        private readonly ICommandRunner<AddTableOptions> AddTableRunner;
 
         public AzRunner(
             ICommandRunner<ConnectionOptions> connectionRunner,
@@ -37,7 +39,8 @@ namespace az_lazy
             ICommandRunner<ContainerOptions> containerRunner,
             ICommandRunner<AddContainerOptions> addContainerRunner,
             ICommandRunner<BlobOptions> blobRunner,
-            ICommandRunner<TableOptions> tableRunner)
+            ICommandRunner<TableOptions> tableRunner,
+            ICommandRunner<AddTableOptions> addTableRunner)
         {
             this.ConnectionRunner = connectionRunner;
             this.AddConnectionRunner = addConnectionRunner;
@@ -47,12 +50,13 @@ namespace az_lazy
             this.AddContainerRunner = addContainerRunner;
             this.BlobRunner = blobRunner;
             this.TableRunner = tableRunner;
+            this.AddTableRunner = addTableRunner;
         }
 
         public async Task Startup(string[] args)
         {
             var parsedResult = Parser.Default
-                .ParseArguments<ConnectionOptions, AddConnectionOptions, QueueOptions, AddQueueOptions, ContainerOptions, AddContainerOptions, BlobOptions, TableOptions>(args);
+                .ParseArguments<ConnectionOptions, AddConnectionOptions, QueueOptions, AddQueueOptions, ContainerOptions, AddContainerOptions, BlobOptions, TableOptions, AddTableOptions>(args);
 
             var result = await parsedResult
                     .MapResult(
@@ -64,6 +68,7 @@ namespace az_lazy
                         (AddContainerOptions opts) => AddContainerRunner.Run(opts),
                         (BlobOptions opts) => BlobRunner.Run(opts),
                         (TableOptions opts) => TableRunner.Run(opts),
+                        (AddTableOptions opts) => AddTableRunner.Run(opts),
                     errs => DisplayHelp(parsedResult, errs))
                 .ConfigureAwait(false);
 

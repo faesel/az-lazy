@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using az_lazy.Exceptions;
 using Microsoft.Azure.Cosmos.Table;
+using az_lazy.Model;
 
 namespace az_lazy.Manager
 {
@@ -15,6 +16,7 @@ namespace az_lazy.Manager
         Task<List<DynamicTableEntity>> Query(string connectionString, string tableName, string partitionKey, string rowKey, int take);
         Task<int> DeleteRow(string connectionString, string tableName, string partitionKey, string rowKey);
         Task<bool> Remove(string connectionString, string tableToRemote);
+        Task Create(string connectionString, string name);
     }
 
     public class AzureTableManager : IAzureTableManager
@@ -151,6 +153,15 @@ namespace az_lazy.Manager
             CloudTable table = tableClient.GetTableReference(tableToRemote);
 
             return await table.DeleteIfExistsAsync().ConfigureAwait(false);
+        }
+
+        public async Task Create(string connectionString, string name)
+        {
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
+            CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
+            CloudTable table = tableClient.GetTableReference(name);
+
+            await table.CreateIfNotExistsAsync().ConfigureAwait(false);
         }
     }
 }
