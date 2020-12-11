@@ -12,6 +12,7 @@ using az_lazy.Commands.Blob;
 using az_lazy.Commands.AddContainer;
 using az_lazy.Commands.Blob.Executor;
 using az_lazy.Commands.Table;
+using az_lazy.Commands.AddTable;
 
 namespace az_lazy.Startup
 {
@@ -30,6 +31,7 @@ namespace az_lazy.Startup
             serviceCollection.AddSingleton<ICommandRunner<AddContainerOptions>, AddContainerRunner>();
             serviceCollection.AddSingleton<ICommandRunner<BlobOptions>, BlobRunner>();
             serviceCollection.AddSingleton<ICommandRunner<TableOptions>, TableRunner>();
+            serviceCollection.AddSingleton<ICommandRunner<AddTableOptions>, AddTableRunner>();
 
             //Executors
             serviceCollection.AddSingleton<ICommandExecutor<ConnectionOptions>, Commands.Connection.Executor.ListExecutor>();

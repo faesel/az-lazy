@@ -125,6 +125,8 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 | `azlazy table --query "table name"` | Query's rows in a table, you can also filter by `--partitionKey` or `--rowKey`. To limit the number of records being returned back you can use `--take 10` |
 | `azlazy table --delete "table name"` | Removes rows from a table using either the `--partitionKey`, `--rowKey` or both together |
 | `azlazy table --remove "table name"` | Removes the entire table from storage |
+| `azlazy addtable --name "table name"` | Creates a new table with the given table name |
+
 
 More coming soon !
 
