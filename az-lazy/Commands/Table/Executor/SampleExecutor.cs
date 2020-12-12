@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Alba.CsConsoleFormat;
 using az_lazy.Helpers;
 using az_lazy.Manager;
+using Spectre.Console;
 
 namespace az_lazy.Commands.Table.Executor
 {
@@ -39,49 +40,34 @@ namespace az_lazy.Commands.Table.Executor
                         ConsoleHelper.WriteInfo("No rows found");
                     }
 
-                    var headerThickness = new LineThickness(LineWidth.Double, LineWidth.Double, LineWidth.Double, LineWidth.Double);
-                    var grid = new Grid {
-                        Color = ConsoleColor.Gray,
-                    };
+                    var table = new Spectre.Console.Table();
+                    table.Border(TableBorder.DoubleEdge);
+                    table.Expand();
+                    table.LeftAligned();
 
-                    var headingCells = new List<Cell>();
-                    headingCells.Add(new Cell("Number") { Color = ConsoleColor.Yellow });
-                    headingCells.Add(new Cell("Partition Key") { Color = ConsoleColor.Yellow });
-                    headingCells.Add(new Cell("Row Key") { Color = ConsoleColor.Yellow });
+                    table.AddColumn("[yellow]Number[/]");
+                    table.AddColumn("[yellow]Partition Key[/]");
+                    table.AddColumn("[yellow]Row Key[/]");
 
                     foreach(var column in sampledEntities[0].Properties)
                     {
-                        headingCells.Add(new Cell(column.Key) { Color = ConsoleColor.Yellow });
+                        table.AddColumn($"[yellow]{column.Key}[/]");
                     }
-                    headingCells.Add(new Cell("Timestamp") { Color = ConsoleColor.Yellow });
-                    grid.Children.Add(headingCells.ToArray());
-
-                    foreach(var cell in headingCells)
-                    {
-                        grid.Columns.Add(new Column() { Name = cell.Name, Width = GridLength.Auto });
-                    }
+                    table.AddColumn("[yellow]Timestamp[/]");
 
                     foreach(var row in sampledEntities)
                     {
-                        var cellList = new List<Cell>();
-                        cellList.Add(new Cell(sampledEntities.IndexOf(row) + 1));
-                        cellList.Add(new Cell(row.PartitionKey));
-                        cellList.Add(new Cell(row.RowKey));
+                        var values = new List<Markup>();
+                        values.Add(new Markup($"[grey62]{sampledEntities.IndexOf(row) + 1}[/]"));
+                        values.Add(new Markup($"[grey93]{row.PartitionKey}[/]"));
+                        values.Add(new Markup($"[grey93]{row.RowKey}[/]"));
+                        values.AddRange(row.Properties.Select(x => new Markup($"[grey62]{x.Value}[/]")).ToList());
+                        values.Add(new Markup($"[grey62]{row.Timestamp}[/]"));
 
-                        foreach(var rowData in row.Properties)
-                        {
-                            cellList.Add(new Cell(rowData.Value));
-                        }
-                        cellList.Add(new Cell(row.Timestamp));
-
-                        grid.Children.Add(cellList.ToArray());
+                        table.AddRow(values.ToArray());
                     }
-
-                    var doc = new Document(
-                        grid
-                    );
-
-                    ConsoleRenderer.RenderDocument(doc);
+                    
+                    AnsiConsole.Render(table);
                 }
                 catch (Exception ex)
                 {

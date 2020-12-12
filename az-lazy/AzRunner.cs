@@ -11,6 +11,9 @@ using az_lazy.Commands.AddContainer;
 using az_lazy.Commands.Blob;
 using az_lazy.Commands.Table;
 using az_lazy.Commands.AddTable;
+using Spectre.Console;
+using System;
+using System.Threading;
 
 namespace az_lazy
 {
