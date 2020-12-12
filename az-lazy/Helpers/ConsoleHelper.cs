@@ -1,6 +1,7 @@
 using System.Drawing;
 using System;
 using Pastel;
+using Spectre.Console;
 
 namespace az_lazy.Helpers
 {
@@ -94,7 +95,8 @@ namespace az_lazy.Helpers
 
         public static void WriteSepparator()
         {
-            Console.WriteLine("------------------------------------------------------------");
+            var rule = new Rule();
+            AnsiConsole.Render(rule);
         }
     }
 }
