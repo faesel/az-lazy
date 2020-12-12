@@ -1,10 +1,10 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Alba.CsConsoleFormat;
 using az_lazy.Extensions;
 using az_lazy.Helpers;
 using az_lazy.Manager;
+using Spectre.Console;
 
 namespace az_lazy.Commands.Queue.Executor
 {
@@ -35,37 +35,35 @@ namespace az_lazy.Commands.Queue.Executor
 
                     ConsoleHelper.WriteLineSuccessWaiting(infoMessage);
 
-                    var headerThickness = new LineThickness(LineWidth.Double, LineWidth.Double, LineWidth.Double, LineWidth.Double);
-                    var doc = new Document(
-                        new Span("Message Count:") { Color = ConsoleColor.Yellow }, peekedMessages.Length, "\n",
-                        new Grid {
-                            Color = ConsoleColor.Gray,
-                            Columns = { GridLength.Auto, GridLength.Auto, GridLength.Auto, GridLength.Auto },
-                            Children = {
-                                new Cell("Number") { Stroke = headerThickness, Color = ConsoleColor.Yellow },
-                                new Cell("Message Id") { Stroke = headerThickness, Color = ConsoleColor.Yellow },
-                                new Cell("Message Text") { Stroke = headerThickness, TextWrap = TextWrap.WordWrap, Color = ConsoleColor.Yellow },
-                                new Cell("Inserted On") { Stroke = headerThickness, Color = ConsoleColor.Yellow },
+                    var table = new Spectre.Console.Table();
+                    table.Border(TableBorder.DoubleEdge);
+                    table.Expand();
+                    table.LeftAligned();
 
-                                peekedMessages.Select((value, index) => {
-                                    var rawMessageText = value.MessageText;
-                                    var isBase64 = rawMessageText.IsBase64();
-                                    var messageText = isBase64 ?
-                                        System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(rawMessageText)) :
-                                        rawMessageText;
+                    table.AddColumn("[yellow]Number[/]");
+                    table.AddColumn("[yellow]Message Id[/]");
+                    table.AddColumn("[yellow]Message Text[/]");
+                    table.AddColumn("[yellow]Inserted On[/]");
 
-                                    return new[] {
-                                        new Cell(index + 1),
-                                        new Cell(value.MessageId),
-                                        new Cell(messageText),
-                                        new Cell(value.InsertedOn),
-                                    };
-                                })
-                            }
-                        }
-                    );
+                    var peekedMessageList = peekedMessages.ToList();
+                    foreach (var message in peekedMessageList)
+                    {
+                        var index = peekedMessageList.IndexOf(message);
 
-                    ConsoleRenderer.RenderDocument(doc);
+                        var rawMessageText = message.MessageText;
+                        var isBase64 = rawMessageText.IsBase64();
+                        var messageText = isBase64 ?
+                            System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(rawMessageText)) :
+                            rawMessageText;
+
+                        table.AddRow(
+                            new Markup($"[grey62]{index + 1}[/]"),
+                            new Markup($"[grey93]{message.MessageId}[/]"),
+                            new Markup($"[grey93]{messageText}[/]"),
+                            new Markup($"[grey62]{message.InsertedOn}[/]"));
+                    }
+
+                    AnsiConsole.Render(table);
                 }
                 catch (Exception ex)
                 {
