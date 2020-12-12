@@ -9,6 +9,7 @@ using az_lazy.Helpers;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using MimeTypes;
+using Spectre.Console;
 
 namespace az_lazy.Manager
 {
@@ -186,29 +187,54 @@ namespace az_lazy.Manager
 
                 ConsoleHelper.WriteLineInfo($"Found {files.Count} files, beginning upload ...");
 
-                using var progress = new ProgressBar();
-                foreach (var file in files)
-                {
-                    var fileName = Path.GetFileName(file);
+                double lastPercentage = 0;
+                double percentageComplete = 0;
+                List<double> progress = new List<double>();
 
-                    var subfolderAndFile = file
-                        .Replace(searchDirectory, string.Empty)
-                        .Replace(fileName, string.Empty);
+                await AnsiConsole.Progress()
+                    .AutoClear(false)
+                    .Columns(new ProgressColumn[]
+                    {
+                        new TaskDescriptionColumn(),
+                        new ProgressBarColumn(),
+                        new PercentageColumn(),
+                        new RemainingTimeColumn(),
+                        new SpinnerColumn()
+                    })
+                    .StartAsync(async ctx =>
+                    {
+                        var task1 = ctx.AddTask($"[green]Uploading Fles[/]");
 
-                    if (!string.IsNullOrEmpty(containerLocation))
-                        subfolderAndFile = containerLocation + subfolderAndFile;
+                        while (!ctx.IsFinished)
+                        {
+                            foreach (var file in files)
+                            {
+                                var fileName = Path.GetFileName(file);
 
-                    if (subfolderAndFile.StartsWith(@"\"))
-                        subfolderAndFile = subfolderAndFile[1..];
+                                var subfolderAndFile = file
+                                    .Replace(searchDirectory, string.Empty)
+                                    .Replace(fileName, string.Empty);
 
-                    if (subfolderAndFile.EndsWith(@"\"))
-                        subfolderAndFile = subfolderAndFile[0..^1];
+                                if (!string.IsNullOrEmpty(containerLocation))
+                                    subfolderAndFile = containerLocation + subfolderAndFile;
 
-                    await UploadBlob(connectionString, containerName, file, subfolderAndFile).ConfigureAwait(false);
+                                if (subfolderAndFile.StartsWith(@"\"))
+                                    subfolderAndFile = subfolderAndFile[1..];
 
-                    var percentageComplete = (double)files.IndexOf(file) / files.Count * 100;
-                    progress.Report((percentageComplete / 100, @$" Uploading - {subfolderAndFile}\{fileName}"));
-                }
+                                if (subfolderAndFile.EndsWith(@"\"))
+                                    subfolderAndFile = subfolderAndFile[0..^1];
+
+                                await UploadBlob(connectionString, containerName, file, subfolderAndFile).ConfigureAwait(false);
+
+                                var fileIndex = files.IndexOf(file) + 1;
+                                percentageComplete = ((double)fileIndex) / files.Count * 100;
+                                task1.Increment(percentageComplete - lastPercentage);
+                                lastPercentage = percentageComplete;
+
+                                task1.Description = @$"[green]Uploading {fileIndex} of {files.Count} Fles[/]";
+                            }
+                        }
+                    });
             }
             catch(Exception ex)
             {
