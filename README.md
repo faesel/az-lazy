@@ -34,7 +34,7 @@ Select the connection you want to use
 
 ![](documentation/images/selectconnection.png)
 
-You can check which connection is selected the the list command, by default you will always have **devStorage** which allows you to connect to a local azure emulator
+You can check which connection is selected using the list command, by default you will always have **devStorage** which allows you to connect to a local Azure emulator
 
 `azlazy connection --list`
 
@@ -74,9 +74,9 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 
 | Command   |      Description      |
 |--------------|:-------------|
-| `azlazy connection --help` | Display a list of commends you can use for connections   |
+| `azlazy connection --help` | Display a list of commands you can use for connections   |
 | `azlazy addconnection --name "name of connection" --connectionstring "connection string"` |  Adds a new connection to the connection list. You can also select the connection with `--select true` |
-| `azlazy connection --list` | Show a list of connections available, the selected connection will highlighted with a `[*]` symbol |
+| `azlazy connection --list` | Show a list of connections available, the selected connection will be highlighted with a `[*]` symbol |
 | `azlazy connection --remove "name of connection"` | Removes a connection from the connections list |
 | `azlazy connection --select "name of connection"` | Selects a connection from the connections list |
 | `azlazy connection --wipe` | Removes all connections from the list, aside from the development connection |
@@ -85,7 +85,7 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 
 | Command   |      Description      |
 |--------------|:-------------|
-| `azlazy queue --help` |  Display a list of commends you can use for queues  |
+| `azlazy queue --help` |  Display a list of commands you can use for queues  |
 | `azlazy addqueue --name "queue to add"` |  Creates a new queue with the given name |
 | `azlazy queue --list` |  View a list of queues in the storage account along with the number of messages they are holding, poison queues are highlighted in red. You can also filter the list with `--contains` |
 | `azlazy queue --remove "queue to remove"` | Removes the queue with the given name |
@@ -104,7 +104,7 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 | `azlazy container --list` | View a list of containers in the storage account, along with whether or not its public and when it was last modified. You can also filter the list with `--contains` |
 | `azlazy addcontainer --name "container to add" --publicAccess "Blob"` | Creates a new container with the given name, the containers public access level can be set using `--publicAccess`. Possible options are `None`, `Blob`, `BlobContainer`. By default any container created will not be publicly accessible and so will be set to `None` |
 | `azlazy container --remove "container to remove"` | Removes a container with the given game |
-| `azlazy container --tree "container to view"` | Returns a tree view of the container `--detailed` command can also be used view file sizes and last modified dates. For large containers `--depth 2` command can be used to limit how deep the folders are traversed |
+| `azlazy container --tree "container to view"` | Returns a tree view of the container `--detailed` command can also be used to view file sizes and last modified dates. For large containers `--depth 2` command can be used to limit how deep the folders are traversed |
 
 ## iv. Blob commands  <a name="blobcommand"></a>
 
