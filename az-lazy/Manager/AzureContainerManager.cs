@@ -18,7 +18,7 @@ namespace az_lazy.Manager
         Task<List<BlobContainerItem>> GetContainers(string connectionString);
         Task<string> CreateContainer(string connectionString, PublicAccessType publicAccessLevel, string containerName);
         Task RemoveContainer(string connectionString, string removeContainer);
-        Task<List<TreeNode>> ContainerTree(string connectionString, string containerName, int? depth, bool detailed);
+        Task<List<TreeNode>> ContainerTree(string connectionString, string containerName, int? depth, bool detailed, string prefix);
         Task RemoveBlob(string connectionString, string containerName, string blobToRemove);
         Task UploadBlob(string connectionString, string containerName, string fileToUpload, string containerLocation);
         Task UploadBlobFromFolder(string connectionString, string containerName, string searchDirectory, string containerLocation);
@@ -76,7 +76,7 @@ namespace az_lazy.Manager
             }
         }
 
-        public async Task<List<TreeNode>> ContainerTree(string connectionString, string containerName, int? depth, bool detailed)
+        public async Task<List<TreeNode>> ContainerTree(string connectionString, string containerName, int? depth, bool detailed, string prefix)
         {
             try
             {
@@ -90,7 +90,7 @@ namespace az_lazy.Manager
                     }
                 };
 
-                await ContainerTree(container, "", 0, containerChildren, depth, detailed).ConfigureAwait(false);
+                await ContainerTree(container, prefix, 0, containerChildren, depth, detailed, prefix).ConfigureAwait(false);
 
                 return treeNodes;
             }
@@ -100,7 +100,7 @@ namespace az_lazy.Manager
             }
         }
 
-        private async Task ContainerTree(BlobContainerClient container, string prefix, int level, List<TreeNode> children, int? depth, bool detailed)
+        private async Task ContainerTree(BlobContainerClient container, string prefix, int level, List<TreeNode> children, int? depth, bool detailed, string prefixSearch)
         {
             const string folderDelimiter = "/";
 
@@ -120,10 +120,13 @@ namespace az_lazy.Manager
                     var incrementedLevel = level + 1;
                     if ((!depth.HasValue || incrementedLevel != depth.Value) && pageValues.IsPrefix)
                     {
-                        var prefixName = string.IsNullOrEmpty(prefix) ? pageValues.Prefix.Replace(folderDelimiter, string.Empty) : pageValues.Prefix.Replace(prefix, string.Empty).Replace(folderDelimiter, string.Empty);
+                        var prefixName = string.IsNullOrEmpty(prefix) || prefix.Equals(prefixSearch) ?
+                            pageValues.Prefix.Replace(folderDelimiter, string.Empty) :
+                            pageValues.Prefix.Replace(prefix, string.Empty).Replace(folderDelimiter, string.Empty);
+                        
                         var prefixChildren = new List<TreeNode>();
                         children.Add(new TreeNode { Name = prefixName, Children = prefixChildren });
-                        await ContainerTree(container, pageValues.Prefix, incrementedLevel, prefixChildren, depth, detailed).ConfigureAwait(false);
+                        await ContainerTree(container, pageValues.Prefix, incrementedLevel, prefixChildren, depth, detailed, prefixSearch).ConfigureAwait(false);
                     }
                 }
             }

@@ -28,7 +28,12 @@ namespace az_lazy.Commands.Container.Executor
                 try
                 {
                     var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    var treeNodes = await AzureContainerManager.ContainerTree(selectedConnection.ConnectionString, opts.Tree, opts.Depth, opts.Detailed).ConfigureAwait(false);
+                    var treeNodes = await AzureContainerManager.ContainerTree(
+                        selectedConnection.ConnectionString,
+                        opts.Tree,
+                        opts.Depth,
+                        opts.Detailed,
+                        opts.Prefix).ConfigureAwait(false);
 
                     if(treeNodes.Count > 0)
                     {
