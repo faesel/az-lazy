@@ -20,6 +20,9 @@ namespace az_lazy.Commands.Container.Executor
         [Option('d', "depth", Required = false, HelpText = "Specifies the depth of view the container in a tree view")]
         public int? Depth { get; set; }
 
+        [Option('p', "prefix", Required = false, HelpText = "Used in combination with the tree command, searches within the prefixed path")]
+        public string Prefix { get; set; }
+
         [Option("detailed", Required = false, HelpText = "Uncovers more detail for each blob")]
         public bool Detailed { get; set; }
     }

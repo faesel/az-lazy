@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System;
 using System.IO;
 using System.Reflection;
@@ -41,7 +42,7 @@ namespace az_lazy.test.BlobTest
 
             await LocalStorageFixture.BlobRunner.Run(new BlobOptions { Container = containerName, UploadFile = path }).ConfigureAwait(false);
 
-            var blobNodes = await LocalStorageFixture.AzureContainerManager.ContainerTree(DevStorageConnectionString, containerName, depth: 1, false).ConfigureAwait(false);
+            var blobNodes = await LocalStorageFixture.AzureContainerManager.ContainerTree(DevStorageConnectionString, containerName, depth: 1, false, string.Empty).ConfigureAwait(false);
 
             Assert.Single(blobNodes[0].Children);
             Assert.Equal(fileName, blobNodes[0].Children[0].Name);
@@ -68,7 +69,7 @@ namespace az_lazy.test.BlobTest
 
             await LocalStorageFixture.BlobRunner.Run(new BlobOptions { Container = containerName, Remove = fileName }).ConfigureAwait(false);
 
-            var blobNodes = await LocalStorageFixture.AzureContainerManager.ContainerTree(DevStorageConnectionString, containerName, depth: 1, false).ConfigureAwait(false);
+            var blobNodes = await LocalStorageFixture.AzureContainerManager.ContainerTree(DevStorageConnectionString, containerName, depth: 1, false, string.Empty).ConfigureAwait(false);
 
             Assert.Empty(blobNodes[0].Children);
         }
