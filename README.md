@@ -101,8 +101,8 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 | Command   |      Description      |
 |--------------|:-------------|
 | `azlazy container --help` | Displays a list of commands you can use for containers |
-| `azlazy container --list` | View a list of containers in the storage account, along with whether or not its public and when it was last modified. You can also filter the list with `--contains` |
-| `azlazy addcontainer --name "container to add" --publicAccess "Blob"` | Creates a new container with the given name, the containers public access level can be set using `--publicAccess`. Possible options are `None`, `Blob`, `BlobContainer`. By default any container created will not be publicly accessible and so will be set to `None` |
+| `azlazy container --list` | View a list of containers in the storage account, along with whether or not its public and when it was last modified. <ul><li>`--contains` can  also be used to filter the list</li></ul> |
+| `azlazy addcontainer --name "container to add" --publicAccess "Blob"` | Creates a new container with the given name. By default any container created will not be publicly accessible and so will have its public access level set to `None`, <ul><li>`--publicAccess` the containers public access level can be set using this command. Possible options are `None`, `Blob`, `BlobContainer`</li></ul>  |
 | `azlazy container --remove "container to remove"` | Removes a container with the given game |
 | `azlazy container --tree "container to view"` | Returns a tree view of the container, other options with this command include, <ul><li>`--detailed` Command can also be used to view file sizes and last modified dates</li><li>`--depth 2` For large containers this command can be used to limit how deep the folders are traversed</li><li>`--prefix` Command can be used to limit the results returned by searching within a prefixed path</li></ul> |
 
@@ -112,18 +112,18 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 |--------------|:-------------|
 | `azlazy blob --help` | Displays a list of commands you can use for blobs |
 | `azlazy blob --container "container name" --remove "blob to remove"` | removes a blob from a given container, note the blob name needs to contain the full path |
-| `azlazy blob --container "container name" --uploadFile "c:\dinofiles\safaripics\t-rex.png" --uploadPath "safaripics"` | Uploads a blob from a given path to the container, `--uploadPath` allows you to specify the location in blob storage. In the example given the file `t-rex.png` will be uploaded to `safaripics\t-rex.png` if no upload path is provided the file will be uploaded to the root of the container. |
-| `azlazy blob --container "container name" --uploadDirectory "c:\dinofiles" --uploadPath "safaripics"` | Upload all the files in a given directory to a container. When uploading, the folder structure of of the directory is reflected into the container. `--uploadPath` can also be optionally specified to copy the files into a subdirectory. |
+| `azlazy blob --container "container name" --uploadFile "c:\dinofiles\safaripics\t-rex.png" --uploadPath "safaripics"` | Uploads a blob from a given path to the container. In the example given the file `t-rex.png` will be uploaded to `safaripics\t-rex.png` if no upload path is provided the file will be uploaded to the root of the container. <ul><li>`--uploadPath` can also be optionally specified to copy the files into a subdirectory.</li></ul> |
+| `azlazy blob --container "container name" --uploadDirectory "c:\dinofiles" --uploadPath "safaripics"` | Upload all the files in a given directory to a container. When uploading, the folder structure of of the directory is reflected into the container. <ul><li>`--uploadPath` can also be optionally specified to copy the files into a subdirectory.</li></ul> |
 
-## v. Table commands <a name="tablecommand">
+## v. Table commands <a name="tablecommand"></a>
 
 | Command   |      Description      |
 |--------------|:-------------|
 | `azlazy table --help` | Displays a list of commands you can use for tables |
-| `azlazy table --list` | View a list of tables in the storage account. You can also filter the list with `--contains`  |
-| `azlazy table --sample "table name"` | Samples the data from a table, by default 10 rows will be selected. To sample more rows `--sampleCount 30` can be used |
-| `azlazy table --query "table name"` | Query's rows in a table, you can also filter by `--partitionKey` or `--rowKey`. To limit the number of records being returned back you can use `--take 10` |
-| `azlazy table --delete "table name"` | Removes rows from a table using either the `--partitionKey`, `--rowKey` or both together |
+| `azlazy table --list` | View a list of tables in the storage account. <ul><li>`--contains` can  also be used to filter the list</li></ul>  |
+| `azlazy table --sample "table name"` | Samples the data from a table, by default 10 rows will be selected. <ul><li>`--sampleCount 30` can also be used to set how many rows should be returned</li></ul> |
+| `azlazy table --query "table name"` | Query's rows in a table, the filters specified below can be used in combination with each other. If no filters are specified all rows in the table will be returned.  <ul><li>`--partitionKey` used to query by the partition key</li><li>`--rowKey` used to query by the row key</li><li>`--take 10` allows you to limit how many rows are returned</li></ul> |
+| `azlazy table --delete "table name"` | Removes rows from a table, to use this command one of the filters mentioned below must be used. <ul><li>`--partitionKey` delete using the partition key</li><li>`--rowKey` delete using the row key</li> |
 | `azlazy table --remove "table name"` | Removes the entire table from storage |
 | `azlazy addtable --name "table name"` | Creates a new table with the given table name |
 
