@@ -74,8 +74,8 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 
 | Command   |      Description      |
 |--------------|:-------------|
-| `azlazy connection --help` | Display a list of commands you can use for connections   |
-| `azlazy addconnection --name "name of connection" --connectionstring "connection string"` |  Adds a new connection to the connection list. You can also select the connection with `--select true` |
+| `azlazy connection --help` | Display a list of commands you can use for connections |
+| `azlazy addconnection --name "name of connection" --connectionstring "connection string"` | Adds a new connection to the connection list. <ul><li>`--select true` The select option allows you to select the connection when inserting</li></ul> |
 | `azlazy connection --list` | Show a list of connections available, the selected connection will be highlighted with a `[*]` symbol |
 | `azlazy connection --remove "name of connection"` | Removes a connection from the connections list |
 | `azlazy connection --select "name of connection"` | Selects a connection from the connections list |
@@ -87,13 +87,13 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 |--------------|:-------------|
 | `azlazy queue --help` |  Display a list of commands you can use for queues  |
 | `azlazy addqueue --name "queue to add"` |  Creates a new queue with the given name |
-| `azlazy queue --list` |  View a list of queues in the storage account along with the number of messages they are holding, poison queues are highlighted in red. You can also filter the list with `--contains` |
+| `azlazy queue --list` |  View a list of queues in the storage account along with the number of messages they are holding, poison queues are highlighted in red. <ul><li>`--contains` can  also be used to filter the list</li></ul> |
 | `azlazy queue --remove "queue to remove"` | Removes the queue with the given name |
 | `azlazy queue --cure "queue to move poison messages to"` | Moves poison queue messages back into the processing queue |
 | `azlazy queue --clear "queue to clear"` | Removes all messages in the queue |
 | `azlazy queue --addQueue "queue to add a new message" --addMessage '{ \"test\": true }'` | Adds a new message to the queue |
 | `azlazy queue --watch "queue to watch"` | Watches a queue for new messages |
-| `azlazy queue --peek "queue to peek messages"` | Views messages in the queue, note this function peeks messages so visibility is not changed for consuming applications. `--peekCount 10` can also be used to specify how many messages you want to view. The Maximum peek count available is 32.  |
+| `azlazy queue --peek "queue to peek messages"` | Views a messages in the queue, note this function peeks messages so visibility is not changed for consuming applications.<ul><li>`--peekCount 10` can also be used to specify how many messages you want to view. The Maximum peek count available is 32.</li></ul> |
 | `azlazy queue --from "source queue name" --to "destination queue name"` | Moves queue messages from the source queue to a destination queue |
  
 ## iii. Container commands <a name="containercommand"></a>
@@ -104,7 +104,7 @@ To view a list of commands through the CLI you can use `azlazy --help`, each com
 | `azlazy container --list` | View a list of containers in the storage account, along with whether or not its public and when it was last modified. You can also filter the list with `--contains` |
 | `azlazy addcontainer --name "container to add" --publicAccess "Blob"` | Creates a new container with the given name, the containers public access level can be set using `--publicAccess`. Possible options are `None`, `Blob`, `BlobContainer`. By default any container created will not be publicly accessible and so will be set to `None` |
 | `azlazy container --remove "container to remove"` | Removes a container with the given game |
-| `azlazy container --tree "container to view"` | Returns a tree view of the container, other options with this command include, <br> <ul><li>`--detailed` Command can also be used to view file sizes and last modified dates</li><li>`--depth 2` For large containers this command can be used to limit how deep the folders are traversed</li><li>`--prefix` Command can be used to limit the results returned by searching within a prefixed path</li></ul> |
+| `azlazy container --tree "container to view"` | Returns a tree view of the container, other options with this command include, <ul><li>`--detailed` Command can also be used to view file sizes and last modified dates</li><li>`--depth 2` For large containers this command can be used to limit how deep the folders are traversed</li><li>`--prefix` Command can be used to limit the results returned by searching within a prefixed path</li></ul> |
 
 ## iv. Blob commands  <a name="blobcommand"></a>
 
