@@ -9,6 +9,8 @@ using az_lazy.Commands.Queue;
 using az_lazy.Manager;
 using az_lazy.Startup;
 using Microsoft.Extensions.DependencyInjection;
+using System.IO;
+using System.Reflection;
 
 namespace az_lazy.test
 {
@@ -37,6 +39,10 @@ namespace az_lazy.test
 
             //Add development connection to connect to azure storage emulator
             LocalStorageManager = ServiceProvider.GetService<ILocalStorageManager>();
+
+            string collectionLocation = @$"{Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)}\connections.db";
+
+            LocalStorageManager.OverrideCollectionLocation(collectionLocation);
             LocalStorageManager.AddDevelopmentConnection();
 
             AzureQueueManager = ServiceProvider.GetService<IAzureQueueManager>();
