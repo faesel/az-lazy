@@ -24,7 +24,7 @@ namespace az_lazy.Manager
     {
         private const string DevConnectionName = "devStorage";
         private const string DevConnectionString = "UseDevelopmentStorage=true";
-        private readonly string ConnectionCollection = @$"{Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)}\connections.db";
+        private readonly string ConnectionCollection = @$"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\.dotnet\tools\.store\az-lazy\connections.db";
 
         public void AddConnection(string connectionName, string connectionString, bool selectConnection = false)
         {

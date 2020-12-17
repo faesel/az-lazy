@@ -123,7 +123,7 @@ namespace az_lazy.Manager
                         var prefixName = string.IsNullOrEmpty(prefix) || prefix.Equals(prefixSearch) ?
                             pageValues.Prefix.Replace(folderDelimiter, string.Empty) :
                             pageValues.Prefix.Replace(prefix, string.Empty).Replace(folderDelimiter, string.Empty);
-                        
+
                         var prefixChildren = new List<TreeNode>();
                         children.Add(new TreeNode { Name = prefixName, Children = prefixChildren });
                         await ContainerTree(container, pageValues.Prefix, incrementedLevel, prefixChildren, depth, detailed, prefixSearch).ConfigureAwait(false);
