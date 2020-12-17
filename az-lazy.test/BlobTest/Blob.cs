@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System;
 using System.IO;
 using System.Reflection;
@@ -34,7 +33,7 @@ namespace az_lazy.test.BlobTest
             }
             catch (Exception)
             {
-                //Suppress, its most likely becuase the container doesnt exist
+                //Suppress, its most likely because the container doesnt exist
             }
             await LocalStorageFixture.AzureContainerManager.CreateContainer(DevStorageConnectionString, PublicAccessType.None, containerName).ConfigureAwait(false);
 
@@ -60,7 +59,7 @@ namespace az_lazy.test.BlobTest
             }
             catch (Exception)
             {
-                //Suppress, its most likely becuase the container doesnt exist
+                //Suppress, its most likely because the container doesnt exist
             }
             await LocalStorageFixture.AzureContainerManager.CreateContainer(DevStorageConnectionString, PublicAccessType.None, containerName).ConfigureAwait(false);
 

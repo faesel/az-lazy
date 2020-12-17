@@ -13,6 +13,7 @@ namespace az_lazy.Manager
     {
         void AddConnection(string connectionName, string connectionString, bool selectConnection = false);
         void AddDevelopmentConnection();
+        void OverrideCollectionLocation(string location);
         bool SelectConnection(string connectionName);
         bool RemoveConnection(string connectionName);
         bool RemoveAllConnections(string connectionName);
@@ -24,11 +25,16 @@ namespace az_lazy.Manager
     {
         private const string DevConnectionName = "devStorage";
         private const string DevConnectionString = "UseDevelopmentStorage=true";
-        private readonly string ConnectionCollection = @$"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\.dotnet\tools\.store\az-lazy\connections.db";
+        private string CollectionLocation = @$"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\.dotnet\tools\.store\az-lazy\connections.db";
+
+        public void OverrideCollectionLocation(string location)
+        {
+            CollectionLocation = location;
+        }
 
         public void AddConnection(string connectionName, string connectionString, bool selectConnection = false)
         {
-            using var db = new LiteDatabase(ConnectionCollection);
+            using var db = new LiteDatabase(CollectionLocation);
             var collection = db.GetCollection<Connection>(nameof(ModelNames.Connection));
             var connection = new Connection(connectionName, connectionString);
 
@@ -48,7 +54,7 @@ namespace az_lazy.Manager
             developmentStorage.SetSelected();
             developmentStorage.SetDevelopmentStorage();
 
-            using var db = new LiteDatabase(ConnectionCollection);
+            using var db = new LiteDatabase(CollectionLocation);
             var collection = db.GetCollection<Connection>(nameof(ModelNames.Connection));
 
             var hasDevelopmentStorage = collection.Query()
@@ -63,7 +69,7 @@ namespace az_lazy.Manager
 
         public List<Connection> GetConnections()
         {
-            using var db = new LiteDatabase(ConnectionCollection);
+            using var db = new LiteDatabase(CollectionLocation);
             var collection = db.GetCollection<Connection>(nameof(ModelNames.Connection));
 
             return collection.Query()
@@ -72,7 +78,7 @@ namespace az_lazy.Manager
 
         public Connection GetSelectedConnection()
         {
-            using var db = new LiteDatabase(ConnectionCollection);
+            using var db = new LiteDatabase(CollectionLocation);
             var collection = db.GetCollection<Connection>(nameof(ModelNames.Connection));
 
             return collection.FindOne(x => x.IsSelected);
@@ -80,7 +86,7 @@ namespace az_lazy.Manager
 
         public bool SelectConnection(string connectionName)
         {
-            using var db = new LiteDatabase(ConnectionCollection);
+            using var db = new LiteDatabase(CollectionLocation);
             var collection = db.GetCollection<Connection>(nameof(ModelNames.Connection));
 
             var connectionToSelect = collection.FindOne(x => x.ConnectionName.Equals(connectionName, StringComparison.InvariantCultureIgnoreCase));
@@ -106,7 +112,7 @@ namespace az_lazy.Manager
 
         public bool RemoveConnection(string connectionName)
         {
-            using var db = new LiteDatabase(ConnectionCollection);
+            using var db = new LiteDatabase(CollectionLocation);
             var collection = db.GetCollection<Connection>(nameof(ModelNames.Connection));
 
             var connectionToRemove = collection.FindOne(x => x.ConnectionName.Equals(connectionName, StringComparison.InvariantCultureIgnoreCase));
@@ -123,7 +129,7 @@ namespace az_lazy.Manager
 
         public bool RemoveAllConnections(string connectionName)
         {
-            using var db = new LiteDatabase(ConnectionCollection);
+            using var db = new LiteDatabase(CollectionLocation);
             var collection = db.GetCollection<Connection>(nameof(ModelNames.Connection));
 
             var connectionToRemove = collection
