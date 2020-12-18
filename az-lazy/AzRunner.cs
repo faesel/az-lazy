@@ -11,6 +11,7 @@ using az_lazy.Commands.AddContainer;
 using az_lazy.Commands.Blob;
 using az_lazy.Commands.Table;
 using az_lazy.Commands.AddTable;
+using Spectre.Console;
 
 namespace az_lazy
 {
@@ -77,6 +78,11 @@ namespace az_lazy
 
         public Task<bool> DisplayHelp<T>(ParserResult<T> result, IEnumerable<Error> errs)
         {
+            AnsiConsole.Render(
+                new FigletText("Az-Lazy")
+                    .LeftAligned()
+                    .Color(Color.Red));
+
             return Task.FromResult(true);
         }
     }
