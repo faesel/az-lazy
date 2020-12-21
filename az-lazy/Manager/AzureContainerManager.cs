@@ -51,7 +51,7 @@ namespace az_lazy.Manager
             try
             {
                 var blobServiceClient = new BlobServiceClient(connectionString);
-                await blobServiceClient.CreateBlobContainerAsync(containerName, PublicAccessType.Blob).ConfigureAwait(false);
+                await blobServiceClient.CreateBlobContainerAsync(containerName, PublicAccessType.Blob);
 
                 return publicAccess == PublicAccessType.None ?
                     string.Empty :
@@ -68,7 +68,7 @@ namespace az_lazy.Manager
             try
             {
                 var blobServiceClient = new BlobServiceClient(connectionString);
-                await blobServiceClient.DeleteBlobContainerAsync(removeContainer).ConfigureAwait(false);
+                await blobServiceClient.DeleteBlobContainerAsync(removeContainer);
             }
             catch(Exception ex)
             {
@@ -90,7 +90,7 @@ namespace az_lazy.Manager
                     }
                 };
 
-                await ContainerTree(container, prefix, 0, containerChildren, depth, detailed, prefix).ConfigureAwait(false);
+                await ContainerTree(container, prefix, 0, containerChildren, depth, detailed, prefix);
 
                 return treeNodes;
             }
@@ -126,7 +126,7 @@ namespace az_lazy.Manager
 
                         var prefixChildren = new List<TreeNode>();
                         children.Add(new TreeNode { Name = prefixName, Children = prefixChildren });
-                        await ContainerTree(container, pageValues.Prefix, incrementedLevel, prefixChildren, depth, detailed, prefixSearch).ConfigureAwait(false);
+                        await ContainerTree(container, pageValues.Prefix, incrementedLevel, prefixChildren, depth, detailed, prefixSearch);
                     }
                 }
             }
@@ -137,7 +137,7 @@ namespace az_lazy.Manager
             try
             {
                 var container = new BlobContainerClient(connectionString, containerName);
-                await container.DeleteBlobIfExistsAsync(blobToRemove).ConfigureAwait(false);
+                await container.DeleteBlobIfExistsAsync(blobToRemove);
             }
             catch (Exception ex)
             {
@@ -174,7 +174,7 @@ namespace az_lazy.Manager
                     {
                         ContentType = fileType
                     }
-                }).ConfigureAwait(false);
+                });
             }
             catch (Exception ex)
             {
@@ -227,7 +227,7 @@ namespace az_lazy.Manager
                                 if (subfolderAndFile.EndsWith(@"\"))
                                     subfolderAndFile = subfolderAndFile[0..^1];
 
-                                await UploadBlob(connectionString, containerName, file, subfolderAndFile).ConfigureAwait(false);
+                                await UploadBlob(connectionString, containerName, file, subfolderAndFile);
 
                                 var fileIndex = files.IndexOf(file) + 1;
                                 percentageComplete = ((double)fileIndex) / files.Count * 100;

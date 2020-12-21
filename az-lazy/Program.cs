@@ -19,7 +19,7 @@ namespace az_lazy
             localStorageManager.AddDevelopmentConnection();
 
             var azRunner = serviceProvider.GetService<IAzRunner>();
-            await azRunner.Startup(args).ConfigureAwait(false);
+            await azRunner.Startup(args);
         }
     }
 }

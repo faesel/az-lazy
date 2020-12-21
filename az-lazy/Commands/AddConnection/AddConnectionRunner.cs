@@ -32,7 +32,7 @@ namespace az_lazy.Commands.AddConnection
 
                 try
                 {
-                    isConnected = await AzureConnectionManager.TestConnection(opts.ConnectionString).ConfigureAwait(false);
+                    isConnected = await AzureConnectionManager.TestConnection(opts.ConnectionString);
                 }
                 catch (ConnectionException connectionException)
                 {

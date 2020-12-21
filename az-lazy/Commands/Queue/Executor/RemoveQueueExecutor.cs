@@ -28,7 +28,7 @@ namespace az_lazy.Commands.Queue.Executor
                 try
                 {
                     var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    await AzureStorageManager.RemoveQueue(selectedConnection.ConnectionString, opts.RemoveQueue).ConfigureAwait(false);
+                    await AzureStorageManager.RemoveQueue(selectedConnection.ConnectionString, opts.RemoveQueue);
 
                     ConsoleHelper.WriteLineSuccessWaiting(message);
                     ConsoleHelper.WriteLineNormal($"Finished removing queue {opts.RemoveQueue}");

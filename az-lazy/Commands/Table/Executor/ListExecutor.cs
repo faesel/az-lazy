@@ -27,7 +27,7 @@ namespace az_lazy.Commands.Table.Executor
                 ConsoleHelper.WriteInfoWaiting(message, true);
 
                 var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                var tables = await AzureTableManager.GetTables(selectedConnection.ConnectionString).ConfigureAwait(false);
+                var tables = await AzureTableManager.GetTables(selectedConnection.ConnectionString);
 
                 if (tables.Count > 0)
                 {

@@ -28,7 +28,7 @@ namespace az_lazy.Commands.Queue.Executor
                 try
                 {
                     var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    await AzureStorageManager.MoveMessages(selectedConnection.ConnectionString, opts.From, opts.To).ConfigureAwait(false);
+                    await AzureStorageManager.MoveMessages(selectedConnection.ConnectionString, opts.From, opts.To);
 
                     ConsoleHelper.WriteLineNormal($"Finished adding message to queue {opts.AddQueue}");
                 }

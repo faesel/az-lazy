@@ -70,8 +70,7 @@ namespace az_lazy
                         (BlobOptions opts) => BlobRunner.Run(opts),
                         (TableOptions opts) => TableRunner.Run(opts),
                         (AddTableOptions opts) => AddTableRunner.Run(opts),
-                    errs => DisplayHelp(parsedResult, errs))
-                .ConfigureAwait(false);
+                    errs => DisplayHelp(parsedResult, errs));
 
             return;
         }

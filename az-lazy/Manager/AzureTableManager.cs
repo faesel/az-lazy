@@ -33,7 +33,7 @@ namespace az_lazy.Manager
 
             do
             {
-                TableResultSegment segment = await tableClient.ListTablesSegmentedAsync(token).ConfigureAwait(false);
+                TableResultSegment segment = await tableClient.ListTablesSegmentedAsync(token);
                 token = segment.ContinuationToken;
                 cloudTableList.AddRange(segment.Results);
             }
@@ -78,7 +78,7 @@ namespace az_lazy.Manager
 
             do
             {
-                var segment = await table.ExecuteQuerySegmentedAsync(new TableQuery { FilterString = query }.Take(takeCount), selectToken).ConfigureAwait(false);
+                var segment = await table.ExecuteQuerySegmentedAsync(new TableQuery { FilterString = query }.Take(takeCount), selectToken);
                 tableEntities.AddRange(segment.Results);
             }
             while(selectToken != null);
@@ -101,7 +101,7 @@ namespace az_lazy.Manager
 
             do
             {
-                var segment = await table.ExecuteQuerySegmentedAsync(new TableQuery().Take(sampleCount), selectToken).ConfigureAwait(false);
+                var segment = await table.ExecuteQuerySegmentedAsync(new TableQuery().Take(sampleCount), selectToken);
                 tableEntities.AddRange(segment.Results);
 
                 takeCount += sampleCount;
@@ -135,7 +135,7 @@ namespace az_lazy.Manager
             foreach (var item in table.ExecuteQuery(new TableQuery { FilterString = query }))
             {
                 var deleteOperation = TableOperation.Delete(item);
-                var result = await table.ExecuteAsync(deleteOperation).ConfigureAwait(false);
+                var result = await table.ExecuteAsync(deleteOperation);
 
                 if(result.HttpStatusCode == (int)HttpStatusCode.NoContent)
                 {
@@ -152,7 +152,7 @@ namespace az_lazy.Manager
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
             CloudTable table = tableClient.GetTableReference(tableToRemote);
 
-            return await table.DeleteIfExistsAsync().ConfigureAwait(false);
+            return await table.DeleteIfExistsAsync();
         }
 
         public async Task Create(string connectionString, string name)
@@ -161,7 +161,7 @@ namespace az_lazy.Manager
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
             CloudTable table = tableClient.GetTableReference(name);
 
-            await table.CreateIfNotExistsAsync().ConfigureAwait(false);
+            await table.CreateIfNotExistsAsync();
         }
     }
 }

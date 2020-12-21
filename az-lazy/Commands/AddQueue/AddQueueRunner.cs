@@ -30,7 +30,7 @@ namespace az_lazy.Commands.AddQueue
 
                 try
                 {
-                    await AzureStorageManager.CreateQueue(connection.ConnectionString, options.Name).ConfigureAwait(false);
+                    await AzureStorageManager.CreateQueue(connection.ConnectionString, options.Name);
 
                     ConsoleHelper.WriteLineSuccessWaiting(message);
                     ConsoleHelper.WriteLineNormal($"Finished creating queue {options.Name}");

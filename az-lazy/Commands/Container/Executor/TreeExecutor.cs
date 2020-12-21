@@ -33,7 +33,7 @@ namespace az_lazy.Commands.Container.Executor
                         opts.Tree,
                         opts.Depth,
                         opts.Detailed,
-                        opts.Prefix).ConfigureAwait(false);
+                        opts.Prefix);
 
                     if(treeNodes.Count > 0)
                     {

@@ -31,7 +31,7 @@ namespace az_lazy.Commands.Table.Executor
                         ConsoleHelper.WriteInfoWaiting(message, true);
 
                         var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                        var deleteCount = await AzureTableManager.DeleteRow(selectedConnection.ConnectionString, opts.Delete, opts.PartitionKey, opts.RowKey).ConfigureAwait(false);
+                        var deleteCount = await AzureTableManager.DeleteRow(selectedConnection.ConnectionString, opts.Delete, opts.PartitionKey, opts.RowKey);
 
                         ConsoleHelper.WriteLineSuccessWaiting(message);
                         ConsoleHelper.WriteLineNormal($"Finished deleting rows, {deleteCount} rows removed");

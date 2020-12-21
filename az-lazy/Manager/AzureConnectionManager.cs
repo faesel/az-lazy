@@ -23,7 +23,7 @@ namespace az_lazy.Manager
         {
             try
             {
-                var queues = await AzureStorageManager.GetQueues(connectionString).ConfigureAwait(false);
+                var queues = await AzureStorageManager.GetQueues(connectionString);
 
                 return true;
             }

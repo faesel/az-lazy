@@ -28,7 +28,7 @@ namespace az_lazy.Commands.Container.Executor
                 try
                 {
                     var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    await AzureContainerManager.RemoveContainer(selectedConnection.ConnectionString, opts.RemoveContainer).ConfigureAwait(false);
+                    await AzureContainerManager.RemoveContainer(selectedConnection.ConnectionString, opts.RemoveContainer);
 
                     ConsoleHelper.WriteLineSuccessWaiting(message);
                     ConsoleHelper.WriteLineNormal($"Finished removing container {opts.RemoveContainer}");

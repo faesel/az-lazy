@@ -24,8 +24,8 @@ namespace az_lazy.test.ContainerTest
         {
             const string containerName = "newcontainer";
 
-            await LocalStorageFixture.AddContainerRunner.Run(new AddContainerOptions { Name = containerName }).ConfigureAwait(false);
-            var containerList = await LocalStorageFixture.AzureContainerManager.GetContainers(DevStorageConnectionString).ConfigureAwait(false);
+            await LocalStorageFixture.AddContainerRunner.Run(new AddContainerOptions { Name = containerName });
+            var containerList = await LocalStorageFixture.AzureContainerManager.GetContainers(DevStorageConnectionString);
 
             Assert.Contains(containerList, x => x.Name.Equals(containerName));
         }
@@ -35,10 +35,10 @@ namespace az_lazy.test.ContainerTest
         {
             const string containerName = "deletecontainer";
 
-            await LocalStorageFixture.AzureContainerManager.CreateContainer(DevStorageConnectionString, PublicAccessType.None, containerName).ConfigureAwait(false);
+            await LocalStorageFixture.AzureContainerManager.CreateContainer(DevStorageConnectionString, PublicAccessType.None, containerName);
 
-            await LocalStorageFixture.ContainerRunner.Run(new ContainerOptions { RemoveContainer = containerName }).ConfigureAwait(false);
-            var containerList = await LocalStorageFixture.AzureContainerManager.GetContainers(DevStorageConnectionString).ConfigureAwait(false);
+            await LocalStorageFixture.ContainerRunner.Run(new ContainerOptions { RemoveContainer = containerName });
+            var containerList = await LocalStorageFixture.AzureContainerManager.GetContainers(DevStorageConnectionString);
 
             Assert.DoesNotContain(containerList, x => x.Name.Equals(containerName));
         }

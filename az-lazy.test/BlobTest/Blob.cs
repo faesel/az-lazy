@@ -29,19 +29,19 @@ namespace az_lazy.test.BlobTest
 
             try
             {
-                await LocalStorageFixture.AzureContainerManager.RemoveContainer(DevStorageConnectionString, containerName).ConfigureAwait(false);
+                await LocalStorageFixture.AzureContainerManager.RemoveContainer(DevStorageConnectionString, containerName);
             }
             catch (Exception)
             {
                 //Suppress, its most likely because the container doesnt exist
             }
-            await LocalStorageFixture.AzureContainerManager.CreateContainer(DevStorageConnectionString, PublicAccessType.None, containerName).ConfigureAwait(false);
+            await LocalStorageFixture.AzureContainerManager.CreateContainer(DevStorageConnectionString, PublicAccessType.None, containerName);
 
             var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestData", "Files", fileName);
 
-            await LocalStorageFixture.BlobRunner.Run(new BlobOptions { Container = containerName, UploadFile = path }).ConfigureAwait(false);
+            await LocalStorageFixture.BlobRunner.Run(new BlobOptions { Container = containerName, UploadFile = path });
 
-            var blobNodes = await LocalStorageFixture.AzureContainerManager.ContainerTree(DevStorageConnectionString, containerName, depth: 1, false, string.Empty).ConfigureAwait(false);
+            var blobNodes = await LocalStorageFixture.AzureContainerManager.ContainerTree(DevStorageConnectionString, containerName, depth: 1, false, string.Empty);
 
             Assert.Single(blobNodes[0].Children);
             Assert.Equal(fileName, blobNodes[0].Children[0].Name);
@@ -55,20 +55,20 @@ namespace az_lazy.test.BlobTest
 
             try
             {
-                await LocalStorageFixture.AzureContainerManager.RemoveContainer(DevStorageConnectionString, containerName).ConfigureAwait(false);
+                await LocalStorageFixture.AzureContainerManager.RemoveContainer(DevStorageConnectionString, containerName);
             }
             catch (Exception)
             {
                 //Suppress, its most likely because the container doesnt exist
             }
-            await LocalStorageFixture.AzureContainerManager.CreateContainer(DevStorageConnectionString, PublicAccessType.None, containerName).ConfigureAwait(false);
+            await LocalStorageFixture.AzureContainerManager.CreateContainer(DevStorageConnectionString, PublicAccessType.None, containerName);
 
             var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestData", "Files", fileName);
-            await LocalStorageFixture.AzureContainerManager.UploadBlob(DevStorageConnectionString,  containerName, path, string.Empty).ConfigureAwait(false);
+            await LocalStorageFixture.AzureContainerManager.UploadBlob(DevStorageConnectionString,  containerName, path, string.Empty);
 
-            await LocalStorageFixture.BlobRunner.Run(new BlobOptions { Container = containerName, Remove = fileName }).ConfigureAwait(false);
+            await LocalStorageFixture.BlobRunner.Run(new BlobOptions { Container = containerName, Remove = fileName });
 
-            var blobNodes = await LocalStorageFixture.AzureContainerManager.ContainerTree(DevStorageConnectionString, containerName, depth: 1, false, string.Empty).ConfigureAwait(false);
+            var blobNodes = await LocalStorageFixture.AzureContainerManager.ContainerTree(DevStorageConnectionString, containerName, depth: 1, false, string.Empty);
 
             Assert.Empty(blobNodes[0].Children);
         }

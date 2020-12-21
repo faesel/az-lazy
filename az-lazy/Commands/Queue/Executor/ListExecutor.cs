@@ -28,7 +28,7 @@ namespace az_lazy.Commands.Queue.Executor
                 ConsoleHelper.WriteInfoWaiting(message, true);
 
                 var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                var queueList = await AzureStorageManager.GetQueues(selectedConnection.ConnectionString).ConfigureAwait(false);
+                var queueList = await AzureStorageManager.GetQueues(selectedConnection.ConnectionString);
 
                 if (queueList.Count > 0)
                 {
@@ -42,7 +42,7 @@ namespace az_lazy.Commands.Queue.Executor
 
                     foreach (var queue in queueList)
                     {
-                        await queue.FetchAttributesAsync().ConfigureAwait(false);
+                        await queue.FetchAttributesAsync();
 
                         var queueCount = queue.ApproximateMessageCount ?? 0;
                         var isPoisonQueue = queue.Name.EndsWith("poison");

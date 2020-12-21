@@ -17,7 +17,7 @@ namespace az_lazy.Commands.Table
         {
             foreach(var executor in CommandExecutors)
             {
-                await executor.Execute(opts).ConfigureAwait(false);
+                await executor.Execute(opts);
             }
 
             return true;
