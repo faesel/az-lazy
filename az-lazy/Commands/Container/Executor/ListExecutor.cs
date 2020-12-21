@@ -1,8 +1,6 @@
-using System.Threading;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using az_lazy.Helpers;
 using az_lazy.Manager;
 using Spectre.Console;
 
@@ -25,11 +23,11 @@ namespace az_lazy.Commands.Container.Executor
         {
             if(opts.List)
             {
-                // Synchronous
-                await AnsiConsole.Status()
+                await AnsiConsole
+                    .Status()
                     .Spinner(Spinner.Known.Star)
                     .SpinnerStyle(Style.Parse("green bold"))
-                    .StartAsync("Fetching containers ...", async ctx =>
+                    .StartAsync("Fetching containers ...", async _ =>
                     {
                         try
                         {
