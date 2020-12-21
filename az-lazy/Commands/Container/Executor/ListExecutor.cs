@@ -27,11 +27,10 @@ namespace az_lazy.Commands.Container.Executor
             {
                 // Synchronous
                 await AnsiConsole.Status()
+                    .Spinner(Spinner.Known.Star)
+                    .SpinnerStyle(Style.Parse("green bold"))
                     .StartAsync("Fetching containers ...", async ctx =>
                     {
-                        ctx.Spinner(Spinner.Known.Dots);
-                        ctx.SpinnerStyle(Style.Parse("green"));
-
                         try
                         {
                             var selectedConnection = LocalStorageManager.GetSelectedConnection();
