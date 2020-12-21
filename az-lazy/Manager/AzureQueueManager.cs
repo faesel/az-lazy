@@ -30,7 +30,7 @@ namespace az_lazy.Manager
         {
             try
             {
-                var queues = await GetQueues(connectionString).ConfigureAwait(false);
+                var queues = await GetQueues(connectionString);
 
                 return true;
             }
@@ -50,7 +50,7 @@ namespace az_lazy.Manager
 
             do
             {
-                QueueResultSegment segment = await queueClient.ListQueuesSegmentedAsync(token).ConfigureAwait(false);
+                QueueResultSegment segment = await queueClient.ListQueuesSegmentedAsync(token);
                 token = segment.ContinuationToken;
                 cloudQueueList.AddRange(segment.Results);
             }
@@ -65,7 +65,7 @@ namespace az_lazy.Manager
             {
                 // Try to create a queue that already exists
                 QueueClient queue = new QueueClient(connectionString, queueName);
-                await queue.CreateAsync().ConfigureAwait(false);
+                await queue.CreateAsync();
 
                 return true;
             }
@@ -80,7 +80,7 @@ namespace az_lazy.Manager
             try
             {
                 QueueClient queue = new QueueClient(connectionString, queueName);
-                await queue.DeleteAsync().ConfigureAwait(false);
+                await queue.DeleteAsync();
 
                 return true;
             }
@@ -95,7 +95,7 @@ namespace az_lazy.Manager
             try
             {
                 QueueClient queue = new QueueClient(connectionString, queueName);
-                await queue.ClearMessagesAsync().ConfigureAwait(false);
+                await queue.ClearMessagesAsync();
 
                 return true;
             }
@@ -110,7 +110,7 @@ namespace az_lazy.Manager
             try
             {
                 QueueClient queue = new QueueClient(connectionString, queueName);
-                await queue.SendMessageAsync(message).ConfigureAwait(false);
+                await queue.SendMessageAsync(message);
 
                 return true;
             }
@@ -134,15 +134,15 @@ namespace az_lazy.Manager
                 var queueClient = new QueueClient(connectionString, queueName);
                 var poisonQueueClient = new QueueClient(connectionString,poisonQueueName);
 
-                var queueExists = await queueClient.ExistsAsync().ConfigureAwait(false);
-                var poisonQueueExists = await poisonQueueClient.ExistsAsync().ConfigureAwait(false);
+                var queueExists = await queueClient.ExistsAsync();
+                var poisonQueueExists = await poisonQueueClient.ExistsAsync();
 
                 if (!queueExists || !poisonQueueExists)
                 {
                     throw new QueueException("Either the queue or its related poison queue do not exist");
                 }
 
-                var poisonProperties = await poisonQueueClient.GetPropertiesAsync().ConfigureAwait(false);
+                var poisonProperties = await poisonQueueClient.GetPropertiesAsync();
                 var poisonQueueCount = poisonProperties.Value.ApproximateMessagesCount;
 
                 ConsoleHelper.WriteLineInfo($"Found {poisonQueueCount} poison messages");
@@ -154,12 +154,12 @@ namespace az_lazy.Manager
 
                 do
                 {
-                    poisonMessages = await poisonQueueClient.ReceiveMessagesAsync(maxMessages: 32).ConfigureAwait(false);
+                    poisonMessages = await poisonQueueClient.ReceiveMessagesAsync(maxMessages: 32);
 
                     foreach (var poisonMessage in poisonMessages)
                     {
-                        await queueClient.SendMessageAsync(poisonMessage.MessageText).ConfigureAwait(false);
-                        await poisonQueueClient.DeleteMessageAsync(poisonMessage.MessageId, poisonMessage.PopReceipt).ConfigureAwait(false);
+                        await queueClient.SendMessageAsync(poisonMessage.MessageText);
+                        await poisonQueueClient.DeleteMessageAsync(poisonMessage.MessageId, poisonMessage.PopReceipt);
                     }
 
                     processed += poisonMessages.Length;
@@ -190,7 +190,7 @@ namespace az_lazy.Manager
 
                 while (true)
                 {
-                    var queueProperties = await queueClient.GetPropertiesAsync().ConfigureAwait(false);
+                    var queueProperties = await queueClient.GetPropertiesAsync();
                     if (queueCount != queueProperties.Value.ApproximateMessagesCount)
                     {
                         var infomessage = queueCount == 0 ?
@@ -216,7 +216,7 @@ namespace az_lazy.Manager
             try
             {
                 var queueClient = new QueueClient(connectionString, queueToView);
-                var queueExists = await queueClient.ExistsAsync().ConfigureAwait(false);
+                var queueExists = await queueClient.ExistsAsync();
 
                 if (!queueExists)
                 {
@@ -226,7 +226,7 @@ namespace az_lazy.Manager
                 viewCount = viewCount == 0 ? 1 : viewCount;
                 viewCount = viewCount > 32 ? 32 : viewCount;
 
-                var messages = await queueClient.PeekMessagesAsync(maxMessages: viewCount).ConfigureAwait(false);
+                var messages = await queueClient.PeekMessagesAsync(maxMessages: viewCount);
 
                 return messages.Value;
             }
@@ -243,15 +243,15 @@ namespace az_lazy.Manager
                 var fromQueueClient = new QueueClient(connectionString, from);
                 var toQueueClient = new QueueClient(connectionString, to);
 
-                var fromQueueExists = await fromQueueClient.ExistsAsync().ConfigureAwait(false);
-                var toQueueExists = await toQueueClient.ExistsAsync().ConfigureAwait(false);
+                var fromQueueExists = await fromQueueClient.ExistsAsync();
+                var toQueueExists = await toQueueClient.ExistsAsync();
 
                 if (!fromQueueExists || !toQueueExists)
                 {
                     throw new QueueException($"Either {from} or {to} queue does not exist");
                 }
 
-                var fromProperties = await fromQueueClient.GetPropertiesAsync().ConfigureAwait(false);
+                var fromProperties = await fromQueueClient.GetPropertiesAsync();
                 var fromQueueCount = fromProperties.Value.ApproximateMessagesCount;
 
                 ConsoleHelper.WriteLineInfo($"Found {fromQueueCount} messages in {from} queue");
@@ -263,12 +263,12 @@ namespace az_lazy.Manager
 
                 do
                 {
-                    fromMessagees = await fromQueueClient.ReceiveMessagesAsync(maxMessages: 32).ConfigureAwait(false);
+                    fromMessagees = await fromQueueClient.ReceiveMessagesAsync(maxMessages: 32);
 
                     foreach (var fromMessage in fromMessagees)
                     {
-                        await toQueueClient.SendMessageAsync(fromMessage.MessageText).ConfigureAwait(false);
-                        await fromQueueClient.DeleteMessageAsync(fromMessage.MessageId, fromMessage.PopReceipt).ConfigureAwait(false);
+                        await toQueueClient.SendMessageAsync(fromMessage.MessageText);
+                        await fromQueueClient.DeleteMessageAsync(fromMessage.MessageId, fromMessage.PopReceipt);
                     }
 
                     processed += fromMessagees.Length;

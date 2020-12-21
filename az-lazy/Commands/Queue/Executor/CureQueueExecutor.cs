@@ -28,7 +28,7 @@ namespace az_lazy.Commands.Queue.Executor
                 try
                 {
                     var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    await AzureStorageManager.MovePoisonQueues(selectedConnection.ConnectionString, opts.CureQueue).ConfigureAwait(false);
+                    await AzureStorageManager.MovePoisonQueues(selectedConnection.ConnectionString, opts.CureQueue);
 
                     ConsoleHelper.WriteLineNormal("Finished moving poison queue messages");
                 }

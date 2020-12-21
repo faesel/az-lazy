@@ -28,7 +28,7 @@ namespace az_lazy.Commands.Table.Executor
                 try
                 {
                     var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    var result = await AzureTableManager.Remove(selectedConnection.ConnectionString, opts.Remove).ConfigureAwait(false);
+                    var result = await AzureTableManager.Remove(selectedConnection.ConnectionString, opts.Remove);
 
                     if(!result) {
                         ConsoleHelper.WriteLineFailedWaiting(infoMessage);

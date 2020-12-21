@@ -31,7 +31,7 @@ namespace az_lazy.Commands.Table.Executor
                 try
                 {
                     var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    var sampledEntities = await AzureTableManager.Sample(selectedConnection.ConnectionString, opts.Sample, opts.SampleCount).ConfigureAwait(false);
+                    var sampledEntities = await AzureTableManager.Sample(selectedConnection.ConnectionString, opts.Sample, opts.SampleCount);
 
                     ConsoleHelper.WriteLineSuccessWaiting(infoMessage);
 

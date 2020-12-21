@@ -36,7 +36,7 @@ namespace az_lazy.Commands.Table.Executor
                         opts.Query,
                         opts.PartitionKey,
                         opts.RowKey,
-                        opts.Take).ConfigureAwait(false);
+                        opts.Take);
 
                     ConsoleHelper.WriteLineSuccessWaiting(infoMessage);
 

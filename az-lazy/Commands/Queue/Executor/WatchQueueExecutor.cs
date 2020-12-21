@@ -29,7 +29,7 @@ namespace az_lazy.Commands.Queue.Executor
                     ConsoleHelper.WriteLineSuccessWaiting($"Watching queue {opts.Watch}");
 
                     var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    await AzureStorageManager.WatchQueue(selectedConnection.ConnectionString, opts.Watch).ConfigureAwait(false);
+                    await AzureStorageManager.WatchQueue(selectedConnection.ConnectionString, opts.Watch);
                 }
                 catch (Exception ex)
                 {

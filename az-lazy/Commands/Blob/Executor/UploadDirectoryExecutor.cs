@@ -29,7 +29,7 @@ namespace az_lazy.Commands.Blob.Executor
                 try
                 {
                     var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    await AzureContainerManager.UploadBlobFromFolder(selectedConnection.ConnectionString, opts.Container, opts.Directory, opts.UploadPath).ConfigureAwait(false);
+                    await AzureContainerManager.UploadBlobFromFolder(selectedConnection.ConnectionString, opts.Container, opts.Directory, opts.UploadPath);
 
                     Console.WriteLine(string.Empty);
                     ConsoleHelper.WriteLineSuccessWaiting(message);

@@ -28,7 +28,7 @@ namespace az_lazy.Commands.AddTable
                 try
                 {
                     var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    await AzureTableManager.Create(selectedConnection.ConnectionString, opts.Name).ConfigureAwait(false);
+                    await AzureTableManager.Create(selectedConnection.ConnectionString, opts.Name);
 
                     ConsoleHelper.WriteLineSuccessWaiting(message);
                     ConsoleHelper.WriteLineNormal($"Finished creating table {opts.Name}");

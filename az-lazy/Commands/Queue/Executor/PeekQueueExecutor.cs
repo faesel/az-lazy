@@ -31,7 +31,7 @@ namespace az_lazy.Commands.Queue.Executor
                 try
                 {
                     var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    var peekedMessages = await AzureStorageManager.PeekMessages(selectedConnection.ConnectionString, opts.Peek, opts.PeekCount).ConfigureAwait(false);
+                    var peekedMessages = await AzureStorageManager.PeekMessages(selectedConnection.ConnectionString, opts.Peek, opts.PeekCount);
 
                     ConsoleHelper.WriteLineSuccessWaiting(infoMessage);
 

@@ -28,7 +28,7 @@ namespace az_lazy.Commands.Blob.Executor
                 try
                 {
                     var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    await AzureContainerManager.UploadBlob(selectedConnection.ConnectionString, opts.Container, opts.UploadFile, opts.UploadPath).ConfigureAwait(false);
+                    await AzureContainerManager.UploadBlob(selectedConnection.ConnectionString, opts.Container, opts.UploadFile, opts.UploadPath);
 
                     ConsoleHelper.WriteLineSuccessWaiting(message);
                     ConsoleHelper.WriteLineNormal($"Finished uploading {opts.UploadFile}");
