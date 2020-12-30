@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using az_lazy.Helpers;
 using az_lazy.Manager;
+using Spectre.Console;
 
 namespace az_lazy.Commands.Container.Executor
 {
@@ -23,41 +23,44 @@ namespace az_lazy.Commands.Container.Executor
         {
             if(opts.List)
             {
-                const string message = "Fetching containers";
-
-                ConsoleHelper.WriteInfoWaiting(message, true);
-
-                try
-                {
-                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    var containers = await AzureContainerManager.GetContainers(selectedConnection.ConnectionString);
-
-                    if(containers.Count > 0)
+                await AnsiConsole
+                    .Status()
+                    .Spinner(Spinner.Known.Star)
+                    .SpinnerStyle(Style.Parse("green bold"))
+                    .StartAsync("Fetching containers ...", async _ =>
                     {
-                        ConsoleHelper.WriteLineSuccessWaiting(message);
-                        ConsoleHelper.WriteSepparator();
-                    }
+                        try
+                        {
+                            var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                            var containers = await AzureContainerManager.GetContainers(selectedConnection.ConnectionString);
 
-                    if(!string.IsNullOrEmpty(opts.Contains))
-                    {
-                        containers = containers.Where(x => x.Name.Contains(opts.Contains)).ToList();
-                    }
+                            if(containers.Count > 0)
+                            {
+                                AnsiConsole.MarkupLine("Fetching containers ... [bold green]Successful[/]");
+                                AnsiConsole.Render(new Rule("Containers").LeftAligned());
+                            }
 
-                    foreach (var container in containers)
-                    {
-                        var containerProperties = container.Properties;
+                            if(!string.IsNullOrEmpty(opts.Contains))
+                            {
+                                containers = containers.Where(x => x.Name.Contains(opts.Contains)).ToList();
+                            }
 
-                        var isPublic = containerProperties.PublicAccess.HasValue ? "(public)" : "(private)";
-                        var lastModified = containerProperties.LastModified.DateTime.ToShortDateString();
+                            foreach (var container in containers)
+                            {
+                                var containerProperties = container.Properties;
 
-                        ConsoleHelper.WriteLineNormal(container.Name, $"{isPublic} {lastModified}");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ConsoleHelper.WriteLineFailedWaiting(message);
-                    ConsoleHelper.WriteLineError(ex.Message);
-                }
+                                var isPublic = containerProperties.PublicAccess.HasValue ? "(public)" : "(private)";
+                                var lastModified = containerProperties.LastModified.DateTime.ToShortDateString();
+
+                                AnsiConsole.MarkupLine($"{container.Name} - [grey]{isPublic} {lastModified}[/]");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            AnsiConsole.MarkupLine("Fetching containers ... [bold red]Failed[/]");
+                            AnsiConsole.MarkupLine($"[bold red]{ex.Message}[/]");
+                        }
+                    });
             }
         }
     }

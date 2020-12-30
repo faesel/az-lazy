@@ -1,8 +1,7 @@
-using System;
 using System.Threading.Tasks;
 using az_lazy.Exceptions;
-using az_lazy.Helpers;
 using az_lazy.Manager;
+using Spectre.Console;
 
 namespace az_lazy.Commands.AddConnection
 {
@@ -23,40 +22,41 @@ namespace az_lazy.Commands.AddConnection
         {
             if (!string.IsNullOrEmpty(opts.ConnectionString) && !string.IsNullOrEmpty(opts.ConnectionName))
             {
-                var testingMessage = $"Testing {opts.ConnectionName} connection";
+                await AnsiConsole
+                    .Status()
+                    .Spinner(Spinner.Known.Star)
+                    .SpinnerStyle(Style.Parse("green bold"))
+                    .StartAsync($"Testing {opts.ConnectionName} connection ...", async _ =>
+                    {
+                        var errorMessage = string.Empty;
+                        bool isConnected;
 
-                ConsoleHelper.WriteInfoWaiting(testingMessage, true);
+                        try
+                        {
+                            isConnected = await AzureConnectionManager.TestConnection(opts.ConnectionString);
+                        }
+                        catch (ConnectionException connectionException)
+                        {
+                            errorMessage = connectionException.Message;
+                            isConnected = false;
+                        }
 
-                var errorMessage = string.Empty;
-                bool isConnected;
+                        if (!isConnected)
+                        {
+                            AnsiConsole.MarkupLine($"Testing {opts.ConnectionName} connection ... [bold red]Failed[/]");
+                            AnsiConsole.MarkupLine($"[bold red]{errorMessage}[/]");
 
-                try
-                {
-                    isConnected = await AzureConnectionManager.TestConnection(opts.ConnectionString);
-                }
-                catch (ConnectionException connectionException)
-                {
-                    errorMessage = connectionException.Message;
-                    isConnected = false;
-                }
+                            return;
+                        }
 
-                if (!isConnected)
-                {
-                    ConsoleHelper.WriteLineFailedWaiting(testingMessage);
-                    ConsoleHelper.WriteLineError(errorMessage);
+                        AnsiConsole.MarkupLine($"Testing {opts.ConnectionName} connection ... [bold green]Successful[/]");
+                        AnsiConsole.Markup($"Storing {opts.ConnectionName} connection ...");
 
-                    return false;
-                }
+                        LocalStorageManager.AddConnection(opts.ConnectionName, opts.ConnectionString, opts.Select);
 
-                ConsoleHelper.WriteLineSuccessWaiting(testingMessage);
-
-                var storingMessage = $"Storing {opts.ConnectionName} connection";
-                ConsoleHelper.WriteInfoWaiting(storingMessage, true);
-
-                LocalStorageManager.AddConnection(opts.ConnectionName, opts.ConnectionString, opts.Select);
-
-                ConsoleHelper.WriteLineSuccessWaiting(storingMessage);
-                ConsoleHelper.WriteLineNormal($"Finished adding connection {opts.ConnectionName}");
+                        AnsiConsole.MarkupLine($"Storing {opts.ConnectionName} connection ... [bold green]Successful[/]");
+                        AnsiConsole.WriteLine($"Finished adding connection {opts.ConnectionName}");
+                    });
             }
 
             return true;
