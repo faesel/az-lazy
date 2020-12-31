@@ -4,6 +4,7 @@ using az_lazy.Exceptions;
 using az_lazy.Helpers;
 using az_lazy.Manager;
 using Azure.Storage.Blobs.Models;
+using Spectre.Console;
 
 namespace az_lazy.Commands.AddContainer
 {
@@ -24,39 +25,44 @@ namespace az_lazy.Commands.AddContainer
         {
             if(!string.IsNullOrEmpty(opts.Name))
             {
-                var message = $"Creating container {opts.Name}";
-                ConsoleHelper.WriteInfoWaiting(message, true);
-
-                try
-                {
-                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    var publicAccessLevel = PublicAccessType.None;
-
-                    if(!string.IsNullOrEmpty(opts.PublicAccess))
+                await AnsiConsole
+                    .Status()
+                    .Spinner(Spinner.Known.Star)
+                    .SpinnerStyle(Style.Parse("green bold"))
+                    .StartAsync($"Creating container {opts.Name}", async _ =>
                     {
-                        Enum.TryParse(opts.PublicAccess, true, out publicAccessLevel);
-                    }
+                        try
+                        {
+                            var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                            var publicAccessLevel = PublicAccessType.None;
 
-                    var uri = await AzureContainerManager.CreateContainer(selectedConnection.ConnectionString, publicAccessLevel, opts.Name);
+                            if(!string.IsNullOrEmpty(opts.PublicAccess))
+                            {
+                                Enum.TryParse(opts.PublicAccess, true, out publicAccessLevel);
+                            }
 
-                    ConsoleHelper.WriteLineSuccessWaiting(message);
-                    ConsoleHelper.WriteLineInfo($"Public Access Level: {publicAccessLevel}");
-                    if(!string.IsNullOrEmpty(uri))
-                    {
-                        ConsoleHelper.WriteLineInfo($"Uri: {uri}");
-                    }
-                    ConsoleHelper.WriteLineNormal($"Finished creating container {opts.Name}");
+                            var uri = await AzureContainerManager.CreateContainer(selectedConnection.ConnectionString, publicAccessLevel, opts.Name);
 
-                    return true;
-                }
-                catch(ContainerException ex)
-                {
-                    ConsoleHelper.WriteLineFailedWaiting(message);
-                    ConsoleHelper.WriteLineError(ex.Message);
-                }
+                            AnsiConsole.MarkupLine($"Creating container {opts.Name} ... [bold green]Successful[/]");
+                            AnsiConsole.MarkupLine($"[grey]Public Access Level: {publicAccessLevel}[/]");
+
+                            if(!string.IsNullOrEmpty(uri))
+                            {
+                                AnsiConsole.MarkupLine($"[grey]Uri: {uri}[/]");
+                            }
+
+                            AnsiConsole.MarkupLine($"Finished creating container {opts.Name}");
+                        }
+                        catch(ContainerException ex)
+                        {
+                            AnsiConsole.MarkupLine($"Creating container {opts.Name} ... [bold red]Failed[/]");
+                            AnsiConsole.MarkupLine($"[bold red]{ex.Message}[/]");
+                        }
+                    });
+
             }
 
-            return false;
+            return true;
         }
     }
 }
