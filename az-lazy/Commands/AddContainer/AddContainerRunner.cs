@@ -59,7 +59,6 @@ namespace az_lazy.Commands.AddContainer
                             AnsiConsole.MarkupLine($"[bold red]{ex.Message}[/]");
                         }
                     });
-
             }
 
             return true;

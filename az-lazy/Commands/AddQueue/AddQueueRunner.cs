@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using az_lazy.Exceptions;
 using az_lazy.Helpers;
 using az_lazy.Manager;
+using Spectre.Console;
 
 namespace az_lazy.Commands.AddQueue
 {
@@ -22,24 +23,27 @@ namespace az_lazy.Commands.AddQueue
         {
             if(!string.IsNullOrEmpty(options.Name))
             {
-                var message = $"Creating new queue {options.Name}";
+                await AnsiConsole
+                    .Status()
+                    .Spinner(Spinner.Known.Star)
+                    .SpinnerStyle(Style.Parse("green bold"))
+                    .StartAsync($"Creating new queue {options.Name} ...", async _ =>
+                    {
+                        var connection = LocalStorageManager.GetSelectedConnection();
 
-                ConsoleHelper.WriteInfoWaiting(message, true);
+                        try
+                        {
+                            await AzureStorageManager.CreateQueue(connection.ConnectionString, options.Name);
 
-                var connection = LocalStorageManager.GetSelectedConnection();
-
-                try
-                {
-                    await AzureStorageManager.CreateQueue(connection.ConnectionString, options.Name);
-
-                    ConsoleHelper.WriteLineSuccessWaiting(message);
-                    ConsoleHelper.WriteLineNormal($"Finished creating queue {options.Name}");
-                }
-                catch(QueueException ex)
-                {
-                    ConsoleHelper.WriteLineFailedWaiting(message);
-                    ConsoleHelper.WriteLineError(ex.Message);
-                }
+                            AnsiConsole.MarkupLine($"Creating new queue {options.Name} ... [bold green]Successful[/]");
+                            AnsiConsole.MarkupLine($"Finished creating queue {options.Name}");
+                        }
+                        catch(QueueException ex)
+                        {
+                            AnsiConsole.MarkupLine($"Creating new queue {options.Name} ... [bold red]Failed[/]");
+                            AnsiConsole.MarkupLine($"[bold red]{ex.Message}[/]");
+                        }
+                    });
 
                 return true;
             }
