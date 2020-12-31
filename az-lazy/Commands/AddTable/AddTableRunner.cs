@@ -1,5 +1,6 @@
 using az_lazy.Helpers;
 using az_lazy.Manager;
+using Spectre.Console;
 using System;
 using System.Threading.Tasks;
 
@@ -22,22 +23,26 @@ namespace az_lazy.Commands.AddTable
         {
             if(!string.IsNullOrEmpty(opts.Name))
             {
-                string message = $"Creating table {opts.Name}";
-                ConsoleHelper.WriteInfoWaiting(message, true);
+                await AnsiConsole
+                    .Status()
+                    .Spinner(Spinner.Known.Star)
+                    .SpinnerStyle(Style.Parse("green bold"))
+                    .StartAsync($"Creating table {opts.Name} ...", async _ =>
+                    {
+                        try
+                        {
+                            var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                            await AzureTableManager.Create(selectedConnection.ConnectionString, opts.Name);
 
-                try
-                {
-                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    await AzureTableManager.Create(selectedConnection.ConnectionString, opts.Name);
-
-                    ConsoleHelper.WriteLineSuccessWaiting(message);
-                    ConsoleHelper.WriteLineNormal($"Finished creating table {opts.Name}");
-                }
-                catch (Exception ex)
-                {
-                    ConsoleHelper.WriteLineFailedWaiting(message);
-                    ConsoleHelper.WriteLineError(ex.Message);
-                }
+                            AnsiConsole.MarkupLine($"Creating table {opts.Name} ... [bold green]Successful[/]");
+                            AnsiConsole.MarkupLine($"Finished creating table {opts.Name}");
+                        }
+                        catch (Exception ex)
+                        {
+                            AnsiConsole.MarkupLine($"Creating table {opts.Name} ... [bold red]Failed[/]");
+                            AnsiConsole.MarkupLine($"[bold red]{ex.Message}[/]");
+                        }
+                    });
             }
 
             return true;
