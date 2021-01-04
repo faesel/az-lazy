@@ -188,7 +188,7 @@ namespace az_lazy.Manager
             {
                 var files = Directory.GetFiles(searchDirectory, "*", SearchOption.AllDirectories).ToList();
 
-                ConsoleHelper.WriteLineInfo($"Found {files.Count} files, beginning upload ...");
+                AnsiConsole.MarkupLine($"Found {files.Count} files, beginning upload ...");
 
                 double lastPercentage = 0;
                 double percentageComplete = 0;

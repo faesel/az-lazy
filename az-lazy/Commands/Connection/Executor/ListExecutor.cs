@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using az_lazy.Helpers;
 using az_lazy.Manager;
+using Spectre.Console;
 
 namespace az_lazy.Commands.Connection.Executor
 {
@@ -19,13 +19,37 @@ namespace az_lazy.Commands.Connection.Executor
         {
             if(opts.List)
             {
-                foreach (var connection in LocalStorageManager.GetConnections())
-                {
-                    var connectionName = $"{connection.ConnectionName} {(connection.IsSelected ? "[*]" : string.Empty)}";
-                    var addedOn = $"Added on {connection.DateAdded.ToShortDateString()}";
+                AnsiConsole
+                    .Status()
+                    .Spinner(Spinner.Known.Star)
+                    .SpinnerStyle(Style.Parse("green bold"))
+                    .StartAsync("Getting connections ... ", _ =>
+                    {
+                        try
+                        {
+                            var connections =  LocalStorageManager.GetConnections();
 
-                    ConsoleHelper.WriteLineAdditionalInfo(connectionName, addedOn);
-                }
+                            if(connections.Count > 0)
+                            {
+                                AnsiConsole.MarkupLine("Getting connections ... [bold green]Successful[/]");
+
+                                foreach (var connection in connections)
+                                {
+                                    var connectionName = connection.ConnectionName + (connection.IsSelected ? " [[*]]" : string.Empty);
+                                    var addedOn = $"Added on {connection.DateAdded.ToShortDateString()}";
+
+                                    AnsiConsole.MarkupLine($"{connectionName} - [grey]{addedOn.EscapeMarkup()}[/]");
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            AnsiConsole.MarkupLine("Getting connections ... [bold red]Failed[/]");
+                            AnsiConsole.MarkupLine($"[bold red]{ex.Message}[/]");
+                        }
+
+                        return Task.CompletedTask;
+                    });
             }
 
             return Task.CompletedTask;
