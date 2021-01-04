@@ -1,6 +1,6 @@
-﻿using az_lazy.Exceptions;
-using az_lazy.Helpers;
-using az_lazy.Manager;
+﻿using az_lazy.Manager;
+using Spectre.Console;
+using System;
 using System.Threading.Tasks;
 
 namespace az_lazy.Commands.Blob.Executor
@@ -22,22 +22,26 @@ namespace az_lazy.Commands.Blob.Executor
         {
             if (!string.IsNullOrEmpty(opts.Container) && !string.IsNullOrEmpty(opts.UploadFile))
             {
-                string message = $"Uploading {opts.UploadFile}";
-                ConsoleHelper.WriteInfoWaiting(message, true);
+                 await AnsiConsole
+                    .Status()
+                    .Spinner(Spinner.Known.Star)
+                    .SpinnerStyle(Style.Parse("green bold"))
+                    .StartAsync($"Uploading {opts.UploadFile} ... ", async _ =>
+                    {
+                        try
+                        {
+                            var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                            await AzureContainerManager.UploadBlob(selectedConnection.ConnectionString, opts.Container, opts.UploadFile, opts.UploadPath);
 
-                try
-                {
-                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    await AzureContainerManager.UploadBlob(selectedConnection.ConnectionString, opts.Container, opts.UploadFile, opts.UploadPath);
-
-                    ConsoleHelper.WriteLineSuccessWaiting(message);
-                    ConsoleHelper.WriteLineNormal($"Finished uploading {opts.UploadFile}");
-                }
-                catch (ContainerException ex)
-                {
-                    ConsoleHelper.WriteLineFailedWaiting(message);
-                    ConsoleHelper.WriteLineError(ex.Message);
-                }
+                            AnsiConsole.MarkupLine($"Uploading {opts.UploadFile} ... [bold green]Successful[/]");
+                            AnsiConsole.MarkupLine($"Finished uploading {opts.UploadFile}");
+                        }
+                        catch (Exception ex)
+                        {
+                            AnsiConsole.MarkupLine($"Uploading {opts.UploadFile} ... [bold red]Failed[/]");
+                            AnsiConsole.MarkupLine($"[bold red]{ex.Message}[/]");
+                        }
+                    });
             }
         }
     }

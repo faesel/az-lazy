@@ -1,5 +1,5 @@
-using az_lazy.Helpers;
 using az_lazy.Manager;
+using Spectre.Console;
 using System;
 using System.Threading.Tasks;
 
@@ -20,25 +20,28 @@ namespace az_lazy.Commands.Blob.Executor
 
         public async Task Execute(BlobOptions opts)
         {
-            if(!string.IsNullOrEmpty(opts.Directory))
+            if(!string.IsNullOrEmpty(opts.Directory) && !string.IsNullOrEmpty(opts.Container))
             {
-                var message = $"Syncing directory {opts.Directory}";
-                ConsoleHelper.WriteLineInfo(message);
-                ConsoleHelper.WriteSepparator();
+                await AnsiConsole
+                    .Status()
+                    .Spinner(Spinner.Known.Star)
+                    .SpinnerStyle(Style.Parse("green bold"))
+                    .StartAsync($"Syncing directory {opts.Directory} ... ", async _ =>
+                    {
+                        try
+                        {
+                            var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                            await AzureContainerManager.UploadBlobFromFolder(selectedConnection.ConnectionString, opts.Container, opts.Directory, opts.UploadPath);
 
-                try
-                {
-                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    await AzureContainerManager.UploadBlobFromFolder(selectedConnection.ConnectionString, opts.Container, opts.Directory, opts.UploadPath);
-
-                    Console.WriteLine(string.Empty);
-                    ConsoleHelper.WriteLineSuccessWaiting(message);
-                }
-                catch(Exception ex)
-                {
-                    ConsoleHelper.WriteLineFailedWaiting("Unable to sync directory");
-                    ConsoleHelper.WriteLineError(ex.Message);
-                }
+                            AnsiConsole.MarkupLine($"Syncing directory {opts.Directory} ... [bold green]Successful[/]");
+                            AnsiConsole.MarkupLine($"Finished syncing directory");
+                        }
+                        catch (Exception ex)
+                        {
+                            AnsiConsole.MarkupLine($"Syncing directory {opts.Directory} ... [bold red]Failed[/]");
+                            AnsiConsole.MarkupLine($"[bold red]{ex.Message}[/]");
+                        }
+                    });
             }
         }
     }

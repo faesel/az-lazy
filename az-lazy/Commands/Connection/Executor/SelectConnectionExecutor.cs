@@ -1,6 +1,8 @@
+using System;
 using System.Threading.Tasks;
 using az_lazy.Helpers;
 using az_lazy.Manager;
+using Spectre.Console;
 
 namespace az_lazy.Commands.Connection.Executor
 {
@@ -18,21 +20,35 @@ namespace az_lazy.Commands.Connection.Executor
         {
             if (!string.IsNullOrEmpty(opts.SelectConnection))
             {
-                var selectMessage = $"Selecting connection {opts.SelectConnection}";
-                ConsoleHelper.WriteInfoWaiting(selectMessage, true);
+                AnsiConsole
+                    .Status()
+                    .Spinner(Spinner.Known.Star)
+                    .SpinnerStyle(Style.Parse("green bold"))
+                    .StartAsync($"Selecting connection {opts.SelectConnection} ...", _ =>
+                    {
+                        try
+                        {
+                            var isSuccessfull = LocalStorageManager.SelectConnection(opts.SelectConnection);
 
-                var isSuccessfull = LocalStorageManager.SelectConnection(opts.SelectConnection);
+                            if (isSuccessfull)
+                            {
+                                AnsiConsole.MarkupLine($"Selecting connection {opts.SelectConnection} ... [bold green]Successful[/]");
+                                AnsiConsole.MarkupLine($"Connection {opts.SelectConnection} is ready to use!");
+                            }
+                            else
+                            {
+                                AnsiConsole.MarkupLine($"Selecting connection {opts.SelectConnection} ... [bold red]Failed[/]");
+                                ConsoleHelper.WriteLineError("Check the connection name exists and try again");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            AnsiConsole.MarkupLine($"Error whilst selecting connection {opts.SelectConnection} ... [bold red]Failed[/]");
+                            AnsiConsole.MarkupLine($"[bold red]{ex.Message}[/]");
+                        }
 
-                if(isSuccessfull)
-                {
-                    ConsoleHelper.WriteLineSuccessWaiting(selectMessage);
-                    ConsoleHelper.WriteLineNormal($"Connection {opts.SelectConnection} is ready to use!");
-                }
-                else
-                {
-                    ConsoleHelper.WriteLineFailedWaiting(selectMessage);
-                    ConsoleHelper.WriteLineError("Check the connection name exists and try again");
-                }
+                        return Task.CompletedTask;
+                    });
             }
 
             return Task.CompletedTask;

@@ -1,6 +1,6 @@
-﻿using az_lazy.Exceptions;
-using az_lazy.Helpers;
-using az_lazy.Manager;
+﻿using az_lazy.Manager;
+using Spectre.Console;
+using System;
 using System.Threading.Tasks;
 
 namespace az_lazy.Commands.Blob.Executor
@@ -22,22 +22,26 @@ namespace az_lazy.Commands.Blob.Executor
         {
             if (!string.IsNullOrEmpty(opts.Container) && !string.IsNullOrEmpty(opts.Remove))
             {
-                string message = $"Removing blob {opts.Remove} from container {opts.Container}";
-                ConsoleHelper.WriteInfoWaiting(message, true);
+                await AnsiConsole
+                    .Status()
+                    .Spinner(Spinner.Known.Star)
+                    .SpinnerStyle(Style.Parse("green bold"))
+                    .StartAsync($"Removing blob {opts.Remove} from container {opts.Container} ... ", async _ =>
+                    {
+                        try
+                        {
+                            var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                            await AzureContainerManager.RemoveBlob(selectedConnection.ConnectionString, opts.Container, opts.Remove);
 
-                try
-                {
-                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    await AzureContainerManager.RemoveBlob(selectedConnection.ConnectionString, opts.Container, opts.Remove);
-
-                    ConsoleHelper.WriteLineSuccessWaiting(message);
-                    ConsoleHelper.WriteLineNormal($"Finished removing blob {opts.Remove}");
-                }
-                catch (ContainerException ex)
-                {
-                    ConsoleHelper.WriteLineFailedWaiting(message);
-                    ConsoleHelper.WriteLineError(ex.Message);
-                }
+                            AnsiConsole.MarkupLine($"Removing blob {opts.Remove} from container {opts.Container} ... [bold green]Successful[/]");
+                            AnsiConsole.MarkupLine($"Finished removing blob {opts.Remove}");
+                        }
+                        catch (Exception ex)
+                        {
+                            AnsiConsole.MarkupLine($"Removing blob {opts.Remove} from container {opts.Container} ... [bold red]Failed[/]");
+                            AnsiConsole.MarkupLine($"[bold red]{ex.Message}[/]");
+                        }
+                    });
             }
         }
     }
