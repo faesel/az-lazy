@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using az_lazy.Helpers;
 using az_lazy.Manager;
+using Spectre.Console;
 
 namespace az_lazy.Commands.Queue.Executor
 {
@@ -22,22 +23,26 @@ namespace az_lazy.Commands.Queue.Executor
         {
             if (!string.IsNullOrEmpty(opts.AddQueue) || !string.IsNullOrEmpty(opts.AddMessage))
             {
-                string message = $"Adding message to queue {opts.AddQueue}";
-                ConsoleHelper.WriteInfoWaiting(message, true);
+                await AnsiConsole
+                    .Status()
+                    .Spinner(Spinner.Known.Star)
+                    .SpinnerStyle(Style.Parse("green bold"))
+                    .StartAsync($"Adding message to queue {opts.AddQueue} ... ", async _ =>
+                    {
+                        try
+                        {
+                            var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                            await AzureStorageManager.AddMessage(selectedConnection.ConnectionString, opts.AddQueue, opts.AddMessage);
 
-                try
-                {
-                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    await AzureStorageManager.AddMessage(selectedConnection.ConnectionString, opts.AddQueue, opts.AddMessage);
-
-                    ConsoleHelper.WriteLineSuccessWaiting(message);
-                    ConsoleHelper.WriteLineNormal($"Finished adding message to queue {opts.AddQueue}");
-                }
-                catch (Exception ex)
-                {
-                    ConsoleHelper.WriteLineFailedWaiting(message);
-                    ConsoleHelper.WriteLineError(ex.Message);
-                }
+                            AnsiConsole.MarkupLine($"Adding message to queue {opts.AddQueue} ... [bold green]Successful[/]");
+                            AnsiConsole.MarkupLine($"Finished adding message to queue {opts.AddQueue}");
+                        }
+                        catch (Exception ex)
+                        {
+                            AnsiConsole.MarkupLine($"Adding message to queue {opts.AddQueue} ... [bold red]Failed[/]");
+                            AnsiConsole.MarkupLine($"[bold red]{ex.Message}[/]");
+                        }
+                    });
             }
         }
     }
