@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using az_lazy.Helpers;
 using az_lazy.Manager;
+using Spectre.Console;
 
 namespace az_lazy.Commands.Queue.Executor
 {
@@ -22,22 +23,26 @@ namespace az_lazy.Commands.Queue.Executor
         {
             if (!string.IsNullOrEmpty(opts.ClearQueue))
             {
-                string message = $"Clearing queue {opts.ClearQueue}";
-                ConsoleHelper.WriteInfoWaiting(message, true);
+                await AnsiConsole
+                    .Status()
+                    .Spinner(Spinner.Known.Star)
+                    .SpinnerStyle(Style.Parse("green bold"))
+                    .StartAsync($"Clearing queue {opts.ClearQueue} ... ", async _ =>
+                    {
+                        try
+                        {
+                            var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                            await AzureStorageManager.ClearQueue(selectedConnection.ConnectionString, opts.ClearQueue);
 
-                try
-                {
-                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    await AzureStorageManager.ClearQueue(selectedConnection.ConnectionString, opts.ClearQueue);
-
-                    ConsoleHelper.WriteLineSuccessWaiting(message);
-                    ConsoleHelper.WriteLineNormal($"Finished clearing queue {opts.ClearQueue}");
-                }
-                catch (Exception ex)
-                {
-                    ConsoleHelper.WriteLineFailedWaiting(message);
-                    ConsoleHelper.WriteLineError(ex.Message);
-                }
+                            AnsiConsole.MarkupLine($"Clearing queue {opts.ClearQueue} ... [bold green]Successful[/]");
+                            AnsiConsole.MarkupLine($"Finished clearing queue {opts.ClearQueue}");
+                        }
+                        catch (Exception ex)
+                        {
+                            AnsiConsole.MarkupLine($"Clearing queue {opts.ClearQueue} ... [bold red]Failed[/]");
+                            AnsiConsole.MarkupLine($"[bold red]{ex.Message}[/]");
+                        }
+                    });
             }
         }
     }
