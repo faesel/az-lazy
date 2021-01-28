@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using az_lazy.Helpers;
 using az_lazy.Manager;
+using Spectre.Console;
 
 namespace az_lazy.Commands.Queue.Executor
 {
@@ -22,6 +23,27 @@ namespace az_lazy.Commands.Queue.Executor
         {
             if (!string.IsNullOrEmpty(opts.Watch))
             {
+                await AnsiConsole
+                    .Status()
+                    .Spinner(Spinner.Known.Star)
+                    .SpinnerStyle(Style.Parse("green bold"))
+                    .StartAsync($"Starting to watch {opts.Watch} ... ", async _ =>
+                    {
+                        try
+                        {
+                            var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                            await AzureStorageManager.WatchQueue(selectedConnection.ConnectionString, opts.Watch);
+
+                            AnsiConsole.MarkupLine($"Clearing poison queue {opts.CureQueue}-poison ... [bold green]Successful[/]");
+                            AnsiConsole.MarkupLine($"Finished moving poison queue messages");
+                        }
+                        catch (Exception ex)
+                        {
+                            AnsiConsole.MarkupLine($"Starting to watch {opts.Watch} ... [bold red]Failed[/]");
+                            AnsiConsole.MarkupLine($"[bold red]{ex.Message}[/]");
+                        }
+                    });
+
                 ConsoleHelper.WriteInfoWaiting($"Starting to watch {opts.Watch}", true);
 
                 try

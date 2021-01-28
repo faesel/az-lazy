@@ -196,7 +196,8 @@ namespace az_lazy.Manager
                             $"{queueProperties.Value.ApproximateMessagesCount} already in queue, waiting for more ..." :
                             $"Queue message added - {queueProperties.Value.ApproximateMessagesCount} in queue - {DateTime.UtcNow:MM/dd/yyyy HH:mm:ss}";
 
-                        ConsoleHelper.WriteLineNormal(infomessage);
+                        // ConsoleHelper.WriteLineNormal(infomessage);
+                        AnsiConsole.MarkupLine(infomessage);
 
                         queueCount = queueProperties.Value.ApproximateMessagesCount;
                     }
