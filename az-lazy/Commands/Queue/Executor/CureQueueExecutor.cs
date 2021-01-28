@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using az_lazy.Helpers;
 using az_lazy.Manager;
+using Spectre.Console;
 
 namespace az_lazy.Commands.Queue.Executor
 {
@@ -22,21 +23,26 @@ namespace az_lazy.Commands.Queue.Executor
         {
             if (!string.IsNullOrEmpty(opts.CureQueue))
             {
-                string message = $"Clearing poison queue {opts.CureQueue}-poison";
-                ConsoleHelper.WriteInfoWaiting(message);
+                await AnsiConsole
+                    .Status()
+                    .Spinner(Spinner.Known.Star)
+                    .SpinnerStyle(Style.Parse("green bold"))
+                    .StartAsync($"Clearing poison queue {opts.CureQueue}-poison ... ", async _ =>
+                    {
+                        try
+                        {
+                            var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                            await AzureStorageManager.MovePoisonQueues(selectedConnection.ConnectionString, opts.CureQueue);
 
-                try
-                {
-                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    await AzureStorageManager.MovePoisonQueues(selectedConnection.ConnectionString, opts.CureQueue);
-
-                    ConsoleHelper.WriteLineNormal("Finished moving poison queue messages");
-                }
-                catch (Exception ex)
-                {
-                    ConsoleHelper.WriteLineFailedWaiting(message);
-                    ConsoleHelper.WriteLineError(ex.Message);
-                }
+                            AnsiConsole.MarkupLine($"Clearing poison queue {opts.CureQueue}-poison ... [bold green]Successful[/]");
+                            AnsiConsole.MarkupLine($"Finished moving poison queue messages");
+                        }
+                        catch (Exception ex)
+                        {
+                            AnsiConsole.MarkupLine($"Clearing poison queue {opts.CureQueue}-poison ... [bold red]Failed[/]");
+                            AnsiConsole.MarkupLine($"[bold red]{ex.Message}[/]");
+                        }
+                    });
             }
         }
     }
