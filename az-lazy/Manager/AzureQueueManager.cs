@@ -8,6 +8,7 @@ using Azure.Storage.Queues;
 using Azure.Storage.Queues.Models;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
+using Spectre.Console;
 
 namespace az_lazy.Manager
 {
@@ -145,9 +146,9 @@ namespace az_lazy.Manager
                 var poisonProperties = await poisonQueueClient.GetPropertiesAsync();
                 var poisonQueueCount = poisonProperties.Value.ApproximateMessagesCount;
 
-                ConsoleHelper.WriteLineInfo($"Found {poisonQueueCount} poison messages");
+                AnsiConsole.MarkupLine($"[grey]Found {poisonQueueCount} poison messages[/]");
                 const string message = "Moving messages";
-                ConsoleHelper.WriteInfoWaiting(message, true);
+                AnsiConsole.Markup($"[grey]{message} ... [/]");
 
                 QueueMessage[] poisonMessages = null;
                 int processed = 0;
@@ -166,12 +167,10 @@ namespace az_lazy.Manager
 
                     if (poisonMessages.Length > 0)
                     {
-                        ConsoleHelper.WriteInfoWaitingPct(message, processed / poisonQueueCount * 100, true);
+                        AnsiConsole.Markup($"[grey]{message} ... {processed / poisonQueueCount * 100}[/]");
                     }
                 }
                 while (poisonMessages.Length > 0);
-
-                ConsoleHelper.WriteLineSuccessWaiting(message);
 
                 return true;
             }

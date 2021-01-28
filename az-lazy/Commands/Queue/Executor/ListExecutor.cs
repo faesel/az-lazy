@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using az_lazy.Helpers;
 using az_lazy.Manager;
+using Spectre.Console;
 
 namespace az_lazy.Commands.Queue.Executor
 {
@@ -23,46 +23,57 @@ namespace az_lazy.Commands.Queue.Executor
         {
             if (opts.List)
             {
-                const string message = "Fetching queues";
-
-                ConsoleHelper.WriteInfoWaiting(message, true);
-
-                var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                var queueList = await AzureStorageManager.GetQueues(selectedConnection.ConnectionString);
-
-                if (queueList.Count > 0)
-                {
-                    ConsoleHelper.WriteLineSuccessWaiting(message);
-                    ConsoleHelper.WriteSepparator();
-
-                    if(!string.IsNullOrEmpty(opts.Contains))
+                await AnsiConsole
+                    .Status()
+                    .Spinner(Spinner.Known.Star)
+                    .SpinnerStyle(Style.Parse("green bold"))
+                    .StartAsync($"Fetching queues ... ", async _ =>
                     {
-                        queueList = queueList.Where(x => x.Name.Contains(opts.Contains)).ToList();
-                    }
-
-                    foreach (var queue in queueList)
-                    {
-                        await queue.FetchAttributesAsync();
-
-                        var queueCount = queue.ApproximateMessageCount ?? 0;
-                        var isPoisonQueue = queue.Name.EndsWith("poison");
-                        var queueInformation = $"{queue.Name} ({queueCount})";
-
-                        if (isPoisonQueue)
+                        try
                         {
-                            ConsoleHelper.WriteLineError(queueInformation);
+                            var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                            var queueList = await AzureStorageManager.GetQueues(selectedConnection.ConnectionString);
+
+                            if (queueList.Count > 0)
+                            {
+                                AnsiConsole.MarkupLine($"Fetching queues ... [bold green]Successful[/]");
+                                AnsiConsole.Render(new Rule());
+
+                                if (!string.IsNullOrEmpty(opts.Contains))
+                                {
+                                    queueList = queueList.Where(x => x.Name.Contains(opts.Contains)).ToList();
+                                }
+
+                                foreach (var queue in queueList)
+                                {
+                                    await queue.FetchAttributesAsync();
+
+                                    var queueCount = queue.ApproximateMessageCount ?? 0;
+                                    var isPoisonQueue = queue.Name.EndsWith("poison");
+                                    var queueInformation = $"{queue.Name} ({queueCount})";
+
+                                    if (isPoisonQueue)
+                                    {
+                                        AnsiConsole.MarkupLine($"[red]{queueInformation}[/]");
+                                    }
+                                    else
+                                    {
+                                        AnsiConsole.MarkupLine($"[green]{queueInformation}[/]");
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                AnsiConsole.MarkupLine($"Fetching queues ... [bold red]Failed[/]");
+                                AnsiConsole.MarkupLine($"[bold red]No queues found[/]");
+                            }
                         }
-                        else
+                        catch (Exception ex)
                         {
-                            ConsoleHelper.WriteLineNormal(queueInformation);
+                            AnsiConsole.MarkupLine($"Fetching queues ... [bold red]Failed[/]");
+                            AnsiConsole.MarkupLine($"[bold red]{ex.Message}[/]");
                         }
-                    }
-                }
-                else
-                {
-                    ConsoleHelper.WriteLineFailedWaiting(message);
-                    ConsoleHelper.WriteLineError("No queues found");
-                }
+                    });
             }
         }
     }
