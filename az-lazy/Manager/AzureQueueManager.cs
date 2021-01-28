@@ -167,7 +167,7 @@ namespace az_lazy.Manager
 
                     if (poisonMessages.Length > 0)
                     {
-                        AnsiConsole.Markup($"[grey]{message} ... {processed / poisonQueueCount * 100}[/]");
+                        AnsiConsole.Markup($"[grey]{message} ... %{processed / poisonQueueCount * 100}[/]");
                     }
                 }
                 while (poisonMessages.Length > 0);
@@ -253,9 +253,10 @@ namespace az_lazy.Manager
                 var fromProperties = await fromQueueClient.GetPropertiesAsync();
                 var fromQueueCount = fromProperties.Value.ApproximateMessagesCount;
 
-                ConsoleHelper.WriteLineInfo($"Found {fromQueueCount} messages in {from} queue");
+                AnsiConsole.MarkupLine($"[grey]Found {fromQueueCount} messages in {from} queue[/]");
+
                 const string message = "Moving messages";
-                ConsoleHelper.WriteInfoWaiting(message, true);
+                AnsiConsole.Markup($"[grey]{message} ...[/]");
 
                 QueueMessage[] fromMessagees = null;
                 int processed = 0;
@@ -274,12 +275,10 @@ namespace az_lazy.Manager
 
                     if (fromMessagees.Length > 0)
                     {
-                        ConsoleHelper.WriteInfoWaitingPct(message, processed / fromQueueCount * 100, true);
+                        AnsiConsole.Markup($"[grey]{message} ... %{processed / fromQueueCount * 100}[/]");
                     }
                 }
                 while (fromMessagees.Length > 0);
-
-                ConsoleHelper.WriteLineSuccessWaiting(message);
 
                 return true;
             }
