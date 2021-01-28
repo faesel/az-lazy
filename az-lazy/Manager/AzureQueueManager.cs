@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using az_lazy.Exceptions;
-using az_lazy.Helpers;
 using Azure.Storage.Queues;
 using Azure.Storage.Queues.Models;
 using Microsoft.WindowsAzure.Storage;
@@ -196,7 +195,6 @@ namespace az_lazy.Manager
                             $"{queueProperties.Value.ApproximateMessagesCount} already in queue, waiting for more ..." :
                             $"Queue message added - {queueProperties.Value.ApproximateMessagesCount} in queue - {DateTime.UtcNow:MM/dd/yyyy HH:mm:ss}";
 
-                        // ConsoleHelper.WriteLineNormal(infomessage);
                         AnsiConsole.MarkupLine(infomessage);
 
                         queueCount = queueProperties.Value.ApproximateMessagesCount;
