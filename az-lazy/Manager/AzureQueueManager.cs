@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using az_lazy.Exceptions;
-using az_lazy.Helpers;
 using Azure.Storage.Queues;
 using Azure.Storage.Queues.Models;
 using Microsoft.WindowsAzure.Storage;
@@ -167,7 +166,7 @@ namespace az_lazy.Manager
 
                     if (poisonMessages.Length > 0)
                     {
-                        AnsiConsole.Markup($"[grey]{message} ... {processed / poisonQueueCount * 100}[/]");
+                        AnsiConsole.Markup($"[grey]{message} ... %{processed / poisonQueueCount * 100}[/]");
                     }
                 }
                 while (poisonMessages.Length > 0);
@@ -196,7 +195,7 @@ namespace az_lazy.Manager
                             $"{queueProperties.Value.ApproximateMessagesCount} already in queue, waiting for more ..." :
                             $"Queue message added - {queueProperties.Value.ApproximateMessagesCount} in queue - {DateTime.UtcNow:MM/dd/yyyy HH:mm:ss}";
 
-                        ConsoleHelper.WriteLineNormal(infomessage);
+                        AnsiConsole.MarkupLine(infomessage);
 
                         queueCount = queueProperties.Value.ApproximateMessagesCount;
                     }
@@ -253,9 +252,10 @@ namespace az_lazy.Manager
                 var fromProperties = await fromQueueClient.GetPropertiesAsync();
                 var fromQueueCount = fromProperties.Value.ApproximateMessagesCount;
 
-                ConsoleHelper.WriteLineInfo($"Found {fromQueueCount} messages in {from} queue");
+                AnsiConsole.MarkupLine($"[grey]Found {fromQueueCount} messages in {from} queue[/]");
+
                 const string message = "Moving messages";
-                ConsoleHelper.WriteInfoWaiting(message, true);
+                AnsiConsole.Markup($"[grey]{message} ...[/]");
 
                 QueueMessage[] fromMessagees = null;
                 int processed = 0;
@@ -274,12 +274,10 @@ namespace az_lazy.Manager
 
                     if (fromMessagees.Length > 0)
                     {
-                        ConsoleHelper.WriteInfoWaitingPct(message, processed / fromQueueCount * 100, true);
+                        AnsiConsole.Markup($"[grey]{message} ... %{processed / fromQueueCount * 100}[/]");
                     }
                 }
                 while (fromMessagees.Length > 0);
-
-                ConsoleHelper.WriteLineSuccessWaiting(message);
 
                 return true;
             }

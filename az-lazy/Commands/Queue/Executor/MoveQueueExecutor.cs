@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using az_lazy.Helpers;
 using az_lazy.Manager;
+using Spectre.Console;
 
 namespace az_lazy.Commands.Queue.Executor
 {
@@ -22,21 +23,26 @@ namespace az_lazy.Commands.Queue.Executor
         {
             if (!string.IsNullOrEmpty(opts.From) || !string.IsNullOrEmpty(opts.To))
             {
-                string message = $"Moving message from {opts.From} to {opts.To}";
-                ConsoleHelper.WriteLineInfo(message);
+                await AnsiConsole
+                    .Status()
+                    .Spinner(Spinner.Known.Star)
+                    .SpinnerStyle(Style.Parse("green bold"))
+                    .StartAsync($"Moving message from {opts.From} to {opts.To} ... ", async _ =>
+                    {
+                        try
+                        {
+                            var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                            await AzureStorageManager.MoveMessages(selectedConnection.ConnectionString, opts.From, opts.To);
 
-                try
-                {
-                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    await AzureStorageManager.MoveMessages(selectedConnection.ConnectionString, opts.From, opts.To);
-
-                    ConsoleHelper.WriteLineNormal($"Finished adding message to queue {opts.AddQueue}");
-                }
-                catch (Exception ex)
-                {
-                    ConsoleHelper.WriteLineFailedWaiting(message);
-                    ConsoleHelper.WriteLineError(ex.Message);
-                }
+                            AnsiConsole.MarkupLine($"Moving message from {opts.From} to {opts.To} ... [bold green]Successful[/]");
+                            AnsiConsole.MarkupLine($"Finished adding message to queue {opts.AddQueue}");
+                        }
+                        catch (Exception ex)
+                        {
+                            AnsiConsole.MarkupLine($"Moving message from {opts.From} to {opts.To} ... [bold red]Failed[/]");
+                            AnsiConsole.MarkupLine($"[bold red]{ex.Message}[/]");
+                        }
+                    });
             }
         }
     }

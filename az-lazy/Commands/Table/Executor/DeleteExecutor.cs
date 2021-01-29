@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using az_lazy.Helpers;
 using az_lazy.Manager;
+using Spectre.Console;
 
 namespace az_lazy.Commands.Table.Executor
 {
@@ -22,30 +23,33 @@ namespace az_lazy.Commands.Table.Executor
         {
             if(!string.IsNullOrEmpty(opts.Delete))
             {
-                if(!string.IsNullOrEmpty(opts.PartitionKey) || !string.IsNullOrEmpty(opts.RowKey))
-                {
-                    try
+                await AnsiConsole
+                    .Status()
+                    .Spinner(Spinner.Known.Star)
+                    .SpinnerStyle(Style.Parse("green bold"))
+                    .StartAsync($"Deleting rows ... ", async _ =>
                     {
-                        const string message = "Deleting rows";
+                        try
+                        {
+                            if(!string.IsNullOrEmpty(opts.PartitionKey) || !string.IsNullOrEmpty(opts.RowKey))
+                            {
+                                var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                                var deleteCount = await AzureTableManager.DeleteRow(selectedConnection.ConnectionString, opts.Delete, opts.PartitionKey, opts.RowKey);
 
-                        ConsoleHelper.WriteInfoWaiting(message, true);
-
-                        var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                        var deleteCount = await AzureTableManager.DeleteRow(selectedConnection.ConnectionString, opts.Delete, opts.PartitionKey, opts.RowKey);
-
-                        ConsoleHelper.WriteLineSuccessWaiting(message);
-                        ConsoleHelper.WriteLineNormal($"Finished deleting rows, {deleteCount} rows removed");
-                    }
-                    catch(Exception ex)
-                    {
-                        ConsoleHelper.WriteLineError(ex.Message);
-                        ConsoleHelper.WriteLineFailedWaiting($"Failed to sample table {opts.Sample}");
-                    }
-                }
-                else
-                {
-                    ConsoleHelper.WriteLineError("PartitionKey or RowKey are required in order to delete rows");
-                }
+                                AnsiConsole.MarkupLine($"Deleting rows ... [bold green]Successful[/]");
+                                AnsiConsole.MarkupLine($"Finished deleting rows, {deleteCount} rows removed");
+                            }
+                            else
+                            {
+                                AnsiConsole.MarkupLine($"[bold red]PartitionKey or RowKey are required in order to delete rows[/]");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            AnsiConsole.MarkupLine($"Deleting rows ... [bold red]Failed[/]");
+                            AnsiConsole.MarkupLine($"[bold red]{ex.Message}[/]");
+                        }
+                    });
             }
         }
     }
