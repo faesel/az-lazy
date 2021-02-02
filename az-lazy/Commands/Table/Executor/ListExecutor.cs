@@ -1,7 +1,9 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using az_lazy.Helpers;
 using az_lazy.Manager;
+using Spectre.Console;
 
 namespace az_lazy.Commands.Table.Executor
 {
@@ -22,33 +24,44 @@ namespace az_lazy.Commands.Table.Executor
         {
             if (opts.List)
             {
-                const string message = "Fetching tables";
-
-                ConsoleHelper.WriteInfoWaiting(message, true);
-
-                var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                var tables = await AzureTableManager.GetTables(selectedConnection.ConnectionString);
-
-                if (tables.Count > 0)
-                {
-                    ConsoleHelper.WriteLineSuccessWaiting(message);
-                    ConsoleHelper.WriteSepparator();
-
-                    if(!string.IsNullOrEmpty(opts.Contains))
+                await AnsiConsole
+                    .Status()
+                    .Spinner(Spinner.Known.Star)
+                    .SpinnerStyle(Style.Parse("green bold"))
+                    .StartAsync($"Fetching tables ... ", async _ =>
                     {
-                        tables = tables.Where(x => x.Name.Contains(opts.Contains)).ToList();
-                    }
+                        try
+                        {
+                            var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                            var tables = await AzureTableManager.GetTables(selectedConnection.ConnectionString);
 
-                    foreach (var table in tables)
-                    {
-                        ConsoleHelper.WriteLineNormal(table.Name);
-                    }
-                }
-                else
-                {
-                    ConsoleHelper.WriteLineFailedWaiting(message);
-                    ConsoleHelper.WriteLineError("No queues found");
-                }
+                            if (tables.Count > 0)
+                            {
+                                AnsiConsole.MarkupLine($"Fetching tables ... [bold green]Successful[/]");
+                                AnsiConsole.Render(new Rule());
+
+                                if(!string.IsNullOrEmpty(opts.Contains))
+                                {
+                                    tables = tables.Where(x => x.Name.Contains(opts.Contains)).ToList();
+                                }
+
+                                foreach (var table in tables)
+                                {
+                                    AnsiConsole.MarkupLine(table.Name);
+                                }
+                            }
+                            else
+                            {
+                                AnsiConsole.MarkupLine($"Fetching tables ... [bold red]Failed[/]");
+                                AnsiConsole.MarkupLine($"[bold red]No queues found[/]");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            AnsiConsole.MarkupLine($"Fetching tables ... [bold red]Failed[/]");
+                            AnsiConsole.MarkupLine($"[bold red]{ex.Message}[/]");
+                        }
+                    });
             }
         }
     }
