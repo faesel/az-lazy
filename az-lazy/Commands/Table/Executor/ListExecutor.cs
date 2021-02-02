@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using az_lazy.Helpers;
 using az_lazy.Manager;
 using Spectre.Console;
 
