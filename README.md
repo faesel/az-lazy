@@ -1,5 +1,8 @@
 ![](az-lazy/icon.png)
 
+![.NET Core](https://github.com/faesel/az-lazy/workflows/.NET%20Core/badge.svg)
+![Downloads](https://img.shields.io/nuget/dt/az-lazy.svg)
+
 AzLazy CLI tool is designed for developers, it provides a command line interface to quickly manage and make changes to azure storage queues, blobs and tables. The inspiration for this project was to move away from using Azure Storage Manager and provide a faster CLI experience for developers.
 
 # Table of Contents
