@@ -1,5 +1,6 @@
 ![](az-lazy/icon.png)
 
+![Nuget](https://img.shields.io/nuget/v/az-lazy.svg)
 ![.NET Core](https://github.com/faesel/az-lazy/workflows/.NET%20Core/badge.svg)
 ![Downloads](https://img.shields.io/nuget/dt/az-lazy.svg)
 
