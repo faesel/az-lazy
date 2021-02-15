@@ -36,11 +36,9 @@ namespace az_lazy.Commands.Table.Executor
                             var selectedConnection = LocalStorageManager.GetSelectedConnection();
                             var sampledEntities = await AzureTableManager.Sample(selectedConnection.ConnectionString, opts.Sample, opts.SampleCount);
 
-                            
-
                             if(sampledEntities == null || sampledEntities.Count == 0)
                             {
-                                AnsiConsole.WriteLine("No rows found");
+                                AnsiConsole.MarkupLine($"No rows found ... [bold red]Failed[/]");
                             }
                             else
                             {
