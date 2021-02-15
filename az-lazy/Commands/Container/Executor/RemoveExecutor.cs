@@ -26,7 +26,7 @@ namespace az_lazy.Commands.Container.Executor
                     .Status()
                     .Spinner(Spinner.Known.Star)
                     .SpinnerStyle(Style.Parse("green bold"))
-                    .StartAsync($"Removing container {opts.RemoveContainer}", async _ =>
+                    .StartAsync($"Removing container {opts.RemoveContainer} ...", async _ =>
                     {
                         try
                         {
