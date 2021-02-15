@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using az_lazy.Commands.Container.Dto;
 using az_lazy.Manager;
 using Spectre.Console;
 
@@ -22,77 +24,62 @@ namespace az_lazy.Commands.Container.Executor
         {
             if(!string.IsNullOrEmpty(opts.Tree))
             {
-                await AnsiConsole
-                    .Status()
-                    .Spinner(Spinner.Known.Star)
-                    .SpinnerStyle(Style.Parse("green bold"))
-                    .StartAsync($"Getting blobs in container {opts.Tree} ...", async _ =>
+                try
+                {
+                    AnsiConsole.MarkupLine($"Getting blobs in container {opts.Tree} ... ");
+                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                    var treeNodes = await AzureContainerManager.ContainerTree(
+                        selectedConnection.ConnectionString,
+                        opts.Tree,
+                        opts.Depth,
+                        opts.Detailed,
+                        opts.Prefix);
+
+                    if(treeNodes.Count > 0)
                     {
-                        try
-                        {
-                            var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                            var treeNodes = await AzureContainerManager.ContainerTree(
-                                selectedConnection.ConnectionString,
-                                opts.Tree,
-                                opts.Depth,
-                                opts.Detailed,
-                                opts.Prefix);
+                        AnsiConsole.MarkupLine($"Getting blobs in container {opts.Tree} ... [bold green]Successful[/]");
+                        AnsiConsole.Render(new Rule());
 
-                            if(treeNodes.Count > 0)
-                            {
-                                AnsiConsole.MarkupLine($"Getting blobs in container {opts.Tree} ... [bold green]Successful[/]");
-                                
-                            }
+                        //First node always represents the container name
+                        var firstNode = treeNodes[0];
+                        var tree = new Tree(firstNode.Name)
+                            .Guide(TreeGuide.BoldLine)
+                            .Style("yellow");
 
+                        AddChildren(tree, null, firstNode.Children);
 
-                        }
-                        catch (Exception ex)
-                        {
-                            AnsiConsole.MarkupLine($"Getting blobs in container {opts.Tree} ... [bold red]Failed[/]");
-                            AnsiConsole.MarkupLine($"[bold red]{ex.Message}[/]");
-                        }
-                    });
+                        AnsiConsole.Render(tree);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    AnsiConsole.MarkupLine($"Getting blobs in container {opts.Tree} ... [bold red]Failed[/]");
+                    AnsiConsole.MarkupLine($"[bold red]{ex.Message}[/]");
+                }
+            }
+        }
 
+        private void AddChildren(Tree tree, TreeNode childNode, List<BlobTreeNode> children)
+        {
+            if(childNode == null)
+            {
+                foreach(var child in children)
+                {
+                    var information = string.IsNullOrEmpty(child.Information) ? string.Empty : $"[grey] - {child.Information}[/]";
+                    var node = tree.AddNode(markup: child.Name + information);
 
+                    AddChildren(tree, node, child.Children);
+                }
+            }
+            else
+            {
+                foreach(var child in children)
+                {
+                    var information = string.IsNullOrEmpty(child.Information) ? string.Empty : $"[grey] - {child.Information}[/]";
+                    var node = childNode.AddNode(child.Name + information);
 
-                var tree = new Tree("Root")
-                    .Style("white on red");
-
-                var foo = tree.AddNode("[yellow]Foo[/]");
-                var table = foo.AddNode("[yellow]GREjhR[/]");
-
-
-
-
-
-                AnsiConsole.Render(tree);
-
-                // string message = $"Getting blobs in container {opts.Tree}";
-                // ConsoleHelper.WriteInfoWaiting(message, true);
-
-                // try
-                // {
-                //     var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                //     var treeNodes = await AzureContainerManager.ContainerTree(
-                //         selectedConnection.ConnectionString,
-                //         opts.Tree,
-                //         opts.Depth,
-                //         opts.Detailed,
-                //         opts.Prefix);
-
-                //     if(treeNodes.Count > 0)
-                //     {
-                //         ConsoleHelper.WriteLineSuccessWaiting(message);
-                //         ConsoleHelper.WriteSepparator();
-                //     }
-
-                //     new Tree(treeNodes);
-                // }
-                // catch(ContainerException ex)
-                // {
-                //     ConsoleHelper.WriteLineFailedWaiting(message);
-                //     ConsoleHelper.WriteLineError(ex.Message);
-                // }
+                    AddChildren(tree, node, child.Children);
+                }
             }
         }
     }

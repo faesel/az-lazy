@@ -1,15 +1,14 @@
-using System.Threading;
 using System.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using az_lazy.Exceptions;
-using az_lazy.Helpers;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using MimeTypes;
 using Spectre.Console;
+using az_lazy.Commands.Container.Dto;
 
 namespace az_lazy.Manager
 {
@@ -18,7 +17,7 @@ namespace az_lazy.Manager
         Task<List<BlobContainerItem>> GetContainers(string connectionString);
         Task<string> CreateContainer(string connectionString, PublicAccessType publicAccessLevel, string containerName);
         Task RemoveContainer(string connectionString, string removeContainer);
-        Task<List<TreeNode>> ContainerTree(string connectionString, string containerName, int? depth, bool detailed, string prefix);
+        Task<List<BlobTreeNode>> ContainerTree(string connectionString, string containerName, int? depth, bool detailed, string prefix);
         Task RemoveBlob(string connectionString, string containerName, string blobToRemove);
         Task UploadBlob(string connectionString, string containerName, string fileToUpload, string containerLocation);
         Task UploadBlobFromFolder(string connectionString, string containerName, string searchDirectory, string containerLocation);
@@ -76,15 +75,15 @@ namespace az_lazy.Manager
             }
         }
 
-        public async Task<List<TreeNode>> ContainerTree(string connectionString, string containerName, int? depth, bool detailed, string prefix)
+        public async Task<List<BlobTreeNode>> ContainerTree(string connectionString, string containerName, int? depth, bool detailed, string prefix)
         {
             try
             {
                 var container = new BlobContainerClient(connectionString, containerName);
 
-                var containerChildren = new List<TreeNode>();
-                var treeNodes = new List<TreeNode>() {
-                    new TreeNode {
+                var containerChildren = new List<BlobTreeNode>();
+                var treeNodes = new List<BlobTreeNode>() {
+                    new BlobTreeNode {
                         Name = container.Name,
                         Children = containerChildren
                     }
@@ -100,7 +99,7 @@ namespace az_lazy.Manager
             }
         }
 
-        private async Task ContainerTree(BlobContainerClient container, string prefix, int level, List<TreeNode> children, int? depth, bool detailed, string prefixSearch)
+        private async Task ContainerTree(BlobContainerClient container, string prefix, int level, List<BlobTreeNode> children, int? depth, bool detailed, string prefixSearch)
         {
             const string folderDelimiter = "/";
 
@@ -111,7 +110,7 @@ namespace az_lazy.Manager
                     if(pageValues.IsBlob)
                     {
                         var blob = pageValues.Blob;
-                        children.Add(new TreeNode {
+                        children.Add(new BlobTreeNode {
                             Name = string.IsNullOrEmpty(prefix) ? blob.Name : blob.Name.Replace(prefix, string.Empty),
                             Information = detailed ? $"({blob.Properties.ContentLength / 1024}kb) {blob.Properties.LastModified.Value.DateTime.ToShortDateString()}" : string.Empty
                         });
@@ -124,8 +123,8 @@ namespace az_lazy.Manager
                             pageValues.Prefix.Replace(folderDelimiter, string.Empty) :
                             pageValues.Prefix.Replace(prefix, string.Empty).Replace(folderDelimiter, string.Empty);
 
-                        var prefixChildren = new List<TreeNode>();
-                        children.Add(new TreeNode { Name = prefixName, Children = prefixChildren });
+                        var prefixChildren = new List<BlobTreeNode>();
+                        children.Add(new BlobTreeNode { Name = prefixName, Children = prefixChildren });
                         await ContainerTree(container, pageValues.Prefix, incrementedLevel, prefixChildren, depth, detailed, prefixSearch);
                     }
                 }
