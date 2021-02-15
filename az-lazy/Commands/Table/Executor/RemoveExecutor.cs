@@ -26,7 +26,7 @@ namespace az_lazy.Commands.Table.Executor
                     .Status()
                     .Spinner(Spinner.Known.Star)
                     .SpinnerStyle(Style.Parse("green bold"))
-                    .StartAsync($"Removing table ... ", async _ =>
+                    .StartAsync($"Removing table {opts.Remove} ... ", async _ =>
                     {
                         try
                         {
@@ -34,16 +34,16 @@ namespace az_lazy.Commands.Table.Executor
                             var result = await AzureTableManager.Remove(selectedConnection.ConnectionString, opts.Remove);
 
                             if(!result) {
-                                AnsiConsole.MarkupLine($"Removing table ... [bold red]Failed[/]");
+                                AnsiConsole.MarkupLine($"Removing table {opts.Remove} ... [bold red]Failed[/]");
                                 AnsiConsole.MarkupLine($"[bold red]Check to ensure the table name is correct[/]");
                             }
                             else {
-                                AnsiConsole.MarkupLine($"Removing table ... [bold green]Successful[/]");
+                                AnsiConsole.MarkupLine($"Removing table {opts.Remove} ... [bold green]Successful[/]");
                             }
                         }
                         catch (Exception ex)
                         {
-                            AnsiConsole.MarkupLine($"Removing table ... [bold red]Failed[/]");
+                            AnsiConsole.MarkupLine($"Removing table {opts.Remove} ... [bold red]Failed[/]");
                             AnsiConsole.MarkupLine($"[bold red]{ex.Message}[/]");
                         }
                     });
