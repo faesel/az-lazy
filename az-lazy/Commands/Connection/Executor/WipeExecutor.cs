@@ -38,7 +38,7 @@ namespace az_lazy.Commands.Connection.Executor
                             else
                             {
                                 AnsiConsole.MarkupLine("Removing all connections ... [bold red]Failed[/]");
-                                ConsoleHelper.WriteLineError("Failed to remove all connections");
+                                AnsiConsole.MarkupLine("Failed to remove all connections");
                             }
                         }
                         catch (Exception ex)

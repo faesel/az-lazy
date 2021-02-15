@@ -38,7 +38,7 @@ namespace az_lazy.Commands.Connection.Executor
                             else
                             {
                                 AnsiConsole.MarkupLine($"Selecting connection {opts.SelectConnection} ... [bold red]Failed[/]");
-                                ConsoleHelper.WriteLineError("Check the connection name exists and try again");
+                                AnsiConsole.MarkupLine("Check the connection name exists and try again");
                             }
                         }
                         catch (Exception ex)
