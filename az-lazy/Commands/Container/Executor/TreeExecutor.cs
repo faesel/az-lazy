@@ -1,7 +1,9 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using az_lazy.Exceptions;
-using az_lazy.Helpers;
+using az_lazy.Commands.Container.Dto;
 using az_lazy.Manager;
+using Spectre.Console;
 
 namespace az_lazy.Commands.Container.Executor
 {
@@ -22,11 +24,9 @@ namespace az_lazy.Commands.Container.Executor
         {
             if(!string.IsNullOrEmpty(opts.Tree))
             {
-                string message = $"Getting blobs in container {opts.Tree}";
-                ConsoleHelper.WriteInfoWaiting(message, true);
-
                 try
                 {
+                    AnsiConsole.MarkupLine($"Getting blobs in container {opts.Tree} ... ");
                     var selectedConnection = LocalStorageManager.GetSelectedConnection();
                     var treeNodes = await AzureContainerManager.ContainerTree(
                         selectedConnection.ConnectionString,
@@ -37,16 +37,48 @@ namespace az_lazy.Commands.Container.Executor
 
                     if(treeNodes.Count > 0)
                     {
-                        ConsoleHelper.WriteLineSuccessWaiting(message);
-                        ConsoleHelper.WriteSepparator();
-                    }
+                        AnsiConsole.MarkupLine($"Getting blobs in container {opts.Tree} ... [bold green]Successful[/]");
+                        AnsiConsole.Render(new Rule());
 
-                    new Tree(treeNodes);
+                        //First node always represents the container name
+                        var firstNode = treeNodes[0];
+                        var tree = new Tree(firstNode.Name)
+                            .Guide(TreeGuide.BoldLine)
+                            .Style("yellow");
+
+                        AddChildren(tree, null, firstNode.Children);
+
+                        AnsiConsole.Render(tree);
+                    }
                 }
-                catch(ContainerException ex)
+                catch (Exception ex)
                 {
-                    ConsoleHelper.WriteLineFailedWaiting(message);
-                    ConsoleHelper.WriteLineError(ex.Message);
+                    AnsiConsole.MarkupLine($"Getting blobs in container {opts.Tree} ... [bold red]Failed[/]");
+                    AnsiConsole.MarkupLine($"[bold red]{ex.Message}[/]");
+                }
+            }
+        }
+
+        private void AddChildren(Tree tree, TreeNode childNode, List<BlobTreeNode> children)
+        {
+            if(childNode == null)
+            {
+                foreach(var child in children)
+                {
+                    var information = string.IsNullOrEmpty(child.Information) ? string.Empty : $"[grey] - {child.Information}[/]";
+                    var node = tree.AddNode(markup: child.Name + information);
+
+                    AddChildren(tree, node, child.Children);
+                }
+            }
+            else
+            {
+                foreach(var child in children)
+                {
+                    var information = string.IsNullOrEmpty(child.Information) ? string.Empty : $"[grey] - {child.Information}[/]";
+                    var node = childNode.AddNode(child.Name + information);
+
+                    AddChildren(tree, node, child.Children);
                 }
             }
         }
