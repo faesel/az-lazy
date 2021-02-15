@@ -1,11 +1,11 @@
-using System;
-using System.Threading.Tasks;
-using az_lazy.Helpers;
-using az_lazy.Manager;
-using Spectre.Console;
-
 namespace az_lazy.Commands.Queue.Executor
 {
+    using System;
+    using System.Threading.Tasks;
+    using az_lazy.Helpers;
+    using az_lazy.Manager;
+    using Spectre.Console;
+
     public class RemoveQueueExecutor : ICommandExecutor<QueueOptions>
     {
         private readonly ILocalStorageManager LocalStorageManager;
