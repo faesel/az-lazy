@@ -1,5 +1,5 @@
-using az_lazy.Helpers;
 using az_lazy.Manager;
+using Spectre.Console;
 using System;
 using System.Threading.Tasks;
 
@@ -22,27 +22,31 @@ namespace az_lazy.Commands.Table.Executor
         {
             if(!string.IsNullOrEmpty(opts.Remove))
             {
-                var infoMessage = $"Removing table {opts.Remove}";
-                ConsoleHelper.WriteInfoWaiting(infoMessage, true);
+                await AnsiConsole
+                    .Status()
+                    .Spinner(Spinner.Known.Star)
+                    .SpinnerStyle(Style.Parse("green bold"))
+                    .StartAsync($"Removing table {opts.Remove} ... ", async _ =>
+                    {
+                        try
+                        {
+                            var selectedConnection = LocalStorageManager.GetSelectedConnection();
+                            var result = await AzureTableManager.Remove(selectedConnection.ConnectionString, opts.Remove);
 
-                try
-                {
-                    var selectedConnection = LocalStorageManager.GetSelectedConnection();
-                    var result = await AzureTableManager.Remove(selectedConnection.ConnectionString, opts.Remove);
-
-                    if(!result) {
-                        ConsoleHelper.WriteLineFailedWaiting(infoMessage);
-                        ConsoleHelper.WriteLineNormal("Check to ensure the table name is correct");
-                    }
-                    else {
-                        ConsoleHelper.WriteLineSuccessWaiting(infoMessage);
-                    }
-                }
-                catch(Exception ex)
-                {
-                    ConsoleHelper.WriteLineError(ex.Message);
-                    ConsoleHelper.WriteLineFailedWaiting($"Failed to query table {opts.Query}");
-                }
+                            if(!result) {
+                                AnsiConsole.MarkupLine($"Removing table {opts.Remove} ... [bold red]Failed[/]");
+                                AnsiConsole.MarkupLine($"[bold red]Check to ensure the table name is correct[/]");
+                            }
+                            else {
+                                AnsiConsole.MarkupLine($"Removing table {opts.Remove} ... [bold green]Successful[/]");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            AnsiConsole.MarkupLine($"Removing table {opts.Remove} ... [bold red]Failed[/]");
+                            AnsiConsole.MarkupLine($"[bold red]{ex.Message}[/]");
+                        }
+                    });
             }
         }
     }

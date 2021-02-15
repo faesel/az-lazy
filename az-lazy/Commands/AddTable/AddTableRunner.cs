@@ -1,4 +1,3 @@
-using az_lazy.Helpers;
 using az_lazy.Manager;
 using Spectre.Console;
 using System;
