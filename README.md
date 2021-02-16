@@ -141,3 +141,7 @@ I haven't written any contributing guidelines yet but you can reach me here on [
 # 5. Change Log <a name="changelog"></a>
 
 For older versions check the change log [here](documentation/legacyversionhistory.md), for newer versions check out the [releases page](https://github.com/faesel/az-lazy/releases). 
+
+# 6. Future changes
+
+- Explore adding connections and commands for Azure Storage Bus
